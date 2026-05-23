@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Cari Hesaplar{% endblock %}
+{% block page_title %}Cari Hesaplar{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'cari_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Yeni Cari
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header py-3">
+    <form class="d-flex gap-2" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:260px" placeholder="Ad veya vergi no ara...">
+      <select name="tip" class="form-select form-select-sm" style="max-width:160px">
+        <option value="">Tüm Tipler</option>
+        <option value="musteri" {% if tip == "musteri" %}selected{% endif %}>Müşteri</option>
+        <option value="tedarikci" {% if tip == "tedarikci" %}selected{% endif %}>Tedarikçi</option>
+        <option value="diger" {% if tip == "diger" %}selected{% endif %}>Diğer</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i></button>
+      {% if q or tip %}<a href="{% url 'cari_listesi' %}" class="btn btn-sm btn-link">Temizle</a>{% endif %}
+    </form>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Unvan / Ad</th><th>Tip</th><th>Vergi No</th>
+          <th>Telefon</th><th class="text-end">Bakiye</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cari in cariler %}
+        {% with bak=cari.bakiye %}
+        <tr>
+          <td>
+            <a href="{% url 'cari_detay' cari.pk %}" class="fw-semibold text-decoration-none">{{ cari.ad }}</a>
+            {% if not cari.aktif %}<span class="badge bg-secondary ms-1">Pasif</span>{% endif %}
+          </td>
+          <td>
+            {% if cari.tip == "musteri" %}<span class="badge bg-primary bg-opacity-10 text-primary">Müşteri</span>
+            {% elif cari.tip == "tedarikci" %}<span class="badge bg-warning bg-opacity-10 text-warning">Tedarikçi</span>
+            {% else %}<span class="badge bg-secondary bg-opacity-10 text-secondary">Diğer</span>{% endif %}
+          </td>
+          <td class="text-muted small">{{ cari.vergi_no|default:"—" }}</td>
+          <td class="text-muted small">{{ cari.telefon|default:"—" }}</td>
+          <td class="text-end fw-semibold">
+            <span class="{% if bak > 0 %}text-success{% elif bak < 0 %}text-danger{% else %}text-muted{% endif %}">
+              {{ bak|floatformat:2 }} ₺
+            </span>
+          </td>
+          <td class="text-end">
+            <a href="{% url 'cari_detay' cari.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-eye"></i>
+            </a>
+            <a href="{% url 'cari_duzenle' cari.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-pencil"></i>
+            </a>
+          </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-5">Cari bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

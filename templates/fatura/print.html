@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Fatura {{ fatura.fatura_no }}</title>
+  <style>
+    @page { size: A4; margin: 15mm 15mm 20mm 15mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #222; }
+    .no-print { display: none; }
+
+    /* Header */
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 2px solid #1e40af; padding-bottom: 12px; }
+    .firma-ad { font-size: 18pt; font-weight: bold; color: #1e40af; }
+    .firma-alt { font-size: 9pt; color: #555; margin-top: 4px; }
+    .fatura-baslik { text-align: right; }
+    .fatura-baslik h1 { font-size: 20pt; font-weight: bold; color: #1e40af; }
+    .fatura-baslik .no { background: #1e40af; color: white; padding: 4px 10px; border-radius: 4px; font-size: 10pt; }
+
+    /* Bilgiler */
+    .bilgi-grid { display: flex; gap: 20px; margin-bottom: 20px; }
+    .bilgi-kutu { flex: 1; border: 1px solid #ddd; border-radius: 4px; padding: 10px; }
+    .bilgi-kutu h4 { font-size: 8pt; text-transform: uppercase; letter-spacing: .08em; color: #666; margin-bottom: 6px; }
+    .bilgi-satir { font-size: 9.5pt; margin-bottom: 2px; }
+
+    /* Tablo */
+    table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    thead th { background: #1e40af; color: white; padding: 6px 8px; font-size: 9pt; text-align: left; }
+    thead th.r { text-align: right; }
+    tbody td { padding: 5px 8px; font-size: 9.5pt; border-bottom: 1px solid #eee; }
+    tbody td.r { text-align: right; }
+    tfoot td { padding: 5px 8px; font-size: 9.5pt; }
+    tfoot td.r { text-align: right; }
+    tfoot .toplam-satir td { font-weight: bold; font-size: 11pt; border-top: 2px solid #1e40af; }
+
+    /* Footer */
+    .footer { margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 8pt; color: #666; text-align: center; }
+
+    /* QR Kod */
+    .qr-alan { position: absolute; bottom: 18mm; right: 15mm; text-align: center; }
+    .qr-alan img { width: 70px; height: 70px; display: block; margin: 0 auto 2px; }
+    .qr-alan .qr-label { font-size: 7pt; color: #888; }
+    @page { size: A4; margin: 15mm 15mm 28mm 15mm; }
+
+    /* Print butonları - print'te gizle */
+    @media print {
+      .no-print { display: none !important; }
+    }
+    @media screen {
+      .no-print { display: block; margin-bottom: 16px; }
+      body { max-width: 800px; margin: 20px auto; padding: 20px; position: relative; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="no-print">
+  <button onclick="window.print()" style="padding:8px 20px;background:#1e40af;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12pt;margin-right:8px">
+    🖨️ Yazdır / PDF
+  </button>
+  <button onclick="window.close()" style="padding:8px 20px;background:#6b7280;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12pt">
+    Kapat
+  </button>
+</div>
+
+<!-- BAŞLIK -->
+<div class="header">
+  <div>
+    <div class="firma-ad">Muhasebe Bürosu</div>
+  </div>
+  <div class="fatura-baslik">
+    <h1>FATURA</h1>
+    <div class="no">{{ fatura.fatura_no }}</div>
+  </div>
+</div>
+
+<!-- BİLGİ KUTULARI -->
+<div class="bilgi-grid">
+  <div class="bilgi-kutu">
+    <h4>Fatura Bilgileri</h4>
+    <div class="bilgi-satir"><strong>Tarih:</strong> {{ fatura.tarih|date:"d.m.Y" }}</div>
+    {% if fatura.vade_tarihi %}
+    <div class="bilgi-satir"><strong>Vade:</strong> {{ fatura.vade_tarihi|date:"d.m.Y" }}</div>
+    {% endif %}
+    <div class="bilgi-satir"><strong>Tip:</strong> {{ fatura.get_tip_display }}</div>
+    <div class="bilgi-satir"><strong>Para Birimi:</strong> {{ fatura.para_birimi }}</div>
+    {% if fatura.aciklama %}
+    <div class="bilgi-satir"><strong>Konu:</strong> {{ fatura.aciklama }}</div>
+    {% endif %}
+  </div>
+  <div class="bilgi-kutu">
+    <h4>{% if fatura.tip == "satis" %}Müşteri{% else %}Tedarikçi{% endif %}</h4>
+    <div class="bilgi-satir" style="font-size:11pt;font-weight:bold">{{ fatura.cari.ad }}</div>
+    {% if fatura.cari.vergi_no %}
+    <div class="bilgi-satir">V.No: {{ fatura.cari.vergi_no }}{% if fatura.cari.vergi_dairesi %} / {{ fatura.cari.vergi_dairesi }}{% endif %}</div>
+    {% endif %}
+    {% if fatura.cari.adres %}
+    <div class="bilgi-satir">{{ fatura.cari.adres }}</div>
+    {% endif %}
+    {% if fatura.cari.telefon %}
+    <div class="bilgi-satir">Tel: {{ fatura.cari.telefon }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- KALEMLER -->
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Açıklama / Hizmet</th>
+      <th class="r">Miktar</th>
+      <th>Birim</th>
+      <th class="r">Birim Fiyat</th>
+      <th class="r">İskonto %</th>
+      <th class="r">Matrah</th>
+      <th class="r">KDV %</th>
+      <th class="r">KDV</th>
+      <th class="r">Toplam</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for kalem in fatura.kalemler.all %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ kalem.aciklama }}</td>
+      <td class="r">{{ kalem.miktar }}</td>
+      <td>{{ kalem.birim }}</td>
+      <td class="r">{{ kalem.birim_fiyat|floatformat:2 }}</td>
+      <td class="r">%{{ kalem.iskonto_oran }}</td>
+      <td class="r">{{ kalem.kdv_haric_tutar|floatformat:2 }}</td>
+      <td class="r">%{{ kalem.kdv_orani }}</td>
+      <td class="r">{{ kalem.kdv_tutari|floatformat:2 }}</td>
+      <td class="r" style="font-weight:bold">{{ kalem.kdv_dahil_tutar|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="8" class="r"><strong>KDV Hariç Toplam:</strong></td>
+      <td colspan="2" class="r">{{ fatura.kdv_haric_toplam|floatformat:2 }}</td>
+    </tr>
+    <!-- KDV Dağılımı -->
+    {% for oran, veriler in fatura.kdv_ozeti.items %}
+    <tr>
+      <td colspan="8" class="r" style="font-size:9pt;color:#555">% {{ oran }} KDV (Matrah: {{ veriler.matrah|floatformat:2 }}):</td>
+      <td colspan="2" class="r" style="font-size:9pt;color:#555">{{ veriler.kdv|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="toplam-satir">
+      <td colspan="8" class="r">GENEL TOPLAM ({{ fatura.para_birimi }}):</td>
+      <td colspan="2" class="r">{{ fatura.genel_toplam|floatformat:2 }}</td>
+    </tr>
+  </tfoot>
+</table>
+
+{% if fatura.notlar %}
+<div style="border:1px solid #ddd;padding:8px;border-radius:4px;font-size:9pt;color:#444">
+  <strong>Notlar:</strong> {{ fatura.notlar }}
+</div>
+{% endif %}
+
+<div class="footer">
+  Bu fatura bilgisayar ortamında düzenlenmiş olup imza gerektirmez.
+</div>
+{% if qr_b64 %}
+<div class="qr-alan">
+  <img src="data:image/png;base64,{{ qr_b64 }}" alt="E-Arşiv QR">
+  <div class="qr-label">E-ARŞİV QR</div>
+</div>
+{% endif %}</body>
+</html>

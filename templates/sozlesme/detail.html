@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ sozlesme }}{% endblock %}
+{% block page_title %}Sözleşme Detayı{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'sozlesme_duzenle' sozlesme.pk %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-pencil"></i> Düzenle
+  </a>
+  <a href="{% url 'sozlesme_listesi' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Geri
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header py-3"><i class="bi bi-file-earmark-text me-2"></i>Sözleşme Bilgileri</div>
+      <div class="card-body">
+        <dl class="row mb-0">
+          <dt class="col-4 text-muted small">Sözleşme No</dt>
+          <dd class="col-8">{{ sozlesme.sozlesme_no|default:"—" }}</dd>
+          <dt class="col-4 text-muted small">Başlık</dt>
+          <dd class="col-8 fw-semibold">{{ sozlesme.baslik }}</dd>
+          <dt class="col-4 text-muted small">Cari</dt>
+          <dd class="col-8">
+            <a href="{% url 'cari_detay' sozlesme.cari_id %}">{{ sozlesme.cari.ad }}</a>
+          </dd>
+          <dt class="col-4 text-muted small">Durum</dt>
+          <dd class="col-8">{{ sozlesme.get_durum_display }}</dd>
+          <dt class="col-4 text-muted small">Başlangıç</dt>
+          <dd class="col-8">{{ sozlesme.baslangic_tarihi|date:"d.m.Y"|default:"—" }}</dd>
+          <dt class="col-4 text-muted small">Bitiş</dt>
+          <dd class="col-8">{{ sozlesme.bitis_tarihi|date:"d.m.Y"|default:"—" }}</dd>
+          <dt class="col-4 text-muted small">Tutar</dt>
+          <dd class="col-8 fw-semibold">
+            {% if sozlesme.tutar %}{{ sozlesme.tutar|floatformat:2 }} {{ sozlesme.para_birimi }}
+            {% else %}—{% endif %}
+          </dd>
+          {% if sozlesme.dosya %}
+          <dt class="col-4 text-muted small">Dosya</dt>
+          <dd class="col-8">
+            <a href="{{ sozlesme.dosya.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-download me-1"></i>İndir
+            </a>
+          </dd>
+          {% endif %}
+          {% if sozlesme.notlar %}
+          <dt class="col-4 text-muted small">Notlar</dt>
+          <dd class="col-8">{{ sozlesme.notlar }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

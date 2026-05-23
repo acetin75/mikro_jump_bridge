@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Tahsilat / Ödemeler{% endblock %}
+{% block page_title %}Tahsilat / Ödemeler{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'tahsilat_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Yeni Tahsilat/Ödeme
+  </a>
+{% endblock %}
+
+{% block content %}
+<!-- Özet -->
+<div class="row g-3 mb-3">
+  <div class="col-sm-4">
+    <div class="card p-3 text-center">
+      <div class="small text-muted">Toplam Tutar (filtre)</div>
+      <div class="fs-4 fw-bold text-primary">{{ toplam|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header py-3">
+    <form class="d-flex gap-2" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:260px"
+             placeholder="Cari veya açıklama ara...">
+      <select name="tip" class="form-select form-select-sm" style="max-width:180px">
+        <option value="">Tümü</option>
+        <option value="tahsilat" {% if tip == "tahsilat" %}selected{% endif %}>Tahsilat (Gelen)</option>
+        <option value="odeme" {% if tip == "odeme" %}selected{% endif %}>Ödeme (Giden)</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i></button>
+    </form>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 small">
+      <thead>
+        <tr>
+          <th>Tarih</th><th>Cari</th><th>Tip</th>
+          <th>Yöntem</th><th>Belge No</th><th>Açıklama</th>
+          <th class="text-end">Tutar</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k in kayitlar %}
+        <tr>
+          <td>{{ k.tarih|date:"d.m.Y" }}</td>
+          <td><a href="{% url 'cari_detay' k.cari_id %}">{{ k.cari.ad }}</a></td>
+          <td>
+            {% if k.tip == "tahsilat" %}
+              <span class="badge bg-success bg-opacity-10 text-success">Tahsilat</span>
+            {% else %}
+              <span class="badge bg-danger bg-opacity-10 text-danger">Ödeme</span>
+            {% endif %}
+          </td>
+          <td>{{ k.get_odeme_yontemi_display }}</td>
+          <td class="text-muted">{{ k.belge_no|default:"—" }}</td>
+          <td>{{ k.aciklama|default:"—"|truncatechars:40 }}</td>
+          <td class="text-end fw-semibold {% if k.tip == 'tahsilat' %}text-success{% else %}text-danger{% endif %}">
+            {{ k.tutar|floatformat:2 }} {{ k.para_birimi }}
+          </td>
+          <td>
+            <form method="post" action="{% url 'tahsilat_sil' k.pk %}" style="display:inline"
+                  onsubmit="return confirm('Bu kaydı silmek istediğinizden emin misiniz?')">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-5">Kayıt bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

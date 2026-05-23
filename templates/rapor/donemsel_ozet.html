@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Dönemsel Özet {{ yil }}{% endblock %}
+{% block page_title %}Dönemsel Özet — {{ yil }}{% endblock %}
+
+{% block content %}
+
+<!-- Yıl Gezintisi -->
+<div class="d-flex align-items-center gap-3 mb-4">
+  <a href="?yil={{ onceki_yil }}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-chevron-left"></i> {{ onceki_yil }}
+  </a>
+  <span class="fs-5 fw-bold">{{ yil }}</span>
+  <a href="?yil={{ sonraki_yil }}" class="btn btn-sm btn-outline-secondary">
+    {{ sonraki_yil }} <i class="bi bi-chevron-right"></i>
+  </a>
+</div>
+
+<!-- Genel Özet Kartlar -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card p-3 border-success">
+      <div class="small text-muted">Toplam Satış (KDV Dahil)</div>
+      <div class="fs-5 fw-bold text-success">{{ toplam_gelir|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 border-warning">
+      <div class="small text-muted">Toplam Gider (KDV Dahil)</div>
+      <div class="fs-5 fw-bold text-warning">{{ toplam_gider|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 border-info">
+      <div class="small text-muted">Toplam Tahsilat</div>
+      <div class="fs-5 fw-bold text-info">{{ toplam_tahsilat|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3 {% if net_genel >= 0 %}border-success{% else %}border-danger{% endif %}">
+      <div class="small text-muted">Net Kar/Zarar</div>
+      <div class="fs-5 fw-bold {% if net_genel >= 0 %}text-success{% else %}text-danger{% endif %}">
+        {{ net_genel|floatformat:2 }} ₺
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Aylık Tablo -->
+<div class="card">
+  <div class="card-header py-3 fw-semibold">Aylık Dağılım</div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Ay</th>
+          <th class="text-end">Satış</th>
+          <th class="text-end">Alış</th>
+          <th class="text-end">Gider</th>
+          <th class="text-end">Tahsilat</th>
+          <th class="text-end">Net</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data %}
+        <tr class="{% if row.net < 0 %}table-danger{% elif row.net > 0 %}table-success bg-opacity-10{% endif %}">
+          <td class="fw-semibold">{{ row.ay_adi }}</td>
+          <td class="text-end text-success">{{ row.satis|floatformat:2 }} ₺</td>
+          <td class="text-end text-warning">{{ row.alis|floatformat:2 }} ₺</td>
+          <td class="text-end text-danger">{{ row.gider|floatformat:2 }} ₺</td>
+          <td class="text-end text-info">{{ row.tahsilat|floatformat:2 }} ₺</td>
+          <td class="text-end fw-bold {% if row.net >= 0 %}text-success{% else %}text-danger{% endif %}">
+            {{ row.net|floatformat:2 }} ₺
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot class="table-light">
+        <tr>
+          <td><strong>TOPLAM</strong></td>
+          <td class="text-end fw-bold text-success">{{ toplam_gelir|floatformat:2 }} ₺</td>
+          <td class="text-end fw-bold text-warning">—</td>
+          <td class="text-end fw-bold text-danger">{{ toplam_gider|floatformat:2 }} ₺</td>
+          <td class="text-end fw-bold text-info">{{ toplam_tahsilat|floatformat:2 }} ₺</td>
+          <td class="text-end fw-bold {% if net_genel >= 0 %}text-success{% else %}text-danger{% endif %}">
+            {{ net_genel|floatformat:2 }} ₺
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+{% endblock %}

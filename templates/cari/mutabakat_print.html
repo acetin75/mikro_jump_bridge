@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mutabakat Mektubu — {{ cari.ad }}</title>
+  <style>
+    @page { size: A4; margin: 20mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #222; }
+
+    .baslik-alan { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e40af; padding-bottom: 12px; margin-bottom: 20px; }
+    .firma-adi { font-size: 16pt; font-weight: bold; color: #1e40af; }
+    .firma-alt { font-size: 8.5pt; color: #555; margin-top: 4px; }
+    .belge-baslik { text-align: right; }
+    .belge-baslik h1 { font-size: 14pt; font-weight: bold; color: #1e40af; text-transform: uppercase; letter-spacing: .05em; }
+    .belge-baslik .tarih { font-size: 9pt; color: #555; margin-top: 4px; }
+
+    .bilgi-grid { display: flex; gap: 20px; margin-bottom: 20px; }
+    .bilgi-kutu { flex: 1; border: 1px solid #ddd; border-radius: 4px; padding: 10px; }
+    .bilgi-kutu h4 { font-size: 8pt; text-transform: uppercase; letter-spacing: .08em; color: #666; margin-bottom: 6px; }
+    .bilgi-satir { font-size: 9.5pt; margin-bottom: 3px; }
+
+    .metin { font-size: 10pt; line-height: 1.7; margin-bottom: 20px; }
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    thead th { background: #1e40af; color: white; padding: 6px 8px; font-size: 9pt; }
+    thead th.r { text-align: right; }
+    tbody td { padding: 5px 8px; font-size: 9.5pt; border-bottom: 1px solid #eee; }
+    tbody td.r { text-align: right; }
+    tfoot td { padding: 6px 8px; font-size: 10pt; font-weight: bold; border-top: 2px solid #1e40af; }
+    tfoot td.r { text-align: right; }
+
+    .bakiye-kutu { border: 2px solid #1e40af; border-radius: 6px; padding: 12px 16px; margin-bottom: 24px; }
+    .bakiye-kutu .etiket { font-size: 9pt; color: #555; }
+    .bakiye-kutu .deger { font-size: 15pt; font-weight: bold; }
+    .bakiye-kutu .deger.borc { color: #dc2626; }
+    .bakiye-kutu .deger.alacak { color: #16a34a; }
+    .bakiye-kutu .deger.sifir { color: #6b7280; }
+
+    .onay-alani { display: flex; gap: 40px; margin-top: 40px; }
+    .onay-kutu { flex: 1; border-top: 1px solid #333; padding-top: 8px; font-size: 9pt; color: #444; text-align: center; }
+
+    .footer { margin-top: 30px; font-size: 8pt; color: #888; text-align: center; border-top: 1px solid #ddd; padding-top: 8px; }
+
+    @media print { .no-print { display: none !important; } }
+    @media screen {
+      .no-print { margin-bottom: 16px; }
+      body { max-width: 800px; margin: 20px auto; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="no-print" style="display:block">
+  <button onclick="window.print()" style="padding:8px 20px;background:#1e40af;color:white;border:none;border-radius:4px;cursor:pointer;font-size:11pt;margin-right:8px">
+    🖨️ Yazdır / PDF
+  </button>
+  <button onclick="window.close()" style="padding:8px 20px;background:#6b7280;color:white;border:none;border-radius:4px;cursor:pointer;font-size:11pt">
+    Kapat
+  </button>
+</div>
+
+<!-- BAŞLIK -->
+<div class="baslik-alan">
+  <div>
+    <div class="firma-adi">{{ firma_adi }}</div>
+    {% if firma_vkn %}
+    <div class="firma-alt">V.No: {{ firma_vkn }}{% if firma_vergi_dairesi %} / {{ firma_vergi_dairesi }}{% endif %}</div>
+    {% endif %}
+    {% if firma_adres %}<div class="firma-alt">{{ firma_adres }}</div>{% endif %}
+  </div>
+  <div class="belge-baslik">
+    <h1>Mutabakat Mektubu</h1>
+    <div class="tarih">Düzenleme Tarihi: {{ bugun|date:"d.m.Y" }}</div>
+  </div>
+</div>
+
+<!-- BİLGİ KUTULARI -->
+<div class="bilgi-grid">
+  <div class="bilgi-kutu">
+    <h4>Sayın</h4>
+    <div class="bilgi-satir" style="font-size:12pt;font-weight:bold">{{ cari.ad }}</div>
+    {% if cari.vergi_no %}<div class="bilgi-satir">V.No: {{ cari.vergi_no }}{% if cari.vergi_dairesi %} / {{ cari.vergi_dairesi }}{% endif %}</div>{% endif %}
+    {% if cari.adres %}<div class="bilgi-satir">{{ cari.adres }}</div>{% endif %}
+    {% if cari.telefon %}<div class="bilgi-satir">Tel: {{ cari.telefon }}</div>{% endif %}
+  </div>
+  <div class="bilgi-kutu">
+    <h4>Mutabakat Dönemi</h4>
+    <div class="bilgi-satir"><strong>Başlangıç:</strong> {{ baslangic|date:"d.m.Y" }}</div>
+    <div class="bilgi-satir"><strong>Bitiş:</strong> {{ bitis|date:"d.m.Y" }}</div>
+    <div class="bilgi-satir"><strong>Toplam İşlem:</strong> {{ hareketler|length }} adet</div>
+  </div>
+</div>
+
+<!-- AÇIKLAMA METNİ -->
+<div class="metin">
+  Sayın {{ cari.ad }},<br><br>
+  Firmamız kayıtlarına göre, belirtilen dönem itibarıyla hesap durumunuz aşağıda bilgilerinize sunulmaktadır.
+  Kayıtlarımızla mutabık olmanız halinde bu mektubu imzalayıp iade etmenizi, farklılık bulunması
+  halinde ise en geç <strong>15 gün</strong> içinde yazılı olarak bildirilmesini rica ederiz.
+</div>
+
+<!-- BAKIYE ÖZETI -->
+<div class="bakiye-kutu">
+  <div class="row" style="display:flex;gap:40px">
+    <div>
+      <div class="etiket">Toplam Borç</div>
+      <div class="deger borc">{{ toplam_borc|floatformat:2 }} ₺</div>
+    </div>
+    <div>
+      <div class="etiket">Toplam Alacak</div>
+      <div class="deger alacak">{{ toplam_alacak|floatformat:2 }} ₺</div>
+    </div>
+    <div>
+      <div class="etiket">Net Bakiye</div>
+      <div class="deger {% if bakiye > 0 %}borc{% elif bakiye < 0 %}alacak{% else %}sifir{% endif %}">
+        {{ bakiye|floatformat:2 }} ₺
+        {% if bakiye > 0 %}<small style="font-size:9pt">(Borcunuz)</small>
+        {% elif bakiye < 0 %}<small style="font-size:9pt">(Alacağınız)</small>
+        {% else %}<small style="font-size:9pt">(Borç/Alacak Yok)</small>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HAREKET TABLOSU -->
+<table>
+  <thead>
+    <tr>
+      <th>Tarih</th>
+      <th>Belge No</th>
+      <th>Açıklama</th>
+      <th class="r">Borç (₺)</th>
+      <th class="r">Alacak (₺)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for h in hareketler %}
+    <tr>
+      <td>{{ h.tarih|date:"d.m.Y" }}</td>
+      <td>{{ h.belge_no|default:"—" }}</td>
+      <td>{{ h.aciklama }}</td>
+      <td class="r">{% if h.borc %}{{ h.borc|floatformat:2 }}{% else %}—{% endif %}</td>
+      <td class="r">{% if h.alacak %}{{ h.alacak|floatformat:2 }}{% else %}—{% endif %}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" style="text-align:center;color:#888;padding:12px">Bu dönemde kayıt bulunamadı.</td></tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" style="text-align:right">Toplam</td>
+      <td class="r">{{ toplam_borc|floatformat:2 }}</td>
+      <td class="r">{{ toplam_alacak|floatformat:2 }}</td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- İMZA ALANI -->
+<div class="onay-alani">
+  <div class="onay-kutu">
+    <strong>{{ firma_adi }}</strong><br>
+    Yetkili İmza / Kaşe<br><br><br><br>
+    Ad Soyad: ____________________<br>
+    Tarih: ________________________
+  </div>
+  <div class="onay-kutu">
+    <strong>{{ cari.ad }}</strong><br>
+    Yetkili İmza / Kaşe<br><br><br><br>
+    Ad Soyad: ____________________<br>
+    Tarih: ________________________
+  </div>
+</div>
+
+<div class="footer">
+  Bu mutabakat mektubu bilgisayar ortamında düzenlenmiştir. — {{ bugun|date:"d.m.Y" }}
+</div>
+</body>
+</html>

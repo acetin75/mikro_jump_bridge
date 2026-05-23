@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Kullanıcı Yönetimi{% endblock %}
+{% block page_title %}Kullanıcı Yönetimi{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <a href="{% url 'kullanici:aktivite' %}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-clock-history me-1"></i>Aktivite Logu
+    </a>
+  </div>
+  <a href="{% url 'kullanici:ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-person-plus me-1"></i>Yeni Kullanıcı
+  </a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Kullanıcı Adı</th>
+          <th>Ad Soyad</th>
+          <th>E-posta</th>
+          <th>Rol</th>
+          <th>Durum</th>
+          <th class="text-end">İşlem</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in kullanicilar %}
+        <tr>
+          <td>
+            <strong>{{ u.username }}</strong>
+            {% if u.is_superuser %}<span class="badge bg-danger ms-1">Süper</span>{% endif %}
+          </td>
+          <td>{{ u.get_full_name|default:"—" }}</td>
+          <td class="small text-muted">{{ u.email|default:"—" }}</td>
+          <td>
+            {% with rol=u.groups.first %}
+              {% if rol %}
+                <span class="badge rounded-pill
+                  {% if rol.name == 'Yönetici' %}bg-danger
+                  {% elif rol.name == 'Muhasebeci' %}bg-primary
+                  {% else %}bg-secondary{% endif %}">
+                  {{ rol.name }}
+                </span>
+              {% elif u.is_superuser %}
+                <span class="badge bg-danger rounded-pill">Süper Yönetici</span>
+              {% else %}
+                <span class="text-muted small">Görüntüleyici</span>
+              {% endif %}
+            {% endwith %}
+          </td>
+          <td>
+            {% if u.is_active %}
+              <span class="badge bg-success rounded-pill">Aktif</span>
+            {% else %}
+              <span class="badge bg-secondary rounded-pill">Pasif</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'kullanici:duzenle' u.pk %}" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-pencil"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">Kullanıcı bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

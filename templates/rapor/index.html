@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Raporlar{% endblock %}
+{% block page_title %}Raporlar & Export{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- Dönemsel Özet -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header py-3 fw-semibold">
+        <i class="bi bi-bar-chart-line me-2 text-primary"></i>Dönemsel Özet
+      </div>
+      <div class="card-body">
+        <p class="text-muted small">Yıllık gelir-gider-tahsilat karşılaştırması aylara göre.</p>
+        <a href="{% url 'rapor:donemsel' %}" class="btn btn-primary btn-sm">
+          <i class="bi bi-eye me-1"></i>Görüntüle
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cari Bakiye Excel -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header py-3 fw-semibold">
+        <i class="bi bi-file-earmark-spreadsheet me-2 text-success"></i>Cari Bakiye Listesi (Excel)
+      </div>
+      <div class="card-body">
+        <p class="text-muted small">Tüm carilerin borç, alacak ve bakiye durumunu Excel olarak indir.</p>
+        <a href="{% url 'rapor:excel_cari_bakiye' %}" class="btn btn-success btn-sm">
+          <i class="bi bi-download me-1"></i>Excel İndir
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cari Ekstresi Excel -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header py-3 fw-semibold">
+        <i class="bi bi-file-earmark-spreadsheet me-2 text-success"></i>Cari Hareket Ekstresi (Excel)
+      </div>
+      <div class="card-body">
+        <form method="get" action="{% url 'rapor:excel_cari_ekstre' %}">
+          <div class="mb-2">
+            <select name="cari_id" class="form-select form-select-sm">
+              <option value="">-- Tüm Cariler --</option>
+              {% for c in cariler %}
+              <option value="{{ c.pk }}">{{ c.ad }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col"><input type="date" name="bas" class="form-control form-control-sm" placeholder="Başlangıç"></div>
+            <div class="col"><input type="date" name="bitis" class="form-control form-control-sm" placeholder="Bitiş"></div>
+          </div>
+          <button type="submit" class="btn btn-success btn-sm">
+            <i class="bi bi-download me-1"></i>Excel İndir
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tahsilat Raporu Excel -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header py-3 fw-semibold">
+        <i class="bi bi-file-earmark-spreadsheet me-2 text-success"></i>Tahsilat Raporu (Excel)
+      </div>
+      <div class="card-body">
+        <form method="get" action="{% url 'rapor:excel_tahsilat' %}">
+          <div class="row g-2 mb-2">
+            <div class="col"><input type="date" name="bas" class="form-control form-control-sm" placeholder="Başlangıç"></div>
+            <div class="col"><input type="date" name="bitis" class="form-control form-control-sm" placeholder="Bitiş"></div>
+          </div>
+          <button type="submit" class="btn btn-success btn-sm">
+            <i class="bi bi-download me-1"></i>Excel İndir
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gider Raporu Excel -->
+  <div class="col-md-6">
+    <div class="card h-100">
+      <div class="card-header py-3 fw-semibold">
+        <i class="bi bi-file-earmark-spreadsheet me-2 text-success"></i>Gider Raporu (Excel)
+      </div>
+      <div class="card-body">
+        <form method="get" action="{% url 'rapor:excel_gider' %}">
+          <div class="row g-2 mb-2">
+            <div class="col"><input type="date" name="bas" class="form-control form-control-sm" placeholder="Başlangıç"></div>
+            <div class="col"><input type="date" name="bitis" class="form-control form-control-sm" placeholder="Bitiş"></div>
+          </div>
+          <button type="submit" class="btn btn-success btn-sm">
+            <i class="bi bi-download me-1"></i>Excel İndir
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- KDV Beyanname Özeti Excel -->
+  <div class="col-md-6">
+    <div class="card h-100 border-warning">
+      <div class="card-header py-3 fw-semibold bg-warning bg-opacity-10">
+        <i class="bi bi-percent me-2 text-warning"></i>KDV Beyanname Özeti (Excel)
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">
+          Fatura kalemlerini KDV oranına göre gruplandırır. Hesaplanan ve indirilecek KDV
+          ayrı sayfalarda, beyanname özeti ayrı bir sayfada listelenir.
+        </p>
+        <form method="get" action="{% url 'rapor:excel_kdv_beyanname' %}">
+          <div class="row g-2 mb-2">
+            <div class="col">
+              <input type="number" name="yil" class="form-control form-control-sm"
+                placeholder="Yıl" value="{{ bugun.year }}" min="2020" max="2099">
+            </div>
+            <div class="col">
+              <select name="ay" class="form-select form-select-sm">
+                <option value="">Tüm yıl</option>
+                <option value="1">Ocak</option>
+                <option value="2">Şubat</option>
+                <option value="3">Mart</option>
+                <option value="4">Nisan</option>
+                <option value="5">Mayıs</option>
+                <option value="6">Haziran</option>
+                <option value="7">Temmuz</option>
+                <option value="8">Ağustos</option>
+                <option value="9">Eylül</option>
+                <option value="10">Ekim</option>
+                <option value="11">Kasım</option>
+                <option value="12">Aralık</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-warning btn-sm">
+            <i class="bi bi-download me-1"></i>Excel İndir
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

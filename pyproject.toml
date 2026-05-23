@@ -1,0 +1,46 @@
+[project]
+name = "muhasebe-buro"
+version = "1.0.0"
+description = "Yerel muhasebe bürosu yönetim sistemi"
+requires-python = ">=3.10"
+
+# ---------------------------------------------------------------------------
+# Ruff — linter ve formatter
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [
+    ".venv",
+    "migrations",
+    "__pycache__",
+    "staticfiles",
+    "media",
+]
+
+[tool.ruff.lint]
+# E = pycodestyle errors, F = pyflakes, W = warnings, I = isort
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501",   # satır uzunluğu — line-length ile yönetilir
+    "F401",   # kullanılmayan import — göç dosyalarında gerekli
+]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "muhasebe_buro",
+    "cari",
+    "banka",
+    "sozlesme",
+    "tahsilat",
+    "fatura",
+    "ceksenet",
+    "gider",
+    "rapor",
+    "dashboard",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

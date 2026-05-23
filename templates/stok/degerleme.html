@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Stok Değerleme{% endblock %}
+{% block page_title %}Stok Değerleme Raporu{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'stok:degerleme_excel' %}{% if yontem %}?yontem={{ yontem }}{% endif %}"
+     class="btn btn-sm btn-success">
+    <i class="bi bi-file-earmark-excel"></i> Excel İndir
+  </a>
+  <a href="{% url 'stok:list' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Stok Listesi
+  </a>
+{% endblock %}
+
+{% block content %}
+
+<!-- Özet Kartlar -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card stat-card" style="background:linear-gradient(135deg,#1e40af,#6366f1)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Maliyet Değeri (Alış)</div>
+          <div class="fs-3 fw-bold">{{ toplam_deger|floatformat:2 }} ₺</div>
+        </div>
+        <i class="bi bi-safe2 fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card" style="background:linear-gradient(135deg,#047857,#10b981)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Satış Değeri (Potansiyel)</div>
+          <div class="fs-3 fw-bold">{{ toplam_satis_degeri|floatformat:2 }} ₺</div>
+        </div>
+        <i class="bi bi-graph-up-arrow fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card" style="background:linear-gradient(135deg,#b45309,#f59e0b)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Değerlenen Ürün</div>
+          <div class="fs-3 fw-bold">{{ rapor|length }}</div>
+        </div>
+        <i class="bi bi-box-seam fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filtre -->
+<div class="card mb-3">
+  <div class="card-body py-2">
+    <form class="d-flex align-items-center gap-3" method="get">
+      <label class="form-label mb-0 fw-semibold small">Yöntem:</label>
+      <select name="yontem" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+        <option value="">Tümü</option>
+        {% for k, v in yontem_secenekler %}
+        <option value="{{ k }}" {% if yontem == k %}selected{% endif %}>{{ v }}</option>
+        {% endfor %}
+      </select>
+      {% if yontem %}
+      <a href="{% url 'stok:degerleme' %}" class="btn btn-sm btn-outline-secondary">Temizle</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- Tablo -->
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Kod</th>
+        <th>Ürün Adı</th>
+        <th class="text-center">Birim</th>
+        <th class="text-end">Mevcut Stok</th>
+        <th class="text-center">Yöntem</th>
+        <th class="text-end">Birim Maliyet</th>
+        <th class="text-end">Stok Değeri</th>
+        <th class="text-end">Satış Fiyatı</th>
+        <th class="text-center">Kâr Marjı</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rapor %}
+      <tr {% if r.urun.kritik_stok_mu %}class="table-danger"{% endif %}>
+        <td><code>{{ r.urun.kod|default:"—" }}</code></td>
+        <td>
+          <a href="{% url 'stok:urun_detay' r.urun.pk %}" class="text-decoration-none fw-semibold">
+            {{ r.urun.ad }}
+          </a>
+          {% if r.urun.kritik_stok_mu %}
+          <span class="badge bg-danger ms-1 small">Kritik</span>
+          {% endif %}
+        </td>
+        <td class="text-center text-muted">{{ r.urun.birim }}</td>
+        <td class="text-end fw-bold {% if r.mevcut_adet <= 0 %}text-danger{% else %}text-success{% endif %}">
+          {{ r.mevcut_adet|floatformat:"g" }}
+        </td>
+        <td class="text-center">
+          {% if r.yontem_adi == "FIFO" %}
+          <span class="badge bg-primary rounded-pill">FIFO</span>
+          {% else %}
+          <span class="badge bg-secondary rounded-pill">Ort.</span>
+          {% endif %}
+        </td>
+        <td class="text-end">{{ r.birim_maliyet|floatformat:4 }} ₺</td>
+        <td class="text-end fw-semibold">{{ r.toplam_deger|floatformat:2 }} ₺</td>
+        <td class="text-end">{{ r.urun.satis_fiyati|floatformat:2 }} ₺</td>
+        <td class="text-center">
+          {% if r.kar_marji is not None %}
+            {% if r.kar_marji > 30 %}
+              <span class="badge bg-success rounded-pill">%{{ r.kar_marji|floatformat:1 }}</span>
+            {% elif r.kar_marji > 0 %}
+              <span class="badge bg-warning text-dark rounded-pill">%{{ r.kar_marji|floatformat:1 }}</span>
+            {% else %}
+              <span class="badge bg-danger rounded-pill">%{{ r.kar_marji|floatformat:1 }}</span>
+            {% endif %}
+          {% else %}
+            <span class="text-muted">—</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'stok:urun_detay' r.urun.pk %}" class="btn btn-sm btn-outline-secondary py-0" title="Detay">
+            <i class="bi bi-eye"></i>
+          </a>
+        </td>
+      </tr>
+
+      <!-- FIFO Katmanları (accordion tarzı) -->
+      {% if r.yontem_adi == "FIFO" and r.fifo_katmanlar %}
+      <tr class="bg-light">
+        <td colspan="10" class="py-2 ps-5">
+          <small class="text-muted fw-semibold">FIFO Katmanları:</small>
+          <table class="table table-sm table-borderless mb-0 mt-1 w-auto">
+            <thead><tr>
+              <th class="text-muted small">Giriş Tarihi</th>
+              <th class="text-muted small text-end">Miktar</th>
+              <th class="text-muted small text-end">Birim Fiyat</th>
+              <th class="text-muted small text-end">Katman Değeri</th>
+            </tr></thead>
+            <tbody>
+              {% for k in r.fifo_katmanlar %}
+              <tr>
+                <td class="small">{{ k.tarih }}</td>
+                <td class="small text-end">{{ k.miktar|floatformat:"g" }} {{ r.urun.birim }}</td>
+                <td class="small text-end">{{ k.birim_fiyat|floatformat:4 }} ₺</td>
+                <td class="small text-end fw-semibold">{{ k.deger|floatformat:2 }} ₺</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      {% endif %}
+      {% empty %}
+      <tr>
+        <td colspan="10" class="text-center text-muted py-4">Ürün bulunamadı.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot class="table-light fw-bold">
+      <tr>
+        <td colspan="6" class="text-end">TOPLAM PORTFÖY MALİYETİ</td>
+        <td class="text-end">{{ toplam_deger|floatformat:2 }} ₺</td>
+        <td class="text-end text-muted small">Satış Değeri</td>
+        <td class="text-end" colspan="2">{{ toplam_satis_degeri|floatformat:2 }} ₺</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<p class="text-muted small mt-2">
+  <i class="bi bi-info-circle me-1"></i>
+  Birim maliyet = giriş hareketlerinin <strong>yönteme göre hesaplanan</strong> ağırlıklı değeri.
+  Satış değeri = mevcut stok × satış fiyatı (gerçekleşmemiş potansiyel gelir).
+  VUK Madde 274 kapsamında <strong>Ağırlıklı Ortalama</strong> ve <strong>FIFO</strong> yöntemleri desteklenmektedir.
+</p>
+{% endblock %}

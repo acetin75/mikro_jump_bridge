@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Faturalar{% endblock %}
+{% block page_title %}Faturalar{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'fatura_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Yeni Fatura
+  </a>
+  <a href="{% url 'kdv_ozet' %}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-percent"></i> KDV Özeti
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header py-3">
+    <form class="d-flex flex-wrap gap-2" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:240px"
+             placeholder="Fatura no, cari veya açıklama...">
+      <select name="tip" class="form-select form-select-sm" style="max-width:170px">
+        <option value="">Tüm Tipler</option>
+        <option value="satis" {% if tip == "satis" %}selected{% endif %}>Satış (Müşteriye)</option>
+        <option value="alis" {% if tip == "alis" %}selected{% endif %}>Alış (Tedarikçiden)</option>
+      </select>
+      <select name="durum" class="form-select form-select-sm" style="max-width:140px">
+        <option value="">Tüm Durumlar</option>
+        <option value="taslak" {% if durum == "taslak" %}selected{% endif %}>Taslak</option>
+        <option value="kesildi" {% if durum == "kesildi" %}selected{% endif %}>Kesildi</option>
+        <option value="odendi" {% if durum == "odendi" %}selected{% endif %}>Ödendi</option>
+        <option value="iptal" {% if durum == "iptal" %}selected{% endif %}>İptal</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i></button>
+    </form>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Fatura No</th><th>Tip</th><th>Cari</th>
+          <th>Tarih</th><th>Vade</th><th>Durum</th>
+          <th class="text-end">KDV Hariç</th>
+          <th class="text-end">KDV</th>
+          <th class="text-end">Toplam</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in faturalar %}
+        <tr {% if f.vadesi_gecti_mi %}class="table-warning"{% endif %}>
+          <td class="fw-semibold">
+            <a href="{% url 'fatura_detay' f.pk %}" class="text-decoration-none">{{ f.fatura_no }}</a>
+          </td>
+          <td>
+            {% if f.tip == "satis" %}
+              <span class="badge bg-primary bg-opacity-10 text-primary">Satış</span>
+            {% else %}
+              <span class="badge bg-warning bg-opacity-10 text-warning">Alış</span>
+            {% endif %}
+          </td>
+          <td><a href="{% url 'cari_detay' f.cari_id %}" class="text-decoration-none">{{ f.cari.ad }}</a></td>
+          <td class="small text-muted">{{ f.tarih|date:"d.m.Y" }}</td>
+          <td class="small {% if f.vadesi_gecti_mi %}text-danger fw-semibold{% else %}text-muted{% endif %}">
+            {{ f.vade_tarihi|date:"d.m.Y"|default:"—" }}
+            {% if f.vadesi_gecti_mi %}<i class="bi bi-exclamation-circle ms-1"></i>{% endif %}
+          </td>
+          <td>
+            {% if f.durum == "taslak" %}<span class="badge bg-secondary bg-opacity-10 text-secondary">Taslak</span>
+            {% elif f.durum == "kesildi" %}<span class="badge bg-info bg-opacity-10 text-info">Kesildi</span>
+            {% elif f.durum == "odendi" %}<span class="badge bg-success bg-opacity-10 text-success">Ödendi</span>
+            {% else %}<span class="badge bg-danger bg-opacity-10 text-danger">İptal</span>{% endif %}
+          </td>
+          <td class="text-end small">{{ f.kdv_haric_toplam|floatformat:2 }}</td>
+          <td class="text-end small text-muted">{{ f.kdv_toplam|floatformat:2 }}</td>
+          <td class="text-end fw-semibold">{{ f.genel_toplam|floatformat:2 }} {{ f.para_birimi }}</td>
+          <td class="text-end">
+            <a href="{% url 'fatura_detay' f.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-eye"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="10" class="text-center text-muted py-5">Fatura bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

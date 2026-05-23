@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Vergi Takvimi {{ yil }}{% endblock %}
+{% block page_title %}Vergi Takvimi{% endblock %}
+
+{% block content %}
+
+<!-- Yıl Navigasyonu -->
+<div class="d-flex align-items-center gap-3 mb-4">
+  <a href="?yil={{ onceki_yil }}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-chevron-left"></i> {{ onceki_yil }}
+  </a>
+  <h4 class="mb-0 fw-bold">{{ yil }} Yılı Vergi Takvimi</h4>
+  <a href="?yil={{ sonraki_yil }}" class="btn btn-outline-secondary btn-sm">
+    {{ sonraki_yil }} <i class="bi bi-chevron-right"></i>
+  </a>
+  {% if yaklasiyor_sayisi %}
+  <span class="badge bg-warning text-dark ms-2">
+    <i class="bi bi-bell-fill me-1"></i>{{ yaklasiyor_sayisi }} yaklaşan son 30 gün
+  </span>
+  {% endif %}
+</div>
+
+<!-- Renk Açıklaması -->
+<div class="d-flex flex-wrap gap-2 mb-4">
+  <span class="badge bg-primary px-3 py-2">KDV</span>
+  <span class="badge bg-success px-3 py-2">Muhtasar</span>
+  <span class="badge bg-warning text-dark px-3 py-2">Geçici Vergi</span>
+  <span class="badge bg-danger px-3 py-2">Kurumlar</span>
+  <span class="badge bg-secondary px-3 py-2">Diğer</span>
+  <span class="ms-3 text-muted small align-self-center">
+    <i class="bi bi-check-circle text-secondary me-1"></i>Geçmiş tarihler soluk gösterilir &nbsp;|&nbsp;
+    <i class="bi bi-alarm text-warning me-1"></i>30 gün içindekiler vurgulanır
+  </span>
+</div>
+
+<!-- Takvim Tablosu -->
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th style="width:120px">Tarih</th>
+          <th style="width:60px">Ay</th>
+          <th>Beyanname / Yükümlülük</th>
+          <th style="width:120px">Tür</th>
+          <th style="width:100px">Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in olaylar %}
+        <tr class="{% if o.gecti %}table-secondary text-muted{% elif o.yaklasiyor %}table-warning{% endif %}">
+          <td class="fw-semibold">{{ o.tarih|date:"d.m.Y" }}</td>
+          <td class="small text-muted">{{ o.tarih|date:"M" }}</td>
+          <td>
+            {% if o.yaklasiyor %}
+            <i class="bi bi-alarm text-warning me-1"></i>
+            {% endif %}
+            {{ o.aciklama }}
+          </td>
+          <td>
+            <span class="badge {{ o.badge_class }} rounded-pill px-3">{{ o.badge_etiket }}</span>
+          </td>
+          <td>
+            {% if o.gecti %}
+              <span class="text-secondary small"><i class="bi bi-check-circle me-1"></i>Geçti</span>
+            {% elif o.yaklasiyor %}
+              <span class="text-warning fw-semibold small"><i class="bi bi-alarm me-1"></i>{{ o.tarih|timeuntil }} kaldı</span>
+            {% else %}
+              <span class="text-muted small">{{ o.tarih|timeuntil }} kaldı</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">Takvim bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="text-muted small mt-3">
+  <i class="bi bi-info-circle me-1"></i>
+  Beyanname son günleri GİB'in resmi takviminden alınmıştır. Resmi son tarihleri
+  <a href="https://www.gib.gov.tr" target="_blank" rel="noopener">gib.gov.tr</a>'den teyit ediniz.
+</div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+from django.apps import AppConfig
+
+
+class TahsilatConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "tahsilat"
+    verbose_name = "Tahsilatlar / Ödemeler"

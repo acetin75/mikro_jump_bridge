@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}KDV Özeti{% endblock %}
+{% block page_title %}KDV Özeti — Beyan Özeti{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+  <div class="card-body py-3">
+    <form class="d-flex align-items-center gap-3" method="get">
+      <label class="fw-semibold small text-muted mb-0">Dönem:</label>
+      <input type="month" name="ay" value="{{ ay }}" class="form-control form-control-sm" style="max-width:180px">
+      <button class="btn btn-sm btn-primary">Hesapla</button>
+    </form>
+  </div>
+</div>
+
+<!-- Özet Kartlar -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card p-3 border-success">
+      <div class="small text-muted">Tahsil Edilen KDV (Satış)</div>
+      <div class="fs-3 fw-bold text-success">{{ tahsil_edilen_kdv|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3 border-warning">
+      <div class="small text-muted">İndirilecek KDV (Alış)</div>
+      <div class="fs-3 fw-bold text-warning">{{ odenen_kdv|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3 {% if odenmesi_gereken > 0 %}border-danger{% else %}border-success{% endif %}">
+      <div class="small text-muted">Ödenecek / İadesi KDV</div>
+      <div class="fs-3 fw-bold {% if odenmesi_gereken > 0 %}text-danger{% else %}text-success{% endif %}">
+        {{ odenmesi_gereken|floatformat:2 }} ₺
+      </div>
+      <div class="small text-muted">
+        {% if odenmesi_gereken > 0 %}Hazine'ye ödenecek{% else %}İade veya sonraki döneme devreder{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <!-- Satış KDV -->
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header py-3">
+        <i class="bi bi-arrow-up-circle text-success me-2"></i>Satış Fatura KDV Dağılımı
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>KDV Oranı</th><th class="text-end">Matrah</th><th class="text-end">KDV</th></tr></thead>
+          <tbody>
+            {% for oran, v in satis_kdv.items %}
+            <tr>
+              <td>%{{ oran }}</td>
+              <td class="text-end">{{ v.matrah|floatformat:2 }} ₺</td>
+              <td class="text-end fw-semibold text-success">{{ v.kdv|floatformat:2 }} ₺</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-muted text-center py-3">Bu dönemde satış faturası yok.</td></tr>
+            {% endfor %}
+            {% if satis_kdv %}
+            <tr class="table-light">
+              <td><strong>Toplam</strong></td>
+              <td class="text-end fw-bold">{{ satis_faturalari|length }} fatura</td>
+              <td class="text-end fw-bold text-success">{{ tahsil_edilen_kdv|floatformat:2 }} ₺</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alış KDV -->
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header py-3">
+        <i class="bi bi-arrow-down-circle text-warning me-2"></i>Alış Fatura KDV Dağılımı (İndirilecek)
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>KDV Oranı</th><th class="text-end">Matrah</th><th class="text-end">KDV</th></tr></thead>
+          <tbody>
+            {% for oran, v in alis_kdv.items %}
+            <tr>
+              <td>%{{ oran }}</td>
+              <td class="text-end">{{ v.matrah|floatformat:2 }} ₺</td>
+              <td class="text-end fw-semibold text-warning">{{ v.kdv|floatformat:2 }} ₺</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-muted text-center py-3">Bu dönemde alış faturası yok.</td></tr>
+            {% endfor %}
+            {% if alis_kdv %}
+            <tr class="table-light">
+              <td><strong>Toplam</strong></td>
+              <td class="text-end fw-bold">{{ alis_faturalari|length }} fatura</td>
+              <td class="text-end fw-bold text-warning">{{ odenen_kdv|floatformat:2 }} ₺</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

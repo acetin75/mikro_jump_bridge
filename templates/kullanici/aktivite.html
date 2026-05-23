@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Aktivite Logu{% endblock %}
+{% block page_title %}Aktivite Logu{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-end mb-3">
+  <a href="{% url 'kullanici:liste' %}" class="btn btn-outline-secondary btn-sm">
+    <i class="bi bi-arrow-left me-1"></i>Kullanıcı Listesi
+  </a>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0 small">
+      <thead class="table-light">
+        <tr>
+          <th>Tarih</th>
+          <th>Kullanıcı</th>
+          <th>URL Yolu</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in loglar %}
+        <tr>
+          <td class="text-nowrap">{{ log.tarih|date:"d.m.Y H:i" }}</td>
+          <td>{{ log.kullanici|default:"—" }}</td>
+          <td class="text-muted">{{ log.yol }}</td>
+          <td class="text-muted">{{ log.ip|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="text-center text-muted py-4">Aktivite kaydı yok.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if loglar %}
+  <div class="card-footer text-muted small">Son 500 kayıt gösteriliyor.</div>
+  {% endif %}
+</div>
+{% endblock %}

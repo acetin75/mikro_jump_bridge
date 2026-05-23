@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}{{ cari.ad }}{% endblock %}
+{% block page_title %}{{ cari.ad }}{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'cari_mutabakat' cari.pk %}" target="_blank" class="btn btn-sm btn-outline-info" title="Mutabakat Mektubu Yazdır">
+    <i class="bi bi-file-earmark-check"></i> Mutabakat
+  </a>
+  <a href="{% url 'cari_duzenle' cari.pk %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-pencil"></i> Düzenle
+  </a>
+  <a href="{% url 'cari_listesi' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Geri
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <!-- Sol: Cari Bilgileri + Bakiye -->
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-header py-3">
+        <i class="bi bi-person-badge me-2"></i>Cari Bilgileri
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0 small">
+          <dt class="col-5 text-muted">Tip</dt>
+          <dd class="col-7">{{ cari.get_tip_display }}</dd>
+          <dt class="col-5 text-muted">Vergi No</dt>
+          <dd class="col-7">{{ cari.vergi_no|default:"—" }}</dd>
+          <dt class="col-5 text-muted">Vergi Dairesi</dt>
+          <dd class="col-7">{{ cari.vergi_dairesi|default:"—" }}</dd>
+          <dt class="col-5 text-muted">Telefon</dt>
+          <dd class="col-7">{{ cari.telefon|default:"—" }}</dd>
+          <dt class="col-5 text-muted">E-posta</dt>
+          <dd class="col-7">{{ cari.email|default:"—" }}</dd>
+          <dt class="col-5 text-muted">Adres</dt>
+          <dd class="col-7">{{ cari.adres|default:"—" }}</dd>
+          {% if cari.notlar %}
+          <dt class="col-5 text-muted">Notlar</dt>
+          <dd class="col-7">{{ cari.notlar }}</dd>
+          {% endif %}
+        </dl>
+      </div>
+    </div>
+
+    <!-- Bakiye Özet -->
+    <div class="card">
+      <div class="card-header py-3"><i class="bi bi-cash me-2"></i>Hesap Özeti</div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted small">Toplam Borç</span>
+          <strong class="text-danger">{{ cari.toplam_borc|floatformat:2 }} ₺</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-3">
+          <span class="text-muted small">Toplam Alacak</span>
+          <strong class="text-success">{{ cari.toplam_alacak|floatformat:2 }} ₺</strong>
+        </div>
+        <hr class="my-2">
+        <div class="d-flex justify-content-between">
+          <span class="fw-semibold">Net Bakiye</span>
+          {% with bak=cari.bakiye %}
+          <strong class="fs-5 {% if bak > 0 %}text-success{% elif bak < 0 %}text-danger{% endif %}">
+            {{ bak|floatformat:2 }} ₺
+          </strong>
+          {% endwith %}
+        </div>
+        <a href="{% url 'sozlesme_listesi' %}?q={{ cari.ad }}" class="btn btn-outline-secondary btn-sm w-100 mt-3">
+          <i class="bi bi-file-earmark-text me-1"></i>Sözleşmeler
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sağ: Hareketler -->
+  <div class="col-lg-8">
+    <div class="card mb-3">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-arrow-left-right me-2"></i>Hesap Hareketleri</span>
+      </div>
+      <!-- Hareket Ekleme Formu -->
+      <div class="card-body border-bottom bg-light rounded-top">
+        <form method="post">
+          {% csrf_token %}
+          {% load widget_tweaks %}
+          <div class="row g-2 align-items-end">
+            <div class="col-md-2">
+              {{ form.tarih|add_class:"form-control form-control-sm"|attr:"placeholder:Tarih" }}
+            </div>
+            <div class="col-md-2">
+              {{ form.hareket_tipi|add_class:"form-select form-select-sm" }}
+            </div>
+            <div class="col-md-3">
+              {{ form.aciklama|add_class:"form-control form-control-sm"|attr:"placeholder:Açıklama" }}
+            </div>
+            <div class="col-md-1">
+              {{ form.belge_no|add_class:"form-control form-control-sm"|attr:"placeholder:Belge No" }}
+            </div>
+            <div class="col-md-1">
+              {{ form.borc|add_class:"form-control form-control-sm"|attr:"placeholder:Borç" }}
+            </div>
+            <div class="col-md-1">
+              {{ form.alacak|add_class:"form-control form-control-sm"|attr:"placeholder:Alacak" }}
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary btn-sm w-100">
+                <i class="bi bi-plus"></i> Ekle
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover mb-0 small">
+          <thead>
+            <tr>
+              <th>Tarih</th><th>Belge No</th><th>Açıklama</th><th>Tip</th>
+              <th class="text-end">Borç</th><th class="text-end">Alacak</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in hareketler %}
+            <tr>
+              <td>{{ h.tarih|date:"d.m.Y" }}</td>
+              <td class="text-muted">{{ h.belge_no|default:"—" }}</td>
+              <td>{{ h.aciklama }}</td>
+              <td><span class="badge bg-secondary bg-opacity-10 text-secondary">{{ h.get_hareket_tipi_display }}</span></td>
+              <td class="text-end text-danger">{% if h.borc %}{{ h.borc|floatformat:2 }}{% endif %}</td>
+              <td class="text-end text-success">{% if h.alacak %}{{ h.alacak|floatformat:2 }}{% endif %}</td>
+              <td class="text-end">
+                <form method="post" action="{% url 'hareket_sil' h.pk %}" style="display:inline"
+                      onsubmit="return confirm('Bu hareketi silmek istediğinizden emin misiniz?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-link text-danger p-0">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-muted py-4">Hareket bulunamadı.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

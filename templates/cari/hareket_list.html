@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Tüm Hareketler{% endblock %}
+{% block page_title %}Hesap Hareketleri{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'hareket_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Yeni Hareket
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header py-3">
+    <form class="d-flex gap-2" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:300px"
+             placeholder="Cari, açıklama veya belge no ara...">
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i></button>
+    </form>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 small">
+      <thead>
+        <tr>
+          <th>Tarih</th><th>Cari</th><th>Belge No</th><th>Açıklama</th>
+          <th>Tip</th><th class="text-end">Borç</th><th class="text-end">Alacak</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in hareketler %}
+        <tr>
+          <td>{{ h.tarih|date:"d.m.Y" }}</td>
+          <td><a href="{% url 'cari_detay' h.cari_id %}">{{ h.cari.ad }}</a></td>
+          <td class="text-muted">{{ h.belge_no|default:"—" }}</td>
+          <td>{{ h.aciklama|truncatechars:50 }}</td>
+          <td><span class="badge bg-secondary bg-opacity-10 text-secondary">{{ h.get_hareket_tipi_display }}</span></td>
+          <td class="text-end text-danger">{% if h.borc %}{{ h.borc|floatformat:2 }}{% endif %}</td>
+          <td class="text-end text-success">{% if h.alacak %}{{ h.alacak|floatformat:2 }}{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">Hareket bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

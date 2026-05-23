@@ -1,0 +1,10 @@
+# Geliştirme bağımlılıkları (üretimde gerekmez)
+# Kurulum: pip install -r requirements-dev.txt
+
+-r requirements.txt
+
+# Profiler — Django Debug Toolbar
+django-debug-toolbar>=4.4
+
+# Linter / Formatter
+ruff>=0.4

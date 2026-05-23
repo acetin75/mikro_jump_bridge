@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Stok{% endblock %}
+{% block page_title %}Stok Yönetimi{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'stok:urun_ekle' %}" class="btn btn-sm btn-primary">
+    <i class="bi bi-plus-lg"></i> Yeni Ürün
+  </a>
+  <a href="{% url 'stok:hareket_ekle' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left-right"></i> Hareket Gir
+  </a>
+{% endblock %}
+
+{% block content %}
+
+<!-- Filtre -->
+<div class="card mb-3">
+  <div class="card-body py-3">
+    <form class="row g-2 align-items-end" method="get">
+      <div class="col-md-4">
+        <input type="text" name="q" value="{{ q }}" class="form-control form-control-sm" placeholder="Ürün adı veya kod...">
+      </div>
+      <div class="col-auto">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="kritik" value="1" id="chkKritik" {% if kritik %}checked{% endif %}>
+          <label class="form-check-label small" for="chkKritik">
+            <span class="text-danger fw-semibold">Kritik stok</span>
+          </label>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" name="aktif" value="0" id="chkPasif" {% if not sadece_aktif %}checked{% endif %}>
+          <label class="form-check-label small" for="chkPasif">Pasif de dahil</label>
+        </div>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-sm btn-primary">
+          <i class="bi bi-search"></i> Filtrele
+        </button>
+        <a href="{% url 'stok:list' %}" class="btn btn-sm btn-outline-secondary">Temizle</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Tablo -->
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>Kod</th>
+        <th>Ürün Adı</th>
+        <th>Birim</th>
+        <th class="text-end">Satış Fiyatı</th>
+        <th class="text-center">Mevcut Stok</th>
+        <th class="text-center">Min. Stok</th>
+        <th class="text-center">KDV</th>
+        <th class="text-center">Durum</th>
+        <th class="text-end">İşlem</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for urun in urunler %}
+      <tr {% if urun.kritik_stok_mu %}class="table-danger"{% endif %}>
+        <td><code>{{ urun.kod|default:"—" }}</code></td>
+        <td>
+          <a href="{% url 'stok:urun_detay' urun.pk %}" class="fw-semibold text-decoration-none">
+            {{ urun.ad }}
+          </a>
+          {% if urun.kritik_stok_mu %}
+            <span class="badge bg-danger ms-1">Kritik!</span>
+          {% endif %}
+        </td>
+        <td>{{ urun.birim }}</td>
+        <td class="text-end fw-semibold">{{ urun.satis_fiyati|floatformat:2 }} ₺</td>
+        <td class="text-center fw-bold {% if urun.mevcut_stok <= 0 %}text-danger{% elif urun.kritik_stok_mu %}text-warning{% else %}text-success{% endif %}">
+          {{ urun.mevcut_stok|floatformat:"g" }}
+        </td>
+        <td class="text-center text-muted">{{ urun.min_stok|floatformat:"g" }}</td>
+        <td class="text-center"><span class="badge bg-secondary">%{{ urun.kdv_orani }}</span></td>
+        <td class="text-center">
+          {% if urun.aktif %}
+            <span class="badge bg-success rounded-pill">Aktif</span>
+          {% else %}
+            <span class="badge bg-secondary rounded-pill">Pasif</span>
+          {% endif %}
+        </td>
+        <td class="text-end">
+          <a href="{% url 'stok:hareket_ekle_urun' urun.pk %}" class="btn btn-sm btn-outline-success" title="Hareket Ekle">
+            <i class="bi bi-arrow-left-right"></i>
+          </a>
+          <a href="{% url 'stok:urun_duzenle' urun.pk %}" class="btn btn-sm btn-outline-secondary" title="Düzenle">
+            <i class="bi bi-pencil"></i>
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="9" class="text-center text-muted py-4">Ürün bulunamadı.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="text-muted small">Toplam {{ urunler|length }} ürün</div>
+{% endblock %}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Muhasebe Bürosu{% endblock %} — Muhasebe CRM</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --sidebar-width: 240px;
+      --sidebar-bg: #1e293b;
+      --sidebar-hover: #334155;
+      --sidebar-active: #3b82f6;
+      --accent: #3b82f6;
+    }
+    body { background: #f1f5f9; min-height: 100vh; }
+    /* ── Sidebar ── */
+    #sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-width); background: var(--sidebar-bg);
+      overflow-y: auto; z-index: 1000; transition: width .25s;
+    }
+    #sidebar .brand {
+      padding: 1.25rem 1rem; font-size: 1.1rem; font-weight: 700;
+      color: #fff; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: .5rem;
+    }
+    #sidebar .nav-section {
+      font-size: .7rem; letter-spacing: .08em; text-transform: uppercase;
+      color: #94a3b8; padding: .9rem 1rem .3rem;
+    }
+    #sidebar .nav-link {
+      color: #cbd5e1; padding: .55rem 1rem; border-radius: 0;
+      display: flex; align-items: center; gap: .6rem; font-size: .9rem;
+    }
+    #sidebar .nav-link:hover { background: var(--sidebar-hover); color: #fff; }
+    #sidebar .nav-link.active { background: var(--sidebar-active); color: #fff; }
+    /* ── Main ── */
+    #main { margin-left: var(--sidebar-width); min-height: 100vh; }
+    .topbar {
+      background: #fff; border-bottom: 1px solid #e2e8f0;
+      padding: .75rem 1.5rem; display: flex; align-items: center; gap: 1rem;
+    }
+    .page-content { padding: 1.5rem; }
+    /* ── Cards ── */
+    .card { border: none; box-shadow: 0 1px 3px rgba(0,0,0,.08); border-radius: .75rem; }
+    .card-header { background: transparent; border-bottom: 1px solid #e2e8f0; font-weight: 600; }
+    /* ── Tables ── */
+    .table th { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: #64748b; }
+    .table td { vertical-align: middle; }
+    /* ── Stat cards ── */
+    .stat-card { border-radius: .75rem; padding: 1.25rem 1.5rem; color: #fff; }
+    /* ── Badges ── */
+    .badge-alacak { background: #dcfce7; color: #16a34a; }
+    .badge-borc   { background: #fee2e2; color: #dc2626; }
+    /* ── Responsive ── */
+    @media(max-width: 768px) {
+      #sidebar { width: 0; overflow: hidden; }
+      #main { margin-left: 0; }
+    }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- ══ SIDEBAR ═════════════════════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="brand">
+    <i class="bi bi-building"></i> Muhasebe Bürosu
+  </div>
+
+  <div class="nav-section">Genel</div>
+  <a href="{% url 'dashboard' %}"
+     class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> Gösterge Paneli
+  </a>
+
+  <div class="nav-section">Cari</div>
+  <a href="{% url 'cari_listesi' %}"
+     class="nav-link {% if 'cari' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-people"></i> Cari Hesaplar
+  </a>
+  <a href="{% url 'hareket_listesi' %}"
+     class="nav-link {% if request.resolver_match.url_name == 'hareket_listesi' %}active{% endif %}">
+    <i class="bi bi-arrow-left-right"></i> Tüm Hareketler
+  </a>
+
+  <div class="nav-section">Banka</div>
+  <a href="{% url 'banka_hesap_listesi' %}"
+     class="nav-link {% if request.resolver_match.url_name == 'banka_hesap_listesi' %}active{% endif %}">
+    <i class="bi bi-bank"></i> Banka Hesapları
+  </a>
+  <a href="{% url 'banka_ekstre_listesi' %}"
+     class="nav-link {% if 'ekstre' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-file-earmark-spreadsheet"></i> Ekstreler
+  </a>
+  <a href="{% url 'banka_hareket_listesi' %}"
+     class="nav-link {% if request.resolver_match.url_name == 'banka_hareket_listesi' %}active{% endif %}">
+    <i class="bi bi-cash-stack"></i> Banka Hareketleri
+  </a>
+
+  <div class="nav-section">Diğer</div>
+  <a href="{% url 'sozlesme_listesi' %}"
+     class="nav-link {% if 'sozlesme' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-file-earmark-text"></i> Sözleşmeler
+  </a>
+  <a href="{% url 'tahsilat_listesi' %}"
+     class="nav-link {% if 'tahsilat' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-receipt"></i> Tahsilat / Ödeme
+  </a>
+
+  <div class="nav-section">Fatura & KDV</div>
+  <a href="{% url 'fatura_listesi' %}"
+     class="nav-link {% if 'fatura' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-file-earmark-ruled"></i> Faturalar
+  </a>
+  <a href="{% url 'kdv_ozet' %}"
+     class="nav-link {% if request.resolver_match.url_name == 'kdv_ozet' %}active{% endif %}">
+    <i class="bi bi-percent"></i> KDV Özeti
+  </a>
+
+  <div class="nav-section">Çek / Senet</div>
+  <a href="{% url 'ceksenet:list' %}"
+     class="nav-link {% if 'ceksenet' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-cash-coin"></i> Çek / Senet
+  </a>
+
+  <div class="nav-section">Gider</div>
+  <a href="{% url 'gider:list' %}"
+     class="nav-link {% if 'gider' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-wallet2"></i> Masraf / Gider
+  </a>
+
+  <div class="nav-section">Kasa</div>
+  <a href="{% url 'kasa:list' %}"
+     class="nav-link {% if request.resolver_match.app_names and 'kasa' in request.resolver_match.app_names %}active{% endif %}">
+    <i class="bi bi-safe2"></i> Kasa Defteri
+  </a>
+
+  <div class="nav-section">Stok</div>
+  <a href="{% url 'stok:list' %}"
+     class="nav-link {% if request.resolver_match.app_names and 'stok' in request.resolver_match.app_names and 'degerleme' not in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-box-seam"></i> Ürün &amp; Stok
+  </a>
+  <a href="{% url 'stok:degerleme' %}"
+     class="nav-link {% if request.resolver_match.url_name == 'degerleme' %}active{% endif %}">
+    <i class="bi bi-calculator"></i> Stok Değerleme
+  </a>
+
+  <div class="nav-section">Raporlar</div>
+  <a href="{% url 'rapor:index' %}"
+     class="nav-link {% if 'rapor' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-bar-chart-line"></i> Raporlar & Export
+  </a>
+  <a href="{% url 'takvim:takvim' %}"
+     class="nav-link {% if 'takvim' in request.resolver_match.app_names %}active{% endif %}">
+    <i class="bi bi-calendar-check"></i> Vergi Takvimi
+  </a>
+
+  <div class="nav-section">Yönetim</div>
+  {% if kullanici_yonetici %}
+  <a href="{% url 'kullanici:liste' %}"
+     class="nav-link {% if 'kullanici' in request.resolver_match.app_names %}active{% endif %}">
+    <i class="bi bi-people"></i> Kullanıcı Yönetimi
+  </a>
+  {% endif %}
+  <a href="/admin/" class="nav-link">
+    <i class="bi bi-gear"></i> Admin Paneli
+  </a>
+</nav>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
+<div id="main">
+  <div class="topbar">
+    <span class="fw-semibold text-secondary">{% block page_title %}{% endblock %}</span>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      {% block topbar_actions %}{% endblock %}
+      <span class="text-muted small"><i class="bi bi-person-circle me-1"></i>{{ request.user.get_full_name|default:request.user.username }}</span>
+      <form method="post" action="{% url 'logout' %}" class="d-inline m-0">
+        {% csrf_token %}
+        <button class="btn btn-sm btn-outline-secondary" title="Çıkış Yap">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="page-content">
+    {% if yeni_surum_var %}
+    <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center gap-2 mb-3" role="alert">
+      <i class="bi bi-arrow-up-circle-fill fs-5"></i>
+      <span>
+        <strong>Yeni sürüm mevcut: v{{ yeni_surum }}</strong> —
+        Güncel özellikleri ve güvenlik yamalarını almak için güncellemenizi öneririz.
+        <a href="{{ yeni_surum_url }}" target="_blank" class="alert-link ms-2">
+          <i class="bi bi-download me-1"></i>İndir / Güncelle
+        </a>
+      </span>
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    {% for msg in messages %}
+      <div class="alert alert-{% if msg.tags == 'error' %}danger{% else %}{{ msg.tags }}{% endif %} alert-dismissible fade show" role="alert">
+        {{ msg }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+
+    <footer class="mt-5 pt-3 border-top text-muted small d-flex justify-content-between align-items-center">
+      <span>Muhasebe Bürosu CRM</span>
+      <span>v{{ APP_VERSION }}</span>
+    </footer>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

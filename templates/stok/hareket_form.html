@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ baslik }}{% endblock %}
+{% block page_title %}{{ baslik }}{% endblock %}
+
+{% block topbar_actions %}
+  {% if urun %}
+  <a href="{% url 'stok:urun_detay' urun.pk %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> {{ urun.ad }}
+  </a>
+  {% else %}
+  <a href="{% url 'stok:list' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Stok Listesi
+  </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header fw-semibold py-3">
+        <i class="bi bi-arrow-left-right me-2"></i>Stok Hareketi Kaydet
+      </div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
+              {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
+            </label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-check-lg me-1"></i>Kaydet
+            </button>
+            {% if urun %}
+            <a href="{% url 'stok:urun_detay' urun.pk %}" class="btn btn-secondary">İptal</a>
+            {% else %}
+            <a href="{% url 'stok:list' %}" class="btn btn-secondary">İptal</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

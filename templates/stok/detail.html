@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}{{ urun.ad }}{% endblock %}
+{% block page_title %}{{ urun.ad }}{% endblock %}
+
+{% block topbar_actions %}
+  <a href="{% url 'stok:hareket_ekle_urun' urun.pk %}" class="btn btn-sm btn-success">
+    <i class="bi bi-arrow-left-right"></i> Hareket Gir
+  </a>
+  <a href="{% url 'stok:urun_duzenle' urun.pk %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-pencil"></i> Düzenle
+  </a>
+  <a href="{% url 'stok:urun_sil' urun.pk %}" class="btn btn-sm btn-outline-danger">
+    <i class="bi bi-trash"></i>
+  </a>
+  <a href="{% url 'stok:list' %}" class="btn btn-sm btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Geri
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- Sol: Ürün Bilgileri -->
+  <div class="col-lg-4">
+    <div class="card mb-3">
+      <div class="card-header fw-semibold">Ürün Bilgileri</div>
+      <div class="card-body">
+        <table class="table table-sm table-borderless mb-0">
+          <tr><th class="text-muted small w-40">Kod</th><td><code>{{ urun.kod|default:"—" }}</code></td></tr>
+          <tr><th class="text-muted small">Birim</th><td>{{ urun.birim }}</td></tr>
+          <tr><th class="text-muted small">KDV</th><td>%{{ urun.kdv_orani }}</td></tr>
+          <tr><th class="text-muted small">Satış Fiyatı</th><td class="fw-semibold">{{ urun.satis_fiyati|floatformat:2 }} ₺</td></tr>
+          <tr><th class="text-muted small">Alış Fiyatı</th><td>{{ urun.alis_fiyati|floatformat:2 }} ₺</td></tr>
+          <tr><th class="text-muted small">Min. Stok</th><td>{{ urun.min_stok|floatformat:"g" }} {{ urun.birim }}</td></tr>
+          <tr>
+            <th class="text-muted small">Durum</th>
+            <td>
+              {% if urun.aktif %}
+                <span class="badge bg-success">Aktif</span>
+              {% else %}
+                <span class="badge bg-secondary">Pasif</span>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+        {% if urun.aciklama %}
+        <hr class="my-2">
+        <div class="small text-muted">{{ urun.aciklama }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Stok Durumu Kartı -->
+    <div class="card {% if urun.kritik_stok_mu %}border-danger{% else %}border-success{% endif %} mb-3">
+      <div class="card-body text-center py-4">
+        <div class="text-muted small mb-1">Mevcut Stok</div>
+        <div class="display-5 fw-bold {% if urun.mevcut_stok <= 0 %}text-danger{% elif urun.kritik_stok_mu %}text-warning{% else %}text-success{% endif %}">
+          {{ urun.mevcut_stok|floatformat:"g" }}
+        </div>
+        <div class="text-muted">{{ urun.birim }}</div>
+        {% if urun.kritik_stok_mu %}
+        <div class="mt-2">
+          <span class="badge bg-danger">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>Kritik Stok!
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Değerleme Kartı -->
+    <div class="card border-primary">
+      <div class="card-header fw-semibold py-2 bg-primary bg-opacity-10">
+        <i class="bi bi-calculator me-1 text-primary"></i>Maliyet &amp; Değerleme
+        <span class="badge bg-primary ms-2 float-end">
+          {{ degerleme.yontem_adi }}
+        </span>
+      </div>
+      <div class="card-body py-3">
+        <table class="table table-sm table-borderless mb-0">
+          <tr>
+            <th class="text-muted small">Birim Maliyet</th>
+            <td class="fw-bold text-end">{{ degerleme.birim_maliyet|floatformat:4 }} ₺</td>
+          </tr>
+          <tr>
+            <th class="text-muted small">Toplam Stok Değeri</th>
+            <td class="fw-bold text-end text-primary fs-6">{{ degerleme.toplam_deger|floatformat:2 }} ₺</td>
+          </tr>
+          {% if urun.satis_fiyati and degerleme.birim_maliyet %}
+          <tr>
+            <th class="text-muted small">Kâr / Birim</th>
+            <td class="fw-semibold text-end {% if urun.satis_fiyati > degerleme.birim_maliyet %}text-success{% else %}text-danger{% endif %}">
+              {{ urun.satis_fiyati|add:degerleme.birim_maliyet|floatformat:2 }} ₺
+            </td>
+          </tr>
+          {% endif %}
+        </table>
+        {% if degerleme.fifo_katmanlar %}
+        <hr class="my-2">
+        <div class="small text-muted fw-semibold mb-1">FIFO Katmanları:</div>
+        {% for k in degerleme.fifo_katmanlar %}
+        <div class="d-flex justify-content-between small text-muted">
+          <span>{{ k.tarih }} — {{ k.miktar|floatformat:"g" }} {{ urun.birim }}</span>
+          <span class="fw-semibold">{{ k.birim_fiyat|floatformat:4 }} ₺</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <a href="{% url 'stok:urun_duzenle' urun.pk %}" class="btn btn-sm btn-outline-primary w-100 mt-3">
+          <i class="bi bi-pencil me-1"></i>Yöntemi Değiştir
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sağ: Hareketler -->
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center fw-semibold py-3">
+        Son Hareketler
+        <a href="{% url 'stok:hareket_ekle_urun' urun.pk %}" class="btn btn-sm btn-success">
+          <i class="bi bi-plus-lg"></i> Yeni Hareket
+        </a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Tarih</th>
+              <th>Tip</th>
+              <th class="text-end">Miktar</th>
+              <th class="text-end">Birim Fiyat</th>
+              <th>Belge No</th>
+              <th>Açıklama</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in hareketler %}
+            <tr>
+              <td>{{ h.tarih|date:"d.m.Y" }}</td>
+              <td>
+                {% if h.tip == "giris" %}
+                  <span class="badge bg-success"><i class="bi bi-arrow-down me-1"></i>Giriş</span>
+                {% elif h.tip == "cikis" %}
+                  <span class="badge bg-danger"><i class="bi bi-arrow-up me-1"></i>Çıkış</span>
+                {% else %}
+                  <span class="badge bg-info text-dark"><i class="bi bi-arrow-repeat me-1"></i>Sayım</span>
+                {% endif %}
+              </td>
+              <td class="text-end fw-semibold">{{ h.miktar|floatformat:"g" }} {{ urun.birim }}</td>
+              <td class="text-end">{% if h.birim_fiyat %}{{ h.birim_fiyat|floatformat:2 }} ₺{% else %}—{% endif %}</td>
+              <td>{{ h.belge_no|default:"—" }}</td>
+              <td class="text-muted small">{{ h.aciklama|default:"" }}</td>
+              <td>
+                <form method="post" action="{% url 'stok:hareket_sil' h.pk %}" class="d-inline"
+                      onsubmit="return confirm('Bu hareketi silmek istiyor musunuz?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger py-0">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">Henüz hareket kaydı yok.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

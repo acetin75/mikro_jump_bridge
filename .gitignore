@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg
+*.egg-info/
+dist/
+build/
+*.so
+
+# Sanal ortam
+.venv/
+venv/
+env/
+ENV/
+
+# Django
+db.sqlite3
+db_yedek*.sqlite3
+*.sqlite3-journal
+media/
+staticfiles/
+logs/
+
+# Ortam değişkenleri
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Test & kapsam
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Derleme çıktıları
+*.log
+
+# Müşteri verileri ve arşiv (GitHub'a gönderilmez)
+_arsiv/

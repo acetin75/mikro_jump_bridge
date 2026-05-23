@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Sözleşmeler{% endblock %}
+{% block page_title %}Sözleşmeler{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'sozlesme_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Yeni Sözleşme
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header py-3">
+    <form class="d-flex gap-2" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:260px"
+             placeholder="Başlık, no veya cari ara...">
+      <select name="durum" class="form-select form-select-sm" style="max-width:150px">
+        <option value="">Tüm Durumlar</option>
+        <option value="taslak" {% if durum == "taslak" %}selected{% endif %}>Taslak</option>
+        <option value="aktif" {% if durum == "aktif" %}selected{% endif %}>Aktif</option>
+        <option value="tamamlandi" {% if durum == "tamamlandi" %}selected{% endif %}>Tamamlandı</option>
+        <option value="iptal" {% if durum == "iptal" %}selected{% endif %}>İptal</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i></button>
+    </form>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>No</th><th>Başlık</th><th>Cari</th>
+          <th>Durum</th><th>Başl.</th><th>Bitiş</th>
+          <th class="text-end">Tutar</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in sozlesmeler %}
+        <tr>
+          <td class="text-muted small">{{ s.sozlesme_no|default:"—" }}</td>
+          <td>
+            <a href="{% url 'sozlesme_detay' s.pk %}" class="fw-semibold text-decoration-none">{{ s.baslik }}</a>
+          </td>
+          <td>
+            <a href="{% url 'cari_detay' s.cari_id %}">{{ s.cari.ad }}</a>
+          </td>
+          <td>
+            {% if s.durum == "aktif" %}<span class="badge bg-success bg-opacity-10 text-success">Aktif</span>
+            {% elif s.durum == "taslak" %}<span class="badge bg-secondary bg-opacity-10 text-secondary">Taslak</span>
+            {% elif s.durum == "tamamlandi" %}<span class="badge bg-primary bg-opacity-10 text-primary">Tamamlandı</span>
+            {% else %}<span class="badge bg-danger bg-opacity-10 text-danger">İptal</span>{% endif %}
+          </td>
+          <td class="small text-muted">{{ s.baslangic_tarihi|date:"d.m.Y"|default:"—" }}</td>
+          <td class="small text-muted">{{ s.bitis_tarihi|date:"d.m.Y"|default:"—" }}</td>
+          <td class="text-end small">
+            {% if s.tutar %}{{ s.tutar|floatformat:2 }} {{ s.para_birimi }}{% else %}—{% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'sozlesme_detay' s.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-eye"></i>
+            </a>
+            <a href="{% url 'sozlesme_duzenle' s.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-pencil"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="text-center text-muted py-5">Sözleşme bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

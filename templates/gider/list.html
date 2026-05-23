@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Giderler{% endblock %}
+{% block page_title %}Gider Listesi{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+  <div class="card-body py-3">
+    <form class="row g-2 align-items-end" method="get">
+      <div class="col-auto">
+        <input type="month" name="ay" value="{{ ay }}" class="form-control form-control-sm" placeholder="Ay filtrele">
+      </div>
+      <div class="col-auto">
+        <select name="kategori" class="form-select form-select-sm">
+          <option value="">-- Kategori --</option>
+          {% for k in kategoriler %}
+          <option value="{{ k.pk }}" {% if kategori_id == k.pk|stringformat:"s" %}selected{% endif %}>{{ k.ad }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-secondary">Filtrele</button>
+        <a href="{% url 'gider:list' %}" class="btn btn-sm btn-outline-secondary ms-1">Temizle</a>
+      </div>
+      <div class="col-auto ms-auto d-flex gap-2">
+        <a href="{% url 'gider:kategoriler' %}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-tags me-1"></i>Kategoriler
+        </a>
+        <a href="{% url 'gider:ekle' %}" class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg me-1"></i>Yeni Gider
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Özet Kartlar -->
+<div class="row g-3 mb-3">
+  <div class="col-md-4">
+    <div class="card p-3">
+      <div class="small text-muted">KDV Hariç Toplam</div>
+      <div class="fs-5 fw-bold">{{ toplam_kdv_haric|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3">
+      <div class="small text-muted">KDV Tutarı</div>
+      <div class="fs-5 fw-bold">{{ toplam_kdv|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3 border-primary">
+      <div class="small text-muted">KDV Dahil Toplam</div>
+      <div class="fs-5 fw-bold text-primary">{{ toplam_kdv_dahil|floatformat:2 }} ₺</div>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Tarih</th><th>Açıklama</th><th>Kategori</th>
+        <th class="text-end">KDV Hariç</th><th>KDV</th>
+        <th class="text-end">KDV Dahil</th>
+        <th>Ödeme</th><th>Belge No</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in giderler %}
+      <tr>
+        <td>{{ g.tarih }}</td>
+        <td>{{ g.aciklama }}</td>
+        <td>{{ g.kategori|default:"-" }}</td>
+        <td class="text-end">{{ g.kdv_haric_tutar|floatformat:2 }} ₺</td>
+        <td>%{{ g.kdv_orani }}</td>
+        <td class="text-end fw-semibold">{{ g.kdv_dahil_tutar|floatformat:2 }} ₺</td>
+        <td>{{ g.get_odeme_yontemi_display }}</td>
+        <td>{{ g.belge_no|default:"-" }}</td>
+        <td>
+          <a href="{% url 'gider:duzenle' g.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'gider:sil' g.pk %}" class="btn btn-sm btn-outline-danger ms-1">
+            <i class="bi bi-trash"></i>
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

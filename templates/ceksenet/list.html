@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Çek / Senet{% endblock %}
+{% block page_title %}Çek / Senet Takibi{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+  <div class="card-body py-3">
+    <form class="row g-2 align-items-end" method="get">
+      <div class="col-auto">
+        <select name="tip" class="form-select form-select-sm">
+          <option value="">-- Tür --</option>
+          <option value="alınan" {% if tip_secili == "alınan" %}selected{% endif %}>Alınan</option>
+          <option value="verilen" {% if tip_secili == "verilen" %}selected{% endif %}>Verilen</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <select name="durum" class="form-select form-select-sm">
+          <option value="">-- Durum --</option>
+          <option value="beklemede" {% if durum_secili == "beklemede" %}selected{% endif %}>Beklemede</option>
+          <option value="tahsil_edildi" {% if durum_secili == "tahsil_edildi" %}selected{% endif %}>Tahsil Edildi</option>
+          <option value="iade" {% if durum_secili == "iade" %}selected{% endif %}>İade</option>
+          <option value="protestolu" {% if durum_secili == "protestolu" %}selected{% endif %}>Protestolu</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <div class="form-check form-switch my-1">
+          <input class="form-check-input" type="checkbox" id="vadeli" name="vadeli" value="1" {% if vadeli %}checked{% endif %}>
+          <label class="form-check-label small" for="vadeli">Sadece Vadesi Geçenler</label>
+        </div>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-sm btn-secondary">Filtrele</button>
+        <a href="{% url 'ceksenet:list' %}" class="btn btn-sm btn-outline-secondary ms-1">Temizle</a>
+      </div>
+      <div class="col-auto ms-auto">
+        <a href="{% url 'ceksenet:ekle' %}" class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg me-1"></i>Yeni Ekle
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Belge No</th><th>Cari</th><th>Tür</th>
+        <th class="text-end">Tutar</th><th>Vade</th><th>Banka/Şube</th>
+        <th>Durum</th><th class="text-center">İşlem</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cs in ceksenets %}
+      <tr class="{% if cs.vadesi_gecti_mi %}table-danger{% endif %}">
+        <td>{{ cs.belge_no }}</td>
+        <td><a href="{% url 'cari_detay' cs.cari.pk %}">{{ cs.cari.ad }}</a></td>
+        <td>
+          {% if cs.tip == "alınan" %}
+            <span class="badge bg-success">Alınan</span>
+          {% else %}
+            <span class="badge bg-warning text-dark">Verilen</span>
+          {% endif %}
+        </td>
+        <td class="text-end fw-semibold">{{ cs.tutar|floatformat:2 }} ₺</td>
+        <td>
+          {{ cs.vade_tarihi }}
+          {% if cs.vadesi_gecti_mi %}
+            <span class="text-danger ms-1 small">⚠ Vadesi Geçti</span>
+          {% endif %}
+        </td>
+        <td>{{ cs.banka_sube|default:"-" }}</td>
+        <td>
+          <form method="post" action="{% url 'ceksenet:durum' cs.pk %}" class="d-inline">
+            {% csrf_token %}
+            <select name="durum" class="form-select form-select-sm d-inline w-auto" onchange="this.form.submit()">
+              {% for val, label in cs.DURUM %}
+              <option value="{{ val }}" {% if cs.durum == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+        <td class="text-center">
+          <a href="{% url 'ceksenet:duzenle' cs.pk %}" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <a href="{% url 'ceksenet:sil' cs.pk %}" class="btn btn-sm btn-outline-danger ms-1">
+            <i class="bi bi-trash"></i>
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="text-center text-muted py-4">Kayıt bulunamadı.</td></tr>
+      {% endfor %}
+    </tbody>
+    {% if ceksenets %}
+    <tfoot>
+      <tr class="table-light">
+        <td colspan="3"><strong>TOPLAM</strong></td>
+        <td class="text-end fw-bold">
+          {% with total=0 %}
+          {{ ceksenets|length }} kayıt
+          {% endwith %}
+        </td>
+        <td colspan="4"></td>
+      </tr>
+    </tfoot>
+    {% endif %}
+  </table>
+</div>
+{% endblock %}

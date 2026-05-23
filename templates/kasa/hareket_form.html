@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ baslik }}{% endblock %}
+{% block page_title %}{{ baslik }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-safe2"></i> {{ kasa.ad }}
+        — Mevcut Bakiye:
+        <span class="fw-bold {% if kasa.mevcut_bakiye >= 0 %}text-success{% else %}text-danger{% endif %}">
+          {{ kasa.mevcut_bakiye|floatformat:2 }} ₺
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-info small mb-3">
+          <i class="bi bi-info-circle"></i>
+          Bu form <strong>manuel</strong> kasa girişi içindir (sayım, düzeltme, açılış vb.).
+          Tahsilat ve gider kayıtları nakit seçilince otomatik kasa hareketi oluşturur.
+        </div>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-check-circle"></i> Kaydet
+            </button>
+            <a href="{% url 'kasa:detay' kasa.pk %}" class="btn btn-secondary">İptal</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

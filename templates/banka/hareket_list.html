@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Banka Hareketleri{% endblock %}
+{% block page_title %}Banka Hareketleri{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'banka_hareket_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-plus-lg"></i> Elle Hareket Ekle
+  </a>
+  <a href="{% url 'banka_ekstre_yukle' %}" class="btn btn-outline-primary btn-sm">
+    <i class="bi bi-upload"></i> Ekstre Yükle
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header py-3">
+    <form class="d-flex flex-wrap gap-2" method="get">
+      <input name="q" value="{{ q }}" class="form-control form-control-sm" style="max-width:260px"
+             placeholder="Açıklama veya referans ara...">
+      <select name="tip" class="form-select form-select-sm" style="max-width:130px">
+        <option value="">Tüm Tipler</option>
+        <option value="giris" {% if tip == "giris" %}selected{% endif %}>Giriş</option>
+        <option value="cikis" {% if tip == "cikis" %}selected{% endif %}>Çıkış</option>
+      </select>
+      <select name="eslesti" class="form-select form-select-sm" style="max-width:150px">
+        <option value="">Tüm Eşleşmeler</option>
+        <option value="0" {% if eslesti == "0" %}selected{% endif %}>Eşleşmemiş</option>
+        <option value="1" {% if eslesti == "1" %}selected{% endif %}>Eşleşmiş</option>
+      </select>
+      <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-search"></i></button>
+    </form>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 small">
+      <thead>
+        <tr>
+          <th>Tarih</th><th>Hesap</th><th>Açıklama</th>
+          <th>Tip</th><th class="text-end">Tutar</th>
+          <th>Cari Eşleşme</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in hareketler %}
+        <tr>
+          <td>{{ h.islem_tarihi|date:"d.m.Y" }}</td>
+          <td class="text-muted">{{ h.banka_hesabi.ad }}</td>
+          <td>{{ h.aciklama|truncatechars:55 }}</td>
+          <td>
+            {% if h.tip == "giris" %}
+              <span class="badge bg-success bg-opacity-10 text-success">Giriş</span>
+            {% else %}
+              <span class="badge bg-danger bg-opacity-10 text-danger">Çıkış</span>
+            {% endif %}
+          </td>
+          <td class="text-end fw-semibold {% if h.tip == 'giris' %}text-success{% else %}text-danger{% endif %}">
+            {% if h.tip == "cikis" %}−{% endif %}{{ h.tutar|floatformat:2 }} ₺
+          </td>
+          <td>
+            {% if h.eslesti and h.cari %}
+              <a href="{% url 'cari_detay' h.cari_id %}" class="badge bg-success bg-opacity-10 text-success text-decoration-none">
+                <i class="bi bi-check2"></i> {{ h.cari.ad }}
+              </a>
+            {% else %}
+              <span class="badge bg-warning bg-opacity-10 text-warning">Eşleşmemiş</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'banka_hareket_eslestir' h.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-link"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-5">Hareket bulunamadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

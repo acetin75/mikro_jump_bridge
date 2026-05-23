@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Banka Ekstreleri{% endblock %}
+{% block page_title %}Banka Ekstreleri{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'banka_ekstre_yukle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-upload"></i> Ekstre Yükle
+  </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Banka Hesabı</th><th>Yükleme Tarihi</th><th>Dönem</th>
+          <th>Dosya</th><th>Durum</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in ekstreler %}
+        <tr>
+          <td class="fw-semibold">{{ e.banka_hesabi }}</td>
+          <td class="text-muted small">{{ e.yukleme_tarihi|date:"d.m.Y H:i" }}</td>
+          <td class="small">
+            {% if e.donem_baslangic %}{{ e.donem_baslangic|date:"d.m.Y" }} — {{ e.donem_bitis|date:"d.m.Y" }}
+            {% else %}—{% endif %}
+          </td>
+          <td class="small">
+            <span class="badge bg-light text-dark border">
+              .{{ e.dosya_uzantisi|upper }}
+            </span>
+            {{ e.dosya.name|cut:"ekstreler/" }}
+          </td>
+          <td>
+            {% if e.islendi %}
+              <span class="badge bg-success bg-opacity-10 text-success">İşlendi</span>
+            {% else %}
+              <span class="badge bg-warning bg-opacity-10 text-warning">Bekliyor</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{% url 'banka_ekstre_detay' e.pk %}" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-eye"></i> Detay
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-5">
+            Henüz ekstre yüklenmemiş.
+            <br>
+            <a href="{% url 'banka_ekstre_yukle' %}" class="btn btn-primary mt-2">
+              <i class="bi bi-upload me-1"></i>İlk Ekstreyi Yükle
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
