@@ -6,7 +6,7 @@
 ## Proje Genel Bakış
 
 **Mikro Jump Bridge** (`C:\mikro_jump_bridge`), Mikro ERP'yi doğrudan sorgulayan,
-çok firmalı cari hesap yönetimi ve iki yönlü senkronizasyon köprüsüdür.
+çok firmalı cari hesap yönetim köprüsüdür (sadece okuma odaklı).
 Django + SQLite tabanlı, kurulum gerektirmez şekilde çalışır.
 Tarayıcı üzerinden `http://127.0.0.1:8001` adresinden erişilir.
 GitHub: `acetin75/mikro_jump_bridge` — Django paket adı `mikro_sync` (içsel).
@@ -72,7 +72,7 @@ C:\mikro_jump_bridge\
 ├── mikro_sync/             ← Django proje paketi (paket adı)
 │   ├── settings.py         ← python-decouple, fail-fast SECRET_KEY, prod güvenlik bloğu
 │   ├── urls.py
-│   ├── middleware.py       ← LoginZorunluMiddleware
+│   ├── middleware.py       ← LoginZorunluMiddleware, FirmaSecimZorunluMiddleware
 │   ├── forms_mixin.py      ← BootstrapFormMixin
 │   └── wsgi.py
 ├── sync_motor/             ← ANA UYGULAMA — firma yönetimi + import pipeline

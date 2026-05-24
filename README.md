@@ -4,20 +4,21 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://python.org)
 [![Django](https://img.shields.io/badge/Django-5.2_LTS-green)](https://djangoproject.com)
 
-**Mikro ERP'yi doğrudan sorgulayan, çok firmalı cari hesap yönetimi ve iki yönlü senkronizasyon köprüsü.**
-Django + SQLite tabanlı, kurulum gerektirmez — `baslat.bat` tek tıkla çalıştırmak için yeterlidir.
+**Mikro ERP'yi doğrudan sorgulayan çok firmalı cari hesap ve hareket yönetim köprüsü.**
+Django + SQLite tabanlı, kurulum gerektirmez — `baslat.bat` tek tıkla başlatmak için yeterlidir.
 
 ---
 
-## Bağlantı Mimarisi
+## Mimari
 
 ```
 Mikro ERP API  (port 8094)
       ↕  MikroApiClient  (MD5 günlük hash auth)
-mikro_gelen/   (staging — ham veriler)
-      ↕
-hesap_yonetimi/  (cari sorgulama — okuma amaçlı)
+hesap_yonetimi/  (cari/hareket/bakiye sorgulama — sadece okuma)
+sync_motor/      (firma ayarları, bağlantı testi, import geçmişi)
 ```
+
+> Uygulama Mikro ERP'ye **yazma yapmaz**; cari hesap, hareket ve bakiye verilerini okuyup yerel veritabanında **ayar/oturum** bilgisini saklar.
 
 ---
 
@@ -25,15 +26,15 @@ hesap_yonetimi/  (cari sorgulama — okuma amaçlı)
 
 | Özellik | Açıklama |
 |---|---|
-| **Firma Yönetimi** | Birden fazla Mikro ERP firmasını tek arayüzden yönet |
-| **Otomatik Eşleştirme** | VKN + SequenceMatcher tabanlı öğrenen cari eşleştirme |
-| **5 Adımlı Pipeline** | Çekme → Eşleştirme → Onay → Aktarım → Doğrulama |
-| **Staging Alanı** | Ham Mikro faturaları `mikro_gelen/` üzerinde karantinaya alınır |
-| **Onay Ekranı** | Otomatik eşleştirilemeyen cariler kullanıcı onayına sunulur |
-| **Import Geçmişi** | Her aktarım için tam log; başarı yüzdesi, hata detayı |
-| **Cari Hesap Sorgulama** | Mikro ERP'deki cariler, hareketler ve bakiyeler okunur |
+| **Çoklu Firma** | Birden fazla Mikro ERP firmasını tek arayüzden yönet |
+| **Bağlantı Testi** | LAN / VPN / Uzak Masaüstü IP'leri ile sağlık kontrolü |
+| **Cari Hesap Sorgulama** | Mikro ERP'deki cariler, hareketler ve açık bakiyeler okunur |
+| **Ödeme Planlama** | Vadesi yaklaşan çek/senet takibi |
 | **Şifreli Bağlantı** | Mikro şifreleri `django.core.signing` ile şifreli saklanır |
+| **Kullanıcı Yönetimi** | Kullanıcı ekleme, silme, şifre değiştirme, yetkilendirme |
+| **Posta / Ekstre** | SMTP ayarları ve cari ekstre e-postalama |
 | **Lisans Sistemi** | 15 gün ücretsiz deneme; HMAC imzalı lisans anahtarıyla aktivasyon |
+| **PDF / Excel / CSV** | Türkçe karakter destekli rapor çıktıları |
 
 ---
 
@@ -44,7 +45,7 @@ hesap_yonetimi/  (cari sorgulama — okuma amaçlı)
 
 > **Detaylı adım adım kurulum:** [KURULUM.md](KURULUM.md)
 
-### Başlatma (ilk kez veya sonradan)
+### Başlatma
 
 ```bat
 baslat.bat
@@ -54,7 +55,7 @@ baslat.bat
 1. Sanal Python ortamı oluşturur (`.venv/`)
 2. Gerekli paketleri kurar
 3. Veritabanını hazırlar (`db.sqlite3`)
-4. Admin kullanıcı oluşturur (interaktif)
+4. Admin kullanıcı oluşturur (`.env`'deki `ADMIN_KULLANICI`/`ADMIN_SIFRE` ile sessizce; tanımlı değilse interaktif sorar)
 
 Ardından tarayıcınızda:
 
@@ -67,7 +68,7 @@ Ardından tarayıcınızda:
 
 - **Django 5.2 LTS** + SQLite 3
 - **Bootstrap 5.3** + Bootstrap Icons (CDN)
-- **requests 2.32** — Mikro ERP API HTTP istemcisi
+- **requests 2.34** — Mikro ERP API HTTP istemcisi
 - **defusedxml 0.7** — Güvenli XML parse
 - **whitenoise** — Statik dosya sunumu
 - **django-widget-tweaks** — Şablon form widget'ları
@@ -82,7 +83,7 @@ Ardından tarayıcınızda:
 C:\mikro_jump_bridge\
 ├── baslat.bat              ← Tek tıkla başlat
 ├── kontrol.bat             ← Kod kalitesi: ruff+vulture+pip-audit+django check
-├── olustur_admin.py        ← Admin kullanıcı oluşturma (interaktif)
+├── olustur_admin.py        ← Admin kullanıcı oluşturma (sessiz/interaktif)
 ├── manage.py
 ├── db.sqlite3              ← Tüm veri (yedek = bu dosyayı kopyala)
 ├── pyproject.toml          ← Ruff + Vulture konfigürasyonu
@@ -92,30 +93,33 @@ C:\mikro_jump_bridge\
 ├── logs/
 │   └── mikro_sync.log      ← INFO+ kayıtlar (10 MB × 3 yedek)
 ├── docs/
-│   └── runbooks/           ← Geliştirme standartları ve kararlar (01-18)
+│   ├── runbooks/           ← Geliştirme standartları ve kararlar (01-18)
+│   └── arsiv/              ← Pasif/arşivlenmiş notlar
 ├── templates/
 │   ├── base.html           ← Ana layout
 │   ├── registration/
-│   ├── sync_motor/         ← Firma, import, onay şablonları
-│   ├── mikro_gelen/        ← Staging fatura listeleri
-│   └── hesap_yonetimi/     ← Cari sorgulama şablonları
+│   ├── sync_motor/         ← Firma, import geçmişi şablonları
+│   ├── hesap_yonetimi/     ← Cari sorgulama şablonları
+│   ├── kullanici/          ← Kullanıcı yönetimi şablonları
+│   ├── lisans/             ← Lisans şablonları
+│   └── posta/              ← Posta ayar/ekstre şablonları
 ├── mikro_sync/             ← Django proje paketi
 │   ├── settings.py
 │   ├── urls.py
-│   ├── middleware.py       ← LoginZorunluMiddleware
+│   ├── middleware.py       ← LoginZorunluMiddleware, FirmaSecimZorunluMiddleware
 │   └── forms_mixin.py      ← BootstrapFormMixin
-├── sync_motor/             ← Ana uygulama
+├── sync_motor/             ← Firma ayarları + bağlantı testi + import geçmişi
 │   ├── models.py           ← FirmaAyar, ImportLog
 │   ├── client.py           ← MikroApiClient (MD5 auth, sql_oku)
 │   ├── views.py
 │   └── urls.py
-├── mikro_gelen/            ← Staging alanı
-│   ├── models.py           ← MikroFatura, MikroCariHesap, MikroStokKarti
-│   ├── views.py
+├── hesap_yonetimi/         ← Cari hesap sorgulama (sadece okuma)
+│   ├── views.py            ← panel, firma_kartlari, hesap_hareketleri, bakiye_raporu
 │   └── urls.py
-└── hesap_yonetimi/         ← Cari hesap sorgulama (sadece okuma)
-    ├── views.py            ← panel, firma_kartlari, hesap_hareketleri, bakiye_raporu
-    └── urls.py
+├── kullanici/              ← Kullanıcı yönetimi (liste, ekle, sil, şifre, yetki)
+├── lisans/                 ← Deneme + lisans aktivasyon (middleware ile kontrol)
+├── posta/                  ← SMTP ayarları + cari ekstre e-postalama
+└── installer/              ← Inno Setup paketleme (setup.iss, baslat_kurulu.bat)
 ```
 
 ---
@@ -128,9 +132,14 @@ Proje kökünde `.env` dosyası oluşturun (`.gitignore`'da, asla Git'e gönderi
 SECRET_KEY=guclu-uretilmis-anahtar
 DEBUG=False
 ALLOWED_HOSTS=127.0.0.1,localhost
+
+ADMIN_KULLANICI=admin
+ADMIN_SIFRE=GucluBirSifre123!
 ```
 
 > `SECRET_KEY` değeri `django-insecure-` ile başlıyorsa ve `DEBUG=False` ise uygulama başlamaz.
+
+`.env` tek otorite şifre kaynağıdır. Müşteri kurulum bilgileri ayrıca `SIFRELER.md` dosyasında tutulabilir (Git'e gönderilmez).
 
 ---
 
@@ -141,6 +150,8 @@ Tüm veri `db.sqlite3` dosyasındadır. Yedeklemek için bu dosyayı kopyalayın
 ```bat
 copy db.sqlite3 db_yedek_%date:~6,4%%date:~3,2%%date:~0,2%.sqlite3
 ```
+
+Yerel yedek dizini `yedek/` klasörü `.gitignore`'dadır.
 
 ---
 
@@ -176,7 +187,7 @@ git push
 - **Excel (openpyxl):** Ekstra ayar gerekmez, UTF-8 varsayılan
 - **CSV:** `utf-8-sig` encoding (BOM ile) + `;` ayraç — Excel için zorunlu
 
-Tam kod örnekleri: `docs/runbooks/18-pdf-excel-turkce-karakter.md`
+Tam kod örnekleri: [docs/runbooks/18-pdf-excel-turkce-karakter.md](docs/runbooks/18-pdf-excel-turkce-karakter.md)
 
 ---
 
