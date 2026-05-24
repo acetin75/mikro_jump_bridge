@@ -115,8 +115,14 @@ def panel(request):
         sorgu = """
             SELECT
                 COUNT(*) as cari_adet,
-                SUM(CASE WHEN cari_bakiye > 0 THEN cari_bakiye ELSE 0 END) as toplam_alacak,
-                SUM(CASE WHEN cari_bakiye < 0 THEN ABS(cari_bakiye) ELSE 0 END) as toplam_borc
+                ISNULL((SELECT SUM(CASE WHEN cha_tip = 0 THEN cha_meblag ELSE 0 END)
+                        FROM CARI_HESAP_HAREKETLERI
+                        WHERE cha_kod IN (SELECT cari_kod FROM CARI_HESAPLAR WHERE cari_baglanti_tipi=0)
+                          AND cha_tip = 0), 0) as toplam_alacak,
+                ISNULL((SELECT SUM(CASE WHEN cha_tip = 1 THEN cha_meblag ELSE 0 END)
+                        FROM CARI_HESAP_HAREKETLERI
+                        WHERE cha_kod IN (SELECT cari_kod FROM CARI_HESAPLAR WHERE cari_baglanti_tipi=0)
+                          AND cha_tip = 1), 0) as toplam_borc
             FROM CARI_HESAPLAR
             WHERE cari_baglanti_tipi = 0
         """
@@ -155,18 +161,13 @@ def firma_kartlari(request):
         where = "cari_baglanti_tipi = 0"
         if arama:
             temiz = arama.replace("'", "''")
-            where += f" AND (cari_unvan1 LIKE '%{temiz}%' OR cari_kod LIKE '%{temiz}%' OR cari_vkn_vd LIKE '%{temiz}%')"
-        if tip_filtre == "musteri":
-            where += " AND cari_isk_tip = 0"
-        elif tip_filtre == "tedarikci":
-            where += " AND cari_isk_tip = 1"
+            where += f" AND (cari_unvan1 LIKE '%{temiz}%' OR cari_kod LIKE '%{temiz}%' OR cari_VergiKimlikNo LIKE '%{temiz}%')"
 
         sorgu = f"""
             SELECT TOP 500
                 cari_kod, cari_unvan1, cari_unvan2,
-                cari_vkn_vd, cari_VergiDairesi,
-                cari_telefon1, cari_EMail1,
-                cari_bakiye, cari_isk_tip
+                cari_VergiKimlikNo, cari_vdaire_adi,
+                cari_CepTel, cari_EMail
             FROM CARI_HESAPLAR
             WHERE {where}
             ORDER BY cari_unvan1
@@ -204,10 +205,9 @@ def cari_detay(request, cari_kod: str):
         temiz_kod = cari_kod.replace("'", "''")
         cari_sorgu = f"""
             SELECT cari_kod, cari_unvan1, cari_unvan2,
-                   cari_vkn_vd, cari_VergiDairesi,
-                   cari_telefon1, cari_EMail1,
-                   cari_adres1, cari_adres2,
-                   cari_bakiye, cari_isk_tip
+                   cari_VergiKimlikNo, cari_vdaire_adi,
+                   cari_CepTel, cari_EMail,
+                   cari_sicil_no, cari_muh_kod
             FROM CARI_HESAPLAR
             WHERE cari_kod = '{temiz_kod}' AND cari_baglanti_tipi = 0
         """
@@ -250,7 +250,7 @@ def hesap_hareketleri(request):
             client = _aktif_client(request)
             temiz_kod = cari_kod.replace("'", "''")
             cari_sorgu = f"""
-                SELECT cari_kod, cari_unvan1, cari_bakiye
+                SELECT cari_kod, cari_unvan1
                 FROM CARI_HESAPLAR
                 WHERE cari_kod = '{temiz_kod}' AND cari_baglanti_tipi = 0
             """
@@ -260,13 +260,13 @@ def hesap_hareketleri(request):
 
             sorgu = f"""
                 SELECT
-                    che_tarih, che_evrak_tip, che_evrak_seri, che_evrak_sira,
-                    che_aciklama, che_meblag, che_normal_iade,
-                    che_doviz_cinsi, che_doviz_kuru, che_belge_no
+                    cha_tarihi, cha_evrak_tip, cha_evrakno_seri, cha_evrakno_sira,
+                    cha_aciklama, cha_meblag, cha_normal_Iade,
+                    cha_d_cins, cha_d_kur, cha_belge_no, cha_tip
                 FROM CARI_HESAP_HAREKETLERI
-                WHERE che_cari_kod = '{temiz_kod}'
-                  AND che_tarih BETWEEN '{baslangic}' AND '{bitis}'
-                ORDER BY che_tarih DESC, che_evrak_sira DESC
+                WHERE cha_kod = '{temiz_kod}'
+                  AND cha_tarihi BETWEEN '{baslangic}' AND '{bitis}'
+                ORDER BY cha_tarihi DESC, cha_evrakno_sira DESC
             """
             hareketler = client.sql_oku(sorgu)
             logger.info("Hesap hareketleri [%s] %s: %d satır", aktif_firma.ad, cari_kod, len(hareketler))
@@ -304,25 +304,34 @@ def bakiye_raporu(request):
 
     try:
         client = _aktif_client(request)
-        where = "cari_baglanti_tipi = 0 AND cari_bakiye <> 0"
+        bakiye_filtre = "AND ISNULL(b.cari_bakiye, 0) <> 0"
         if sadece_borclular:
-            where += " AND cari_bakiye < 0"
+            bakiye_filtre = "AND ISNULL(b.cari_bakiye, 0) > 0"
         elif sadece_alacaklilar:
-            where += " AND cari_bakiye > 0"
+            bakiye_filtre = "AND ISNULL(b.cari_bakiye, 0) < 0"
 
         order_map = {
-            "bakiye_desc": "cari_bakiye DESC",
-            "bakiye_asc": "cari_bakiye ASC",
-            "unvan": "cari_unvan1 ASC",
+            "bakiye_desc": "ISNULL(b.cari_bakiye, 0) DESC",
+            "bakiye_asc": "ISNULL(b.cari_bakiye, 0) ASC",
+            "unvan": "h.cari_unvan1 ASC",
         }
-        order_by = order_map.get(sirala, "cari_bakiye DESC")
+        order_by = order_map.get(sirala, "ISNULL(b.cari_bakiye, 0) DESC")
 
         sorgu = f"""
+            WITH bak AS (
+                SELECT cha_kod,
+                       SUM(CASE WHEN cha_tip = 0 THEN cha_meblag ELSE -cha_meblag END) AS cari_bakiye
+                FROM CARI_HESAP_HAREKETLERI
+                GROUP BY cha_kod
+            )
             SELECT TOP 1000
-                cari_kod, cari_unvan1,
-                cari_vkn_vd, cari_bakiye, cari_isk_tip
-            FROM CARI_HESAPLAR
-            WHERE {where}
+                h.cari_kod, h.cari_unvan1,
+                h.cari_VergiKimlikNo,
+                ISNULL(b.cari_bakiye, 0) AS cari_bakiye
+            FROM CARI_HESAPLAR h
+            LEFT JOIN bak b ON b.cha_kod = h.cari_kod
+            WHERE h.cari_baglanti_tipi = 0
+              {bakiye_filtre}
             ORDER BY {order_by}
         """
         bakiyeler = client.sql_oku(sorgu)

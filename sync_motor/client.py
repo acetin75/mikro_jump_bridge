@@ -203,14 +203,23 @@ class MikroApiClient:
         """
         Mikro veritabanında serbest SQL sorgusu çalıştırır (SqlVeriOkuV2).
         Döner: [{"kolon1": deger, "kolon2": deger, ...}, ...]
+
+        Yanıt yapısı: {"result": [{"StatusCode": 200, "Data": [{"SQLResult1": [...]}]}]}
         """
-        sonuc = self._post("SqlVeriOkuV2", {"SqlStr": sorgu})
-        if isinstance(sonuc, list):
-            return sonuc
-        if isinstance(sonuc, dict):
-            for key in ("Data", "data", "Rows", "rows", "Result", "result", "Liste", "liste"):
-                if key in sonuc and isinstance(sonuc[key], list):
-                    return sonuc[key]
+        sonuc = self._post("SqlVeriOkuV2", {"SQLSorgu": sorgu})
+        try:
+            result = sonuc.get("result", []) if isinstance(sonuc, dict) else []
+            if result and isinstance(result, list):
+                kayit = result[0]
+                if kayit.get("IsError") or (kayit.get("StatusCode", 200) not in (200, 0)):
+                    logger.warning("sql_oku hatası [%s]: %s", kayit.get("StatusCode"), kayit.get("ErrorMessage"))
+                    return []
+                data = kayit.get("Data") or []
+                if data and isinstance(data, list):
+                    sql_result = data[0].get("SQLResult1") or []
+                    return sql_result if isinstance(sql_result, list) else []
+        except Exception as e:
+            logger.error("sql_oku parse hatası: %s", e)
         return []
 
     def stok_kartlari(self, arama: str = "") -> list:
