@@ -17,10 +17,10 @@ GitHub: `acetin75/mikro_jump_bridge` — Django paket adı `mikro_sync` (içsel)
 
 | Katman | Teknoloji |
 |---|---|
-| Backend | Django 5.2, Python 3.10+ |
+| Backend | Django 5.2 LTS, Python 3.10+ |
 | Veritabanı | SQLite 3 (`db.sqlite3`) |
 | Frontend | Bootstrap 5.3 (CDN), Bootstrap Icons (CDN) |
-| HTTP İstemcisi | requests 2.32 |
+| HTTP İstemcisi | requests 2.34 |
 | XML Güvenliği | defusedxml 0.7 |
 | Statik dosya | whitenoise |
 | Şablon tag | django-widget-tweaks |
