@@ -54,7 +54,7 @@
     <span class="badge bg-secondary">{{ cariler|length }} kayıt</span>
   </div>
   <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
+    <table class="table table-hover table-sm align-middle mb-0">
       <thead class="table-light">
         <tr>
           <th>Kod</th>
@@ -70,10 +70,8 @@
       <tbody>
         {% for c in cariler %}
           <tr>
-            <td>
-              <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}" class="fw-bold text-primary">
-                {{ c.cari_kod }}
-              </a>
+            <td class="text-nowrap">
+              <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}" class="fw-bold text-primary">{{ c.cari_kod }}</a>
             </td>
             <td>
               <div class="fw-semibold">{{ c.cari_unvan1 }}</div>
@@ -96,15 +94,9 @@
             <td>{{ c.cari_CepTel|default:"—" }}</td>
             <td>{{ c.cari_EMail|default:"—" }}</td>
             <td>{{ c.cari_VergiKimlikNo|default:"—" }}</td>
-            <td>
-              <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}"
-                 class="btn btn-outline-primary btn-sm" title="Hesap Hareketleri">
-                <i class="bi bi-list-columns-reverse"></i>
-              </a>
-              <a href="{% url 'hy_bakiye_raporu' %}?q={{ c.cari_kod }}"
-                 class="btn btn-outline-success btn-sm ms-1" title="Bakiye">
-                <i class="bi bi-bar-chart-line"></i>
-              </a>
+            <td class="text-nowrap">
+              <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}" class="btn btn-outline-primary btn-sm" title="Hesap Hareketleri"><i class="bi bi-list-columns-reverse"></i></a>
+              <a href="{% url 'hy_bakiye_raporu' %}?q={{ c.cari_kod }}" class="btn btn-outline-success btn-sm" title="Bakiye"><i class="bi bi-bar-chart-line"></i></a>
             </td>
           </tr>
         {% empty %}
