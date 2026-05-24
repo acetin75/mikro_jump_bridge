@@ -140,12 +140,14 @@ LOGGING = {
     "handlers": {
         "console": {"class": "logging.StreamHandler", "formatter": "verbose"},
         "dosya": {
-            "class": "logging.handlers.RotatingFileHandler",
+            # Günlük rotasyon — 30 gün sakla, sadece INFO+ yazar (DEBUG dosyaya gitmez)
+            "class": "logging.handlers.TimedRotatingFileHandler",
             "filename": LOGS_DIR / "mikro_sync.log",
-            "maxBytes": 10 * 1024 * 1024,
-            "backupCount": 3,
+            "when": "midnight",
+            "backupCount": 30,
             "formatter": "verbose",
             "encoding": "utf-8",
+            "level": "INFO",
         },
     },
     "loggers": {
