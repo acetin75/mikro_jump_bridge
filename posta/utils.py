@@ -1,6 +1,9 @@
 import logging
+import ssl
 
-from django.core.mail import EmailMessage, get_connection
+from django.core.mail import EmailMessage
+from django.core.mail.backends.smtp import EmailBackend as _DjangoSMTP
+from django.core.mail.utils import DNS_NAME
 from django.template.loader import render_to_string
 
 from .models import EkstreGonderimLog, MailAyar
@@ -13,10 +16,45 @@ def mail_ayar_al() -> MailAyar | None:
     return MailAyar.objects.filter(aktif=True).first()
 
 
+class _EsnekSMTPBackend(_DjangoSMTP):
+    """
+    Paylaşımlı hosting sunucularında sık görülen SSL hostname uyuşmazlığını
+    (CERTIFICATE_VERIFY_FAILED) aşmak için sertifika doğrulamasını devre dışı
+    bırakan özel SMTP backend. Bağlantı şifreli kalır, sadece sertifika
+    kimlik doğrulaması atlanır.
+    """
+
+    def open(self):
+        if self.connection:
+            return False
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        connection_params = {"local_hostname": DNS_NAME.get_fqdn()}
+        if self.timeout is not None:
+            connection_params["timeout"] = self.timeout
+        if self.use_ssl:
+            connection_params["context"] = ctx
+        try:
+            self.connection = self.connection_class(
+                self.host, self.port, **connection_params
+            )
+            if not self.use_ssl and self.use_tls:
+                self.connection.ehlo()
+                self.connection.starttls(context=ctx)
+                self.connection.ehlo()
+            if self.username and self.password:
+                self.connection.login(self.username, self.password)
+            return True
+        except OSError:
+            if not self.fail_silently:
+                raise
+        return False
+
+
 def _smtp_baglantisi(ayar: MailAyar):
     """Verilen MailAyar ile SMTP bağlantısı oluşturur."""
-    return get_connection(
-        backend="django.core.mail.backends.smtp.EmailBackend",
+    backend = _EsnekSMTPBackend(
         host=ayar.smtp_sunucu,
         port=ayar.smtp_port,
         username=ayar.kullanici,
@@ -24,6 +62,7 @@ def _smtp_baglantisi(ayar: MailAyar):
         use_tls=ayar.tls_kullan,
         fail_silently=False,
     )
+    return backend
 
 
 def ekstre_gonder(

@@ -105,7 +105,7 @@ Kalan deneme süresi her sayfanın üstünde gösterilir.
 
 Deneme süresi bittikten sonra uygulamayı kullanmaya devam etmek için lisans gereklidir.
 
-1. Lisans için iletişime geçin: **muhasebe_buro@destek.com**
+1. Lisans için iletişime geçin: **ali.cetin@malihaber.com.tr**
 2. Ödeme sonrasında size bir lisans anahtarı iletilir
 3. `http://127.0.0.1:8001/lisans/` adresine gidin
 4. Aldığınız anahtarı ilgili alana yapıştırın ve **Aktifleştir** butonuna tıklayın
