@@ -323,6 +323,37 @@ def hesap_hareketleri(request):
                 oz["alacak"] = float(oz.get("alacak") or 0)
                 oz["bakiye"] = float(oz.get("bakiye") or 0)
 
+            # Açılış bakiyesi — ilk_tarih öncesi kümülatif (running base)
+            acilis = {}
+            try:
+                acilis_sonuc = client.sql_oku(f"""
+                    SELECT
+                        cha_d_cins AS doviz,
+                        SUM(CASE WHEN cha_tip = 0 THEN cha_meblag ELSE -cha_meblag END) AS bakiye
+                    FROM CARI_HESAP_HAREKETLERI
+                    WHERE cha_kod = '{temiz_kod}'
+                      AND cha_iptal = 0
+                      AND cha_tarihi < '{ilk_tarih}'
+                    GROUP BY cha_d_cins
+                """)
+                for a in acilis_sonuc:
+                    d = int(a.get("doviz") or 0)
+                    acilis[d] = float(a.get("bakiye") or 0)
+            except MikroApiHatasi:
+                pass  # Açılış alınamazsa sıfırdan başla
+
+            # Sorumluluk Merkezi isimleri
+            sm_map = {}
+            try:
+                sm_sonuc = client.sql_oku("""
+                    SELECT som_kod, som_isim
+                    FROM SORUMLULUK_MERKEZLERI
+                    WHERE som_iptal = 0
+                """)
+                sm_map = {str(r["som_kod"]): r["som_isim"] for r in sm_sonuc if r.get("som_kod")}
+            except MikroApiHatasi:
+                pass  # Tablo yoksa boş bırak
+
             # Hareketler — tarih aralığı, ESKİDEN YENİYE (kümülatif için)
             hareketler = client.sql_oku(f"""
                 SELECT TOP 2000
@@ -330,12 +361,14 @@ def hesap_hareketleri(request):
                     cha_tip AS ba,
                     cha_evrakno_seri + '-' + CAST(cha_evrakno_sira AS VARCHAR) AS evrak_no,
                     cha_aciklama AS aciklama,
+                    cha_srmrkkodu AS sm,
                     cha_d_kur AS kur,
                     CASE WHEN cha_tip = 0 THEN cha_meblag ELSE 0 END AS borc,
                     CASE WHEN cha_tip = 1 THEN cha_meblag ELSE 0 END AS alacak,
                     cha_d_cins AS doviz,
                     cha_vade AS vade,
-                    cha_cinsi AS kaynak
+                    cha_cinsi AS kaynak,
+                    cha_meblag_orj_doviz_icin_gecersiz_fl AS gecersiz_fl
                 FROM CARI_HESAP_HAREKETLERI
                 WHERE cha_kod = '{temiz_kod}'
                   AND cha_iptal = 0
@@ -344,22 +377,32 @@ def hesap_hareketleri(request):
                 ORDER BY cha_tarihi ASC, cha_evrakno_sira ASC
             """)
 
-            # Kümülatif bakiye hesapla (döviz bazlı)
-            running = {}
+            # Kümülatif bakiye — açılış bakiyesinden başla, gecersiz_fl=1 hariç
+            running = dict(acilis)
             for h in hareketler:
                 d = int(h.get("doviz") or 0)
                 borc = float(h.get("borc") or 0)
                 alacak = float(h.get("alacak") or 0)
-                running[d] = running.get(d, 0) + borc - alacak
-                h["bakiye"] = running[d]
+                gecersiz = int(h.get("gecersiz_fl") or 0)
+                if gecersiz == 0:
+                    running[d] = running.get(d, 0) + borc - alacak
+                h["bakiye"] = running.get(d, 0)
                 h["doviz_adi"] = DOVIZ_MAP.get(d, str(d))
-                # Tarih: ilk 10 karakter (YYYY-MM-DD)
+                h["sm_adi"] = sm_map.get(str(h.get("sm") or ""), str(h.get("sm") or ""))
                 h["tarih"] = str(h.get("tarih") or "")[:10]
                 h["vade"] = str(h.get("vade") or "")[:10]
                 h["kur"] = float(h.get("kur") or 0)
 
             # Görüntüde YENİDEN ESKİYE sırala
             hareketler = list(reversed(hareketler))
+
+            # Açılış bakiyesi — şablona geçirmek için liste yap (sıfır olanları çıkar)
+            acilis_liste = [
+                {"doviz": d, "doviz_adi": DOVIZ_MAP.get(d, str(d)), "bakiye": b}
+                for d, b in acilis.items()
+                if b != 0
+            ]
+
             logger.info("Hesap hareketleri [%s] %s: %d satır", aktif_firma.ad, cari_kod, len(hareketler))
         except MikroApiHatasi as e:
             logger.error("Hesap hareketleri hatası [%s] %s: %s", aktif_firma.ad, cari_kod, e)
@@ -373,6 +416,7 @@ def hesap_hareketleri(request):
         "son_tarih": son_tarih,
         "firma": firma,
         "bakiye_ozet": bakiye_ozet,
+        "acilis_liste": acilis_liste if cari_kod else [],
         "hareketler": hareketler,
         "DOVIZ_MAP": DOVIZ_MAP,
     })

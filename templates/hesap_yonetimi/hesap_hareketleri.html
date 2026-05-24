@@ -88,6 +88,20 @@
 </div>
 {% endif %}
 
+{% if acilis_liste %}
+<!-- Açılış Bakiyesi Bandı -->
+<div class="alert alert-light border mb-3 py-2 d-flex flex-wrap gap-3 align-items-center">
+  <span class="small text-muted fw-semibold text-nowrap">
+    <i class="bi bi-calendar-check me-1"></i>{{ ilk_tarih }} öncesi bakiye:
+  </span>
+  {% for a in acilis_liste %}
+    <span class="badge {% if a.bakiye > 0 %}bg-danger{% elif a.bakiye < 0 %}bg-success{% else %}bg-secondary{% endif %} fs-6 fw-semibold px-3 py-1">
+      {{ a.doviz_adi }}: {{ a.bakiye|floatformat:2 }}
+    </span>
+  {% endfor %}
+</div>
+{% endif %}
+
 {% if bakiye_ozet %}
 <!-- Bakiye Özeti Kartları (Tüm Zamanlar, Döviz Bazlı) -->
 <div class="row g-3 mb-3">
@@ -135,6 +149,7 @@
           <th>B/A</th>
           <th class="text-nowrap">Evrak No</th>
           <th>Açıklama</th>
+          <th class="text-nowrap">Sor. Merkezi</th>
           <th class="text-end text-nowrap">Borç</th>
           <th class="text-end text-nowrap">Alacak</th>
           <th class="text-end text-nowrap">Bakiye</th>
@@ -157,6 +172,7 @@
             </td>
             <td class="text-nowrap"><small class="text-muted">{{ h.evrak_no|default:"—" }}</small></td>
             <td>{{ h.aciklama|default:"—"|truncatechars:60 }}</td>
+            <td><small class="text-muted">{{ h.sm_adi|default:"—" }}</small></td>
             <td class="text-end text-nowrap">
               {% if h.borc %}
                 <span class="kumulatif-borc">{{ h.borc|floatformat:2 }}</span>
@@ -184,7 +200,7 @@
           </tr>
         {% empty %}
           <tr>
-            <td colspan="11" class="text-center text-muted py-5">
+              <td colspan="12" class="text-center text-muted py-5">
               <i class="bi bi-inbox fs-2 d-block mb-2"></i>
               {% if cari_kod %}
                 Seçili tarih aralığında hareket bulunamadı.
