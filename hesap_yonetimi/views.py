@@ -153,8 +153,9 @@ def firma_kartlari(request):
         return redirect("hy_firma_sec")
 
     arama = request.GET.get("q", "").strip()
-    tip_filtre = request.GET.get("tip", "")
+    grup_filtre = request.GET.get("grup", "").strip()
     cariler = []
+    gruplar = []
 
     try:
         client = _aktif_client(request)
@@ -162,6 +163,20 @@ def firma_kartlari(request):
         if arama:
             temiz = arama.replace("'", "''")
             where += f" AND (cari_unvan1 LIKE '%{temiz}%' OR cari_kod LIKE '%{temiz}%' OR cari_VergiKimlikNo LIKE '%{temiz}%')"
+        if grup_filtre:
+            temiz_grup = grup_filtre.replace("'", "''")
+            where += f" AND cari_grup_kodu = '{temiz_grup}'"
+
+        # Grup kodları dropdown için
+        gruplar_sonuc = client.sql_oku("""
+            SELECT DISTINCT cari_grup_kodu
+            FROM CARI_HESAPLAR
+            WHERE cari_baglanti_tipi = 0
+              AND cari_grup_kodu IS NOT NULL
+              AND cari_grup_kodu <> ''
+            ORDER BY cari_grup_kodu
+        """)
+        gruplar = [r["cari_grup_kodu"] for r in gruplar_sonuc if r.get("cari_grup_kodu")]
 
         sorgu = f"""
             SELECT TOP 500
@@ -183,8 +198,9 @@ def firma_kartlari(request):
         "aktif_firma": aktif_firma,
         "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
         "cariler": cariler,
+        "gruplar": gruplar,
         "arama": arama,
-        "tip_filtre": tip_filtre,
+        "grup_filtre": grup_filtre,
     })
 
 

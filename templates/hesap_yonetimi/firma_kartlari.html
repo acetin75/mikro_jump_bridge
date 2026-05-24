@@ -30,11 +30,12 @@
                placeholder="Cari ara...">
       </div>
       <div class="col-md-3">
-        <label class="form-label small mb-1">Tip</label>
-        <select name="tip" class="form-select form-select-sm">
-          <option value="" {% if not tip_filtre %}selected{% endif %}>Tümü</option>
-          <option value="musteri" {% if tip_filtre == "musteri" %}selected{% endif %}>Müşteri</option>
-          <option value="tedarikci" {% if tip_filtre == "tedarikci" %}selected{% endif %}>Tedarikçi</option>
+        <label class="form-label small mb-1">Grup</label>
+        <select name="grup" class="form-select form-select-sm">
+          <option value="" {% if not grup_filtre %}selected{% endif %}>Tümü</option>
+          {% for g in gruplar %}
+            <option value="{{ g }}" {% if grup_filtre == g %}selected{% endif %}>{{ g }}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="col-auto">
