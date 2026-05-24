@@ -27,6 +27,19 @@ def _imza_anahtari() -> bytes:
         ).digest()
 
 
+def lisans_al():
+    """Tekil ``LisansBilgisi`` kaydını döndürür; yoksa oluşturur.
+
+    Middleware ve view'lar bu yardımcıyı kullanmalıdır; doğrudan
+    ``LisansBilgisi.objects.first()`` çağrısı yapılmamalıdır.
+    """
+    from .models import LisansBilgisi
+    lisans = LisansBilgisi.objects.first()
+    if lisans is None:
+        lisans = LisansBilgisi.objects.create()
+    return lisans
+
+
 def lisans_anahtari_uret(musteri_kodu: str, bitis_tarihi: str, tip: str = "standart") -> str:
     """
     Müşteriye verilecek lisans anahtarı üretir.

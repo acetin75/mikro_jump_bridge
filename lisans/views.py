@@ -5,16 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from .models import LisansBilgisi
-from .utils import lisans_anahtari_dogrula
+from .utils import lisans_al, lisans_anahtari_dogrula
 
 logger = logging.getLogger("mikro_sync")
 
 
 def _lisans_al() -> LisansBilgisi:
-    lisans = LisansBilgisi.objects.first()
-    if lisans is None:
-        lisans = LisansBilgisi.objects.create()
-    return lisans
+    """Geriye dönük uyumluluk için sarmalayıcı (yeni kod ``lisans_al`` kullanmalı)."""
+    return lisans_al()
 
 
 @login_required

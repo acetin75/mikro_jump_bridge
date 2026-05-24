@@ -28,6 +28,22 @@ class MailAyarForm(BootstrapFormMixin, forms.ModelForm):
             "aktif",
         ]
 
+    def clean_sifre(self) -> str:
+        """İlk kayıtta şifre zorunludur, sonradan boş bırakılınca mevcut korunur."""
+        sifre = (self.cleaned_data.get("sifre") or "").strip()
+        if not sifre and self.instance.pk is None:
+            raise ValidationError("İlk kayıt için şifre zorunludur.")
+        return sifre
+
+    def save(self, commit: bool = True):
+        ayar = super().save(commit=False)
+        sifre = self.cleaned_data.get("sifre", "")
+        if sifre:
+            ayar.sifre_kaydet(sifre)
+        if commit:
+            ayar.save()
+        return ayar
+
 
 def _email_listesi_dogrula(deger: str) -> list[str]:
     """Virgülle ayrılmış e-posta listesini doğrulayıp döndürür."""

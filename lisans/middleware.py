@@ -32,10 +32,8 @@ class LisansKontrolMiddleware:
             return self.get_response(request)
 
         # Lisans geçerlilik kontrolü
-        from lisans.models import LisansBilgisi
-        lisans = LisansBilgisi.objects.first()
-        if lisans is None:
-            lisans = LisansBilgisi.objects.create()
+        from lisans.utils import lisans_al
+        lisans = lisans_al()
 
         if not lisans.gecerli_mi:
             return redirect(reverse("lisans_suresi_doldu"))

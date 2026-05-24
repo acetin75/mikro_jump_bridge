@@ -42,3 +42,13 @@ class FirmaAyarForm(forms.ModelForm):
             "notlar": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
             "aktif": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
+
+    def save(self, commit: bool = True):
+        """Şifre alanı boş değilse imzalı olarak kaydeder."""
+        firma = super().save(commit=False)
+        sifre = self.cleaned_data.get("mikro_sifre_gir", "")
+        if sifre:
+            firma.sifre_kaydet(sifre)
+        if commit:
+            firma.save()
+        return firma

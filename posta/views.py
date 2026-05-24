@@ -1,4 +1,5 @@
 import logging
+from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -39,14 +40,7 @@ def posta_ayarlar(request):
     if request.method == "POST":
         form = MailAyarForm(request.POST, instance=ayar)
         if form.is_valid():
-            obj = form.save(commit=False)
-            sifre = form.cleaned_data.get("sifre", "").strip()
-            if sifre:
-                obj.sifre_kaydet(sifre)
-            elif ayar is None:
-                form.add_error("sifre", "İlk kayıt için şifre zorunludur.")
-                return render(request, "posta/ayarlar.html", {"form": form, "ayar": ayar})
-            obj.save()
+            form.save()
             messages.success(request, "Mail ayarları kaydedildi.")
             return redirect("posta_ayarlar")
     else:
@@ -140,7 +134,7 @@ def cari_ekstre_gonder(request):
 
     # Mikro ERP'den hareketleri çek (yalnızca TL = doviz 0)
     hareketler = []
-    acilis_bakiye = 0.0
+    acilis_bakiye = Decimal("0")
 
     try:
         client = MikroApiClient(aktif_firma)
@@ -156,7 +150,7 @@ def cari_ekstre_gonder(request):
               AND cha_tarihi < '{donem_baslangic}'
         """)
         if acilis_sonuc and acilis_sonuc[0].get("bakiye") is not None:
-            acilis_bakiye = float(acilis_sonuc[0]["bakiye"] or 0)
+            acilis_bakiye = Decimal(str(acilis_sonuc[0]["bakiye"] or 0))
 
         ham = client.sql_oku(f"""
             SELECT TOP 2000
@@ -177,8 +171,8 @@ def cari_ekstre_gonder(request):
 
         running = acilis_bakiye
         for h in ham:
-            borc = float(h.get("borc") or 0)
-            alacak = float(h.get("alacak") or 0)
+            borc = Decimal(str(h.get("borc") or 0))
+            alacak = Decimal(str(h.get("alacak") or 0))
             running += borc - alacak
             hareketler.append(
                 {

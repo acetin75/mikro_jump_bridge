@@ -126,6 +126,38 @@ class MikroApiClient:
         except Exception as e:
             return {"basarili": False, "mesaj": str(e)}
 
+    @staticmethod
+    def _extract_list_response(
+        sonuc,
+        endpoint: str,
+        tercih_anahtarlar: tuple[str, ...] = (
+            "Data", "data", "Result", "result",
+            "Items", "items", "Liste", "liste",
+            "Rows", "rows",
+        ),
+    ) -> list:
+        """Mikro API yanıtından liste içeriğini çıkarır.
+
+        Yanıt doğrudan ``list`` ise döndürür. ``dict`` ise önce tercih
+        anahtarlarını dener, sonra ilk ``list`` değerini fallback olarak alır.
+        Hiçbir liste bulunamazsa boş liste döner ve uyarı loglanır.
+        """
+        if isinstance(sonuc, list):
+            return sonuc
+        if not isinstance(sonuc, dict):
+            return []
+        for key in tercih_anahtarlar:
+            v = sonuc.get(key)
+            if isinstance(v, list):
+                return v
+        # Fallback: ilk list değer
+        for k, v in sonuc.items():
+            if isinstance(v, list):
+                logger.debug("%s: fallback '%s' anahtarında %d eleman", endpoint, k, len(v))
+                return v
+        logger.warning("%s: dict yanıt liste içermiyor, anahtarlar=%s", endpoint, list(sonuc.keys()))
+        return []
+
     def gelen_faturalar(self, baslangic: date, bitis: date) -> list:
         """
         Gelen e-faturaları çeker (GelenFaturalarV2).
@@ -139,23 +171,12 @@ class MikroApiClient:
             "IlkTarih": baslangic.strftime("%Y-%m-%d"),
             "SonTarih": bitis.strftime("%Y-%m-%d"),
         }, calisma_yili=yil)
-        # API ya liste ya da sarmalı dict döndürebilir
-        if isinstance(sonuc, list):
-            return sonuc
-        if isinstance(sonuc, dict):
-            # Bilinen anahtarları dene
-            for key in ("Faturalar", "faturalar", "Data", "data", "Result", "result",
-                        "Items", "items", "Liste", "liste", "Rows", "rows"):
-                if key in sonuc and isinstance(sonuc[key], list):
-                    logger.debug("GelenFaturalarV2: '%s' anahtarında %d fatura", key, len(sonuc[key]))
-                    return sonuc[key]
-            # Hiç list değer yoksa ilk list değeri dön
-            for k, v in sonuc.items():
-                if isinstance(v, list):
-                    logger.debug("GelenFaturalarV2: fallback '%s' anahtarında %d fatura", k, len(v))
-                    return v
-            logger.warning("GelenFaturalarV2: dict yanıt liste içermiyor, anahtarlar=%s", list(sonuc.keys()))
-        return []
+        return self._extract_list_response(
+            sonuc, "GelenFaturalarV2",
+            tercih_anahtarlar=("Faturalar", "faturalar", "Data", "data",
+                               "Result", "result", "Items", "items",
+                               "Liste", "liste", "Rows", "rows"),
+        )
 
     def fatura_xml(self, fat_guid: str) -> str:
         """Belirli bir faturanın e-Belge XML içeriğini çeker (EBelgeXmlV2)."""
@@ -191,13 +212,11 @@ class MikroApiClient:
             "Size": "1000",
             "Index": 0,
         })
-        if isinstance(sonuc, list):
-            return sonuc
-        if isinstance(sonuc, dict):
-            for key in ("Cariler", "cariler", "Data", "data"):
-                if key in sonuc:
-                    return sonuc[key]
-        return []
+        return self._extract_list_response(
+            sonuc, "CariListesiV2",
+            tercih_anahtarlar=("Cariler", "cariler", "Data", "data",
+                               "Result", "result", "Items", "items"),
+        )
 
     def sql_oku(self, sorgu: str) -> list:
         """
@@ -236,12 +255,8 @@ class MikroApiClient:
             "Size": "1000",
             "Index": 0,
         })
-        if isinstance(sonuc, list):
-            return sonuc
-        if isinstance(sonuc, dict):
-            for key in ("Stoklar", "stoklar", "Data", "data"):
-                if key in sonuc:
-                    return sonuc[key]
-        return []
-
-
+        return self._extract_list_response(
+            sonuc, "StokListesiV2",
+            tercih_anahtarlar=("Stoklar", "stoklar", "Data", "data",
+                               "Result", "result", "Items", "items"),
+        )

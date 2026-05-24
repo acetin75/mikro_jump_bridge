@@ -21,6 +21,7 @@ Windows Task Scheduler için:
 import calendar
 import logging
 from datetime import date
+from decimal import Decimal
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -226,7 +227,7 @@ class Command(BaseCommand):
               AND cha_d_cins = {DOVIZ_TL}
               AND cha_tarihi < '{baslangic}'
         """)
-        acilis = float((acilis_sonuc[0].get("bakiye") or 0) if acilis_sonuc else 0)
+        acilis = Decimal(str((acilis_sonuc[0].get("bakiye") or 0) if acilis_sonuc else 0))
 
         ham = client.sql_oku(f"""
             SELECT TOP 2000
@@ -247,8 +248,8 @@ class Command(BaseCommand):
         running = acilis
         hareketler = []
         for h in ham:
-            borc = float(h.get("borc") or 0)
-            alacak = float(h.get("alacak") or 0)
+            borc = Decimal(str(h.get("borc") or 0))
+            alacak = Decimal(str(h.get("alacak") or 0))
             running += borc - alacak
             hareketler.append(
                 {

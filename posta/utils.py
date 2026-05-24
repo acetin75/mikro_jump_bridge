@@ -82,7 +82,7 @@ def ekstre_gonder(
     donem_baslangic,
     donem_bitis,
     hareketler: list,
-    acilis_bakiye: float = 0.0,
+    acilis_bakiye=0,
     konu: str = "",
 ) -> EkstreGonderimLog:
     """

@@ -31,11 +31,7 @@ def firma_ekle(request):
     if request.method == "POST":
         form = FirmaAyarForm(request.POST)
         if form.is_valid():
-            firma = form.save(commit=False)
-            sifre = form.cleaned_data.get("mikro_sifre_gir", "")
-            if sifre:
-                firma.sifre_kaydet(sifre)
-            firma.save()
+            firma = form.save()
             messages.success(request, f"{firma.ad} eklendi.")
             return redirect("firma_liste")
     else:
@@ -49,11 +45,7 @@ def firma_duzenle(request, pk):
     if request.method == "POST":
         form = FirmaAyarForm(request.POST, instance=firma)
         if form.is_valid():
-            f = form.save(commit=False)
-            sifre = form.cleaned_data.get("mikro_sifre_gir", "")
-            if sifre:
-                f.sifre_kaydet(sifre)
-            f.save()
+            form.save()
             messages.success(request, "Firma güncellendi.")
             next_url = request.POST.get("next_url", "firma_liste")
             if next_url not in ("firma_liste", "hy_firma_sec"):

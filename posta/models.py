@@ -40,6 +40,12 @@ class MailAyar(models.Model):
     def __str__(self):
         return f"{self.kullanici} ({self.smtp_sunucu}:{self.smtp_port})"
 
+    def save(self, *args, **kwargs):
+        """Aktif yapılırsa diğer kayıtları pasifleştirir (singleton garantisi)."""
+        super().save(*args, **kwargs)
+        if self.aktif:
+            type(self).objects.exclude(pk=self.pk).filter(aktif=True).update(aktif=False)
+
     def sifre_kaydet(self, sifre: str) -> None:
         """Ham şifreyi imzalayarak kaydeder."""
         self._sifre_sifreli = Signer().sign(sifre) if sifre else ""
