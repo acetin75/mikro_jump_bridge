@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 from sync_motor.client import MikroApiClient, MikroApiHatasi
+from sync_motor.forms import FirmaAyarForm
 from sync_motor.models import FirmaAyar
 
 logger = logging.getLogger("mikro_sync")
@@ -67,8 +68,10 @@ def firma_sec(request):
         next_url = request.POST.get("next") or "hy_panel"
         return redirect(next_url)
 
+    firmalar_ile_form = [(f, FirmaAyarForm(instance=f)) for f in firmalar]
     return render(request, "hesap_yonetimi/firma_sec.html", {
         "firmalar": firmalar,
+        "firmalar_ile_form": firmalar_ile_form,
         "aktif_firma": _aktif_firma(request),
         "aktif_mod": request.session.get("aktif_baglanti_modu", "yerel"),
     })

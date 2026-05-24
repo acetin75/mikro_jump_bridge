@@ -54,7 +54,10 @@ def firma_duzenle(request, pk):
                 f.sifre_kaydet(sifre)
             f.save()
             messages.success(request, "Firma güncellendi.")
-            return redirect("firma_liste")
+            next_url = request.POST.get("next_url", "firma_liste")
+            if next_url not in ("firma_liste", "hy_firma_sec"):
+                next_url = "firma_liste"
+            return redirect(next_url)
     else:
         form = FirmaAyarForm(instance=firma)
     return render(request, "sync_motor/firma_form.html", {"form": form, "baslik": "Firma Düzenle", "firma": firma})
