@@ -305,7 +305,12 @@
         formData.append("csrfmiddlewaretoken", csrfToken);
 
         fetch("{% url 'hy_baglanti_test' %}", { method: "POST", body: formData })
-          .then(r => r.json())
+          .then(r => {
+            if (!r.ok || r.redirected) {
+              throw new Error("HTTP " + r.status + (r.redirected ? " (yönlendirme)" : ""));
+            }
+            return r.json();
+          })
           .then(data => {
             this.disabled = false;
             btnText.innerHTML = '<i class="bi bi-plug me-1"></i>Yeniden Test Et';
@@ -322,12 +327,13 @@
             }
             guncelleButon();
           })
-          .catch(() => {
+          .catch((err) => {
             this.disabled = false;
             btnText.innerHTML = '<i class="bi bi-plug me-1"></i>Yeniden Test Et';
             testSonucu = { firmaId: null, mod: null, basarili: false };
+            const errMsg = (err && err.message) ? err.message : "Bağlantı hatası";
             if (sonucEl) sonucEl.innerHTML =
-              '<span class="text-danger"><i class="bi bi-x-circle-fill me-1"></i>Bağlantı hatası</span>';
+              '<span class="text-danger"><i class="bi bi-x-circle-fill me-1"></i>' + errMsg + '</span>';
             guncelleButon();
           });
       });

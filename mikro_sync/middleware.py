@@ -17,6 +17,7 @@ MUAF_URL_ONEKLERI = [
 FIRMA_SEC_MUAF_ONEKLERI = MUAF_URL_ONEKLERI + [
     "/firmalar/",
     "/hesap/firma-sec/",
+    "/hesap/firma-baglanti-test/",  # AJAX endpoint — firma seçimi henüz yapılmamış olabilir
     "/static/",
 ]
 
