@@ -21,7 +21,6 @@ GitHub: `acetin75/mikro_jump_bridge` — Django paket adı `mikro_sync` (içsel)
 | Veritabanı | SQLite 3 (`db.sqlite3`) |
 | Frontend | Bootstrap 5.3 (CDN), Bootstrap Icons (CDN) |
 | HTTP İstemcisi | requests 2.34 |
-| XML Güvenliği | defusedxml 0.7 |
 | Statik dosya | whitenoise |
 | Şablon tag | django-widget-tweaks |
 | Env yönetimi | python-decouple (`.env` dosyası) |
@@ -226,7 +225,7 @@ logger.warning("Eşleştirme bulunamadı: %s", mikro_cari_kod)
 logger.error("Aktarım hatası: %s", e, exc_info=True)
 ```
 
-Log dosyası: `logs/mikro_sync.log` (INFO+, 10 MB × 3 yedek)
+Log dosyası: `logs/mikro_sync.log` (INFO+, günlük rotasyon, 30 gün yedek — `TimedRotatingFileHandler`)
 
 ---
 

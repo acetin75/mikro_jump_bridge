@@ -1,0 +1,105 @@
+/* Mikro Sync — ortak stil */
+body { background: #f0f2f5; }
+
+.sidebar {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1e3a5f 0%, #0d2137 100%);
+  width: 240px;
+  position: fixed;
+  top: 0; left: 0;
+  padding-top: 0;
+  z-index: 100;
+}
+.sidebar-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 20px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  text-decoration: none;
+}
+.sidebar-brand span.badge-port {
+  font-size: 0.65rem;
+  background: rgba(255,255,255,0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #aac8e8;
+}
+.sidebar .nav-section {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,0.4);
+  padding: 16px 20px 4px;
+}
+.sidebar .nav-link {
+  color: rgba(255,255,255,0.75);
+  padding: 8px 20px;
+  border-radius: 0;
+  font-size: 0.88rem;
+  display: flex; align-items: center; gap: 8px;
+  transition: background .15s;
+}
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+.main-content {
+  margin-left: 240px;
+  padding: 24px;
+}
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 24px;
+  margin-left: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.page-title { font-size: 1.3rem; font-weight: 600; color: #1e3a5f; }
+
+.stat-card {
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.badge-durum-ham { background: #6c757d; }
+.badge-durum-onay_bekliyor { background: #f59e0b; color: #1a1a1a; }
+.badge-durum-aktarildi { background: #10b981; }
+.badge-durum-hata { background: #ef4444; }
+.badge-durum-atla { background: #9ca3af; }
+
+/* Sidebar aktif firma seçici */
+.sidebar-firma-wrapper {
+  margin: 10px 12px 4px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 10px;
+}
+.sidebar-firma-wrapper .label {
+  color: rgba(255,255,255,0.4);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.sidebar-firma-wrapper .label-icon {
+  color: rgba(255,255,255,0.5);
+  font-size: 0.75rem;
+}
+.sidebar-firma-select {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.82rem;
+  outline: none;
+  cursor: pointer;
+}
+.sidebar-firma-select option { color: #000; }
+.sidebar-firma-select option.placeholder { color: #999; }

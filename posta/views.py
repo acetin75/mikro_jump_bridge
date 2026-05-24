@@ -126,7 +126,7 @@ def cari_ekstre_gonder(request):
 
     cari_kod = form.cleaned_data["cari_kod"]
     cari_unvan = form.cleaned_data.get("cari_unvan", "")
-    alici_email = form.cleaned_data["alici_email"]   # list
+    alici_email = form.cleaned_data["alici_email"]  # list
     bilgi_email = form.cleaned_data.get("bilgi_email", [])  # list
     donem_baslangic = form.cleaned_data["donem_baslangic"]
     donem_bitis = form.cleaned_data["donem_bitis"]

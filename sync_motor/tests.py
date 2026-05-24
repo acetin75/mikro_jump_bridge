@@ -7,6 +7,7 @@ Kapsam:
   - View erişim kontrolü (login zorunluluğu)
   - View POST akışları (PRG pattern)
 """
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -16,6 +17,7 @@ from .models import FirmaAyar, ImportLog
 # ---------------------------------------------------------------------------
 # Model testleri
 # ---------------------------------------------------------------------------
+
 
 class FirmaAyarSifreTestleri(TestCase):
     """Şifre kaydet/al döngüsü ve güvenlik."""
@@ -75,6 +77,7 @@ class ImportLogTestleri(TestCase):
 # View testleri — erişim kontrolü
 # ---------------------------------------------------------------------------
 
+
 class ViewErisimTestleri(TestCase):
     """Login zorunluluğu: oturum açmadan erişim /giris/'e yönlendirmeli."""
 
@@ -103,15 +106,18 @@ class FirmaEklemeViewTestleri(TestCase):
         self.assertEqual(yanit.status_code, 200)
 
     def test_firma_ekle_post_basarili_redirect(self):
-        yanit = self.client.post(reverse("firma_ekle"), {
-            "ad": "Yeni Firma",
-            "baglanti_tipi": "api",
-            "mikro_sunucu": "192.168.1.5",
-            "mikro_port": 8094,
-            "mikro_kullanici": "admin",
-            "firma_kodu": "YNF",
-            "calisma_yili": "2026",
-        })
+        yanit = self.client.post(
+            reverse("firma_ekle"),
+            {
+                "ad": "Yeni Firma",
+                "baglanti_tipi": "api",
+                "mikro_sunucu": "192.168.1.5",
+                "mikro_port": 8094,
+                "mikro_kullanici": "admin",
+                "firma_kodu": "YNF",
+                "calisma_yili": "2026",
+            },
+        )
         self.assertRedirects(yanit, reverse("firma_liste"), fetch_redirect_response=False)
         self.assertTrue(FirmaAyar.objects.filter(ad="Yeni Firma").exists())
 

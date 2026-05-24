@@ -8,6 +8,7 @@ Kullanım (geliştirici ortamında, .env'de LISANS_IMZA_ANAHTARI tanımlıyken):
 Not: Bu komutu sadece geliştirici çalıştırmalıdır.
      Müşteriye yalnızca üretilen ANAHTAR verilir, imzalama anahtarı paylaşılmaz.
 """
+
 from django.core.management.base import BaseCommand
 
 from lisans.utils import lisans_anahtari_uret
@@ -31,10 +32,10 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        musteri  = options["musteri_kodu"]
-        bitis    = options["bitis_tarihi"]
-        tip      = options["tip"]
-        anahtar  = lisans_anahtari_uret(musteri, bitis, tip)
+        musteri = options["musteri_kodu"]
+        bitis = options["bitis_tarihi"]
+        tip = options["tip"]
+        anahtar = lisans_anahtari_uret(musteri, bitis, tip)
 
         self.stdout.write(self.style.SUCCESS("\n========== LİSANS ANAHTARI =========="))
         self.stdout.write(f"Müşteri : {musteri}")

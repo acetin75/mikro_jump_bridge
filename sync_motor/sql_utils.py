@@ -4,6 +4,7 @@ Mikro `SqlVeriOkuV2` parametrik sorgu desteklemediğinden tüm değerler SQL
 metni içine güvenli biçimde gömülmelidir. Bu modüldeki yardımcılar dışında
 ham f-string ile değer eklemekten kaçının.
 """
+
 from __future__ import annotations
 
 from datetime import date, datetime
@@ -35,12 +36,7 @@ def sql_like(deger: str | None, maks_uzunluk: int = 200) -> str:
     s = str(deger).replace("\x00", "")
     if len(s) > maks_uzunluk:
         s = s[:maks_uzunluk]
-    s = (
-        s.replace("\\", "\\\\")
-         .replace("%", "\\%")
-         .replace("_", "\\_")
-         .replace("[", "\\[")
-    )
+    s = s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_").replace("[", "\\[")
     return "'%" + s.replace("'", "''") + "%'"
 
 

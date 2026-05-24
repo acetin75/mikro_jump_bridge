@@ -34,7 +34,7 @@ sync_motor/      (firma ayarları, bağlantı testi, import geçmişi)
 | **Kullanıcı Yönetimi** | Kullanıcı ekleme, silme, şifre değiştirme, yetkilendirme |
 | **Posta / Ekstre** | SMTP ayarları ve cari ekstre e-postalama |
 | **Lisans Sistemi** | 15 gün ücretsiz deneme; HMAC imzalı lisans anahtarıyla aktivasyon |
-| **PDF / Excel / CSV** | Türkçe karakter destekli rapor çıktıları |
+| **PDF / Excel / CSV** _(planlanan)_ | Türkçe karakter destekli rapor çıktıları — kurallar [docs/runbooks/18](docs/runbooks/18-pdf-excel-turkce-karakter.md) altında belgeli, uygulama yol haritasında |
 
 ---
 

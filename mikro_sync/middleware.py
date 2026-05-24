@@ -1,6 +1,7 @@
 """
 Her sayfaya giriş ve firma seçimi zorunluluğu getirir.
 """
+
 from django.conf import settings
 from django.shortcuts import redirect
 
@@ -19,8 +20,8 @@ FIRMA_SEC_MUAF_ONEKLERI = MUAF_URL_ONEKLERI + [
     "/hesap/firma-baglanti-test/",  # AJAX endpoint — firma seçimi henüz yapılmamış olabilir
     "/static/",
     "/lisans/",  # Lisans sayfaları firma seçimi gerektirmez
-    "/posta/",        # Posta ayarları firma seçimi gerektirmez
-    "/kullanicilar/", # Kullanıcı yönetimi firma seçimi gerektirmez
+    "/posta/",  # Posta ayarları firma seçimi gerektirmez
+    "/kullanicilar/",  # Kullanıcı yönetimi firma seçimi gerektirmez
 ]
 
 
@@ -40,6 +41,7 @@ class FirmaSecimZorunluMiddleware:
     Giriş yapmış kullanıcı, session'da aktif firma seçimi yoksa
     /hesap/firma-sec/ sayfasına yönlendirilir.
     """
+
     def __init__(self, get_response):
         self.get_response = get_response
 

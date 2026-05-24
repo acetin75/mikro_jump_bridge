@@ -42,9 +42,7 @@ class _EsnekSMTPBackend(_DjangoSMTP):
         if self.use_ssl:
             connection_params["context"] = ctx
         try:
-            self.connection = self.connection_class(
-                self.host, self.port, **connection_params
-            )
+            self.connection = self.connection_class(self.host, self.port, **connection_params)
             if not self.use_ssl and self.use_tls:
                 self.connection.ehlo()
                 self.connection.starttls(context=ctx)
@@ -92,8 +90,7 @@ def ekstre_gonder(
     ayar = mail_ayar_al()
     if not ayar:
         raise ValueError(
-            "Aktif mail ayarı bulunamadı. "
-            "Lütfen /posta/ sayfasından SMTP bilgilerini girin."
+            "Aktif mail ayarı bulunamadı. Lütfen /posta/ sayfasından SMTP bilgilerini girin."
         )
 
     # alici_email listesi veya tekli string kabul eder
@@ -104,10 +101,7 @@ def ekstre_gonder(
     bilgi_str = ", ".join(bilgi_email)
 
     if not konu:
-        konu = (
-            f"{cari_unvan} — Hesap Ekstresi "
-            f"{donem_baslangic:%d.%m.%Y} – {donem_bitis:%d.%m.%Y}"
-        )
+        konu = f"{cari_unvan} — Hesap Ekstresi {donem_baslangic:%d.%m.%Y} – {donem_bitis:%d.%m.%Y}"
 
     icerik = render_to_string(
         "posta/ekstre_mail.html",
@@ -148,14 +142,14 @@ def ekstre_gonder(
         log.durum = "gonderildi"
         logger.info(
             "Ekstre gönderildi: %s → TO:%s CC:%s",
-            cari_kod, alici_str, bilgi_str or "-",
+            cari_kod,
+            alici_str,
+            bilgi_str or "-",
         )
     except Exception as e:
         log.durum = "hata"
         log.hata_mesaji = str(e)
-        logger.error(
-            "Ekstre gönderim hatası %s → %s: %s", cari_kod, alici_email, e, exc_info=True
-        )
+        logger.error("Ekstre gönderim hatası %s → %s: %s", cari_kod, alici_email, e, exc_info=True)
         log.save()
         raise
     else:

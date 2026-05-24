@@ -7,21 +7,21 @@ DENEME_GUN = 15
 
 class LisansBilgisi(models.Model):
     TIP = [
-        ("deneme",   "Deneme (15 Gün)"),
+        ("deneme", "Deneme (15 Gün)"),
         ("standart", "Standart"),
-        ("premium",  "Premium"),
+        ("premium", "Premium"),
     ]
 
-    install_tarihi  = models.DateField("Kurulum Tarihi", auto_now_add=True)
-    lisans_tipi     = models.CharField("Lisans Tipi", max_length=20, choices=TIP, default="deneme")
+    install_tarihi = models.DateField("Kurulum Tarihi", auto_now_add=True)
+    lisans_tipi = models.CharField("Lisans Tipi", max_length=20, choices=TIP, default="deneme")
     lisans_anahtari = models.CharField("Lisans Anahtarı", max_length=500, blank=True)
-    musteri_kodu    = models.CharField("Müşteri Kodu", max_length=100, blank=True)
-    lisans_bitis    = models.DateField("Lisans Bitiş Tarihi", null=True, blank=True)
-    guncellendi     = models.DateTimeField(auto_now=True)
+    musteri_kodu = models.CharField("Müşteri Kodu", max_length=100, blank=True)
+    lisans_bitis = models.DateField("Lisans Bitiş Tarihi", null=True, blank=True)
+    guncellendi = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering            = ["-guncellendi"]
-        verbose_name        = "Lisans Bilgisi"
+        ordering = ["-guncellendi"]
+        verbose_name = "Lisans Bilgisi"
         verbose_name_plural = "Lisans Bilgileri"
 
     def __str__(self):

@@ -1,8 +1,11 @@
 @echo off
 REM ============================================================
-REM  kontrol.bat — Kod Kalitesi & Güvenlik Kontrolü
-REM  Kullanım: kontrol.bat
-REM  Çalıştır: git commit öncesi veya haftada bir
+REM  kontrol.bat - Kod Kalitesi ve Guvenlik Kontrolu (fail-fast)
+REM  Kullanim: kontrol.bat
+REM  Calistir: git commit oncesi veya haftada bir
+REM
+REM  Her adim hata verirse betik 1 ile cikar; sonda "BASARILI"
+REM  yalnizca tum adimlar gectiyse yazilir.
 REM ============================================================
 setlocal
 cd /d "%~dp0"
@@ -10,37 +13,62 @@ set PYTHON=.venv\Scripts\python.exe
 
 echo.
 echo ========================================
-echo  1/5  RUFF — Linter + Format Kontrolu
+echo  1/6  RUFF - Linter
 echo ========================================
 %PYTHON% -m ruff check . --output-format=concise
-%PYTHON% -m ruff format --check .
+if errorlevel 1 goto :hata
 
 echo.
 echo ========================================
-echo  2/5  VULTURE — Oldu Kod Tespiti
+echo  2/6  RUFF - Format kontrolu
+echo ========================================
+%PYTHON% -m ruff format --check .
+if errorlevel 1 goto :hata
+
+echo.
+echo ========================================
+echo  3/6  VULTURE - Olu kod tespiti
 echo ========================================
 %PYTHON% -m vulture sync_motor hesap_yonetimi lisans posta kullanici mikro_sync --min-confidence 80
+if errorlevel 1 goto :hata
 
 echo.
 echo ========================================
-echo  3/5  PIP-AUDIT — Guvenlik Aciklari
+echo  4/6  PIP-AUDIT - Guvenlik aciklari
 echo ========================================
 %PYTHON% -m pip_audit -r requirements.txt
+if errorlevel 1 goto :hata
 
 echo.
 echo ========================================
-echo  4/5  BAGIMLILK GUNCELLEME KONTROLU
+echo  5/6  DJANGO sistem kontrolu
 echo ========================================
-%PYTHON% -m pip list --outdated --format=columns
+%PYTHON% manage.py check
+if errorlevel 1 goto :hata
 
 echo.
 echo ========================================
-echo  5/5  DJANGO SISTEM KONTROLU
+echo  6/6  TESTLER
 echo ========================================
-%PYTHON% manage.py check --deploy 2>&1
+%PYTHON% manage.py test --verbosity=1
+if errorlevel 1 goto :hata
 
 echo.
 echo ========================================
-echo  TAMAMLANDI
+echo  BASARILI - Tum kalite kapilari gecti
+echo ========================================
+echo.
+echo (Bilgi) Eski paketleri gormek icin:
+echo   %PYTHON% -m pip list --outdated
+echo.
+pause
+exit /b 0
+
+:hata
+echo.
+echo ========================================
+echo  HATA - Yukaridaki adimda kalite kapisi
+echo  basarisiz oldu. Commit ETMEYIN.
 echo ========================================
 pause
+exit /b 1

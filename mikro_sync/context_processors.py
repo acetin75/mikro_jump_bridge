@@ -6,6 +6,7 @@ def lisans_bilgi(request):
     if not request.user.is_authenticated:
         return {}
     from lisans.models import LisansBilgisi
+
     lisans = LisansBilgisi.objects.first()
     return {"lisans": lisans}
 

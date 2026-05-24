@@ -8,7 +8,7 @@ on:
 
 jobs:
   kalite:
-    name: Lint + Test
+    name: Lint + Test + Audit
     runs-on: windows-latest
 
     steps:
@@ -20,20 +20,33 @@ jobs:
           python-version: "3.10"
           cache: "pip"
 
-      - name: Bağımlılıkları kur
+      - name: Üretim bağımlılıklarını kur
         run: pip install -r requirements.txt
 
-      - name: .env oluştur (CI için)
-        run: |
-          echo SECRET_KEY=ci-test-key-degistir > .env
-          echo DEBUG=True >> .env
-          echo ALLOWED_HOSTS=127.0.0.1,localhost >> .env
+      - name: Geliştirme araçlarını kur
+        run: pip install -r requirements-dev.txt
 
-      - name: Lint (ruff)
-        run: ruff check .
+      - name: .env oluştur (CI için)
+        shell: pwsh
+        run: |
+          @"
+          SECRET_KEY=ci-only-not-secret-7f4b9c2a8d1e6f3b5c7a9e2d4f6b8c1a3e5d7f9b2c4a6e8d1f3b5c7a9e2d4
+          DEBUG=True
+          ALLOWED_HOSTS=127.0.0.1,localhost
+          "@ | Out-File -FilePath .env -Encoding utf8
+
+      - name: Ruff — lint
+        run: ruff check . --output-format=github
+
+      - name: Ruff — format kontrolü
+        run: ruff format --check .
 
       - name: Django sistem kontrolü
         run: python manage.py check
+
+      - name: pip-audit — güvenlik taraması
+        run: pip-audit -r requirements.txt --disable-pip
+        continue-on-error: true
 
       - name: Testleri çalıştır
         run: python manage.py test --verbosity=2

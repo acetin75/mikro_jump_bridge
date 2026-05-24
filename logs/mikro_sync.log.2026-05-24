@@ -1,0 +1,609 @@
+2026-05-22 18:46:09,838 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 18:46:10,963 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | 1 kayıt
+2026-05-22 18:47:20,761 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 18:48:41,443 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:02:23,015 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:03:21,247 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:03:21,711 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error -  Veritabanı bulunamadı!', 'IsError': True}]}
+2026-05-22 19:06:42,079 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:06:42,434 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error -  Veritabanı bulunamadı!', 'IsError': True}]}
+2026-05-22 19:06:42,435 DEBUG [mikro_sync] GelenFaturalarV2: 'result' anahtarında 1 fatura
+2026-05-22 19:06:44,473 ERROR [mikro_sync] Muhasebe Bürosu API GET hatası cari/: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/cari/ (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] Hedef makine etkin olarak reddettiğinden bağlantı kurulamadı"))
+2026-05-22 19:06:44,473 WARNING [mikro_sync] Muhasebe Bürosu cari listesi alınamadı: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/cari/ (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] Hedef makine etkin olarak reddettiğinden bağlantı kurulamadı"))
+2026-05-22 19:06:44,473 INFO [mikro_sync] Cari eşleştirme bulunamadı:  ()
+2026-05-22 19:07:12,206 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:07:12,340 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error -  Veritabanı bulunamadı!', 'IsError': True}]}
+2026-05-22 19:12:09,603 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:12:09,951 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-22 19:12:09,952 DEBUG [mikro_sync] GelenFaturalarV2: 'result' anahtarında 1 fatura
+2026-05-22 19:12:11,996 ERROR [mikro_sync] Muhasebe Bürosu API GET hatası cari/: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/cari/ (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] Hedef makine etkin olarak reddettiğinden bağlantı kurulamadı"))
+2026-05-22 19:12:11,997 WARNING [mikro_sync] Muhasebe Bürosu cari listesi alınamadı: HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/cari/ (Caused by NewConnectionError("HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] Hedef makine etkin olarak reddettiğinden bağlantı kurulamadı"))
+2026-05-22 19:12:11,997 INFO [mikro_sync] Cari eşleştirme bulunamadı:  ()
+2026-05-22 19:46:24,230 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-22 19:46:24,957 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 400, 'Data': None, 'ErrorMessage': 'İstenilen aralıktaki kayıtlar getirilirken hata oluştu. Lütfen tekrar deneyin.', 'IsError': True}]}
+2026-05-24 12:54:09,099 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 12:55:11,720 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 12:55:18,594 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 12:55:18,594 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 12:55:18,760 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 12:55:18,761 INFO [mikro_sync] Firma kartları çekildi [more]: 1 cari
+2026-05-24 12:56:27,223 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 12:56:28,013 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 12:56:51,433 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:01:41,283 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:01:41,323 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:01:41,470 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:01:45,976 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:01:45,977 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:01:46,129 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:01:46,130 INFO [mikro_sync] Firma kartları çekildi [more]: 1 cari
+2026-05-24 13:01:49,679 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:01:49,731 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:01:49,877 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:02:08,172 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:02:08,172 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:02:08,319 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:02:08,320 INFO [mikro_sync] Bakiye raporu [more]: 1 satır
+2026-05-24 13:02:13,393 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:02:13,393 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:02:13,575 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:02:13,575 INFO [mikro_sync] Bakiye raporu [more]: 1 satır
+2026-05-24 13:08:30,634 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:16:39,925 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:16:39,926 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:20:31,784 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:20:31,826 INFO [mikro_sync] Bağlantı testi: firma=more mod=yerel basarili=True
+2026-05-24 13:20:33,138 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:20:33,192 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:20:33,362 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:20:40,100 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:20:40,100 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:20:40,271 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': 'connection error - Şifre Hatalı!', 'IsError': True}]}
+2026-05-24 13:20:40,272 INFO [mikro_sync] Firma kartları çekildi [more]: 1 cari
+2026-05-24 13:22:08,694 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:22:15,621 ERROR [mikro_sync] FirmaAyar pk=1 için şifre çözme başarısız
+2026-05-24 13:26:09,756 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:10,582 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 400, 'Data': None, 'ErrorMessage': 'SQLSorgu parametresi gönderilmelidir !', 'IsError': True}]}
+2026-05-24 13:26:32,754 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:33,007 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 400, 'Data': None, 'ErrorMessage': 'SQLSorgu parametresi gönderilmelidir !', 'IsError': True}]}
+2026-05-24 13:26:34,185 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:34,353 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 400, 'Data': None, 'ErrorMessage': 'SQLSorgu parametresi gönderilmelidir !', 'IsError': True}]}
+2026-05-24 13:26:34,353 INFO [mikro_sync] Firma kartları çekildi [more]: 1 cari
+2026-05-24 13:26:45,763 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:45,853 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:45,917 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_unvan' - ", 'IsError': True}]}
+2026-05-24 13:26:46,010 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_bakiye' - ", 'IsError': True}]}
+2026-05-24 13:26:46,010 INFO [mikro_sync] Bakiye raporu [more]: 1 satır
+2026-05-24 13:26:49,785 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:49,935 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_bakiye' - ", 'IsError': True}]}
+2026-05-24 13:26:49,936 INFO [mikro_sync] Bakiye raporu [more]: 1 satır
+2026-05-24 13:26:55,035 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:26:55,217 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_Guid': '{9A7782F7-5D39-43D5-9700-5EBCED3FCFDA}', 'cari_DBCno': 0, 'cari_SpecRECno': 0, 'cari_iptal': False, 'cari_fileid': 31, 'cari_hidden': False, 'cari_kilitli': False, 'cari_degisti': False, 'cari_checksum': 0, 'cari_create_user': 6, 'cari_create_date': '2025-02-12 12:52:03', 'cari_lastup_user': 14, 'cari_lastup_date': '2026-01-27 12:47:47', 'cari_special1': '', 'cari_special2': '', 'cari_special3': '02.618', 'cari_MainProgramNo
+2026-05-24 13:27:05,733 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:27:05,892 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_vdk' - ", 'IsError': True}]}
+2026-05-24 13:27:11,753 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:27:11,925 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'MU0455'}, {'cari_kod': 'MT0427'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 13:28:01,588 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:01,758 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_vkn_vd' - ", 'IsError': True}]}
+2026-05-24 13:28:01,758 WARNING [mikro_sync] sql_oku hatası [401]: Invalid column name 'cari_vkn_vd' - 
+2026-05-24 13:28:01,758 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:01,931 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_bakiye' - ", 'IsError': True}]}
+2026-05-24 13:28:01,932 WARNING [mikro_sync] sql_oku hatası [401]: Invalid column name 'cari_bakiye' - 
+2026-05-24 13:28:15,183 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:15,360 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_Guid': '{9A7782F7-5D39-43D5-9700-5EBCED3FCFDA}', 'cari_DBCno': 0, 'cari_SpecRECno': 0, 'cari_iptal': False, 'cari_fileid': 31, 'cari_hidden': False, 'cari_kilitli': False, 'cari_degisti': False, 'cari_checksum': 0, 'cari_create_user': 6, 'cari_create_date': '2025-02-12 12:52:03', 'cari_lastup_user': 14, 'cari_lastup_date': '2026-01-27 12:47:47', 'cari_special1': '', 'cari_special2': '', 'cari_special3': '02.618', 'cari_MainProgramNo
+2026-05-24 13:28:48,277 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:48,446 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cha_Guid': '{E6C05D95-7366-47C7-905B-6986B9BAED35}', 'cha_DBCno': 0, 'cha_SpecRecNo': 0, 'cha_iptal': False, 'cha_fileid': 51, 'cha_hidden': False, 'cha_kilitli': True, 'cha_degisti': False, 'cha_CheckSum': 0, 'cha_create_user': 6, 'cha_create_date': '2025-03-01 10:20:41', 'cha_lastup_user': 6, 'cha_lastup_date': '2025-03-01 10:28:06', 'cha_special1': '', 'cha_special2': '', 'cha_special3': '', 'cha_MainProgramNo': 21, 'cha_VersionNo': '
+2026-05-24 13:28:48,446 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:48,599 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'CH_CARI_BAKIYE' - ", 'IsError': True}]}
+2026-05-24 13:28:48,600 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:48,740 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'CARI_BAKIYE' - ", 'IsError': True}]}
+2026-05-24 13:28:48,740 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:48,896 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'VW_CARI_BAKIYE' - ", 'IsError': True}]}
+2026-05-24 13:28:48,896 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:28:49,040 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'CARI_HESAPLAR_OZET' - ", 'IsError': True}]}
+2026-05-24 13:29:00,681 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:29:00,838 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cha_Guid': '{E6C05D95-7366-47C7-905B-6986B9BAED35}', 'cha_DBCno': 0, 'cha_SpecRecNo': 0, 'cha_iptal': False, 'cha_fileid': 51, 'cha_hidden': False, 'cha_kilitli': True, 'cha_degisti': False, 'cha_CheckSum': 0, 'cha_create_user': 6, 'cha_create_date': '2025-03-01 10:20:41', 'cha_lastup_user': 6, 'cha_lastup_date': '2025-03-01 10:28:06', 'cha_special1': '', 'cha_special2': '', 'cha_special3': '', 'cha_MainProgramNo': 21, 'cha_VersionNo': '
+2026-05-24 13:29:09,246 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:29:09,420 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cha_Guid': '{E6C05D95-7366-47C7-905B-6986B9BAED35}', 'cha_DBCno': 0, 'cha_SpecRecNo': 0, 'cha_iptal': False, 'cha_fileid': 51, 'cha_hidden': False, 'cha_kilitli': True, 'cha_degisti': False, 'cha_CheckSum': 0, 'cha_create_user': 6, 'cha_create_date': '2025-03-01 10:20:41', 'cha_lastup_user': 6, 'cha_lastup_date': '2025-03-01 10:28:06', 'cha_special1': '', 'cha_special2': '', 'cha_special3': '', 'cha_MainProgramNo': 21, 'cha_VersionNo': '
+2026-05-24 13:30:07,395 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:31:43,844 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:31:55,738 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:32:00,396 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:32:01,329 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'CEK_SENET_HAREKETLERI' - ", 'IsError': True}]}
+2026-05-24 13:32:01,330 WARNING [mikro_sync] sql_oku hatası [401]: Invalid object name 'CEK_SENET_HAREKETLERI' - 
+2026-05-24 13:32:01,330 INFO [mikro_sync] Ödeme planlama [more]: 0 çek/senet
+2026-05-24 13:32:05,438 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:32:08,193 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:32:09,112 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_bakiye' - ", 'IsError': True}]}
+2026-05-24 13:32:09,113 WARNING [mikro_sync] sql_oku hatası [401]: Invalid column name 'cari_bakiye' - 
+2026-05-24 13:32:09,113 INFO [mikro_sync] Bakiye raporu [more]: 0 satır
+2026-05-24 13:32:13,893 ERROR [mikro_sync] Firma kartları hatası [more]: Mikro API zaman aşımı (30s)
+2026-05-24 13:32:15,801 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 13:32:16,708 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid column name 'cari_bakiye' - ", 'IsError': True}]}
+2026-05-24 13:32:16,708 WARNING [mikro_sync] sql_oku hatası [401]: Invalid column name 'cari_bakiye' - 
+2026-05-24 13:32:16,708 INFO [mikro_sync] Bakiye raporu [more]: 0 satır
+2026-05-24 13:32:25,760 ERROR [mikro_sync] Panel özet hatası [more]: Mikro API zaman aşımı (30s)
+2026-05-24 13:32:35,474 ERROR [mikro_sync] Ödeme planlama hatası [more]: Mikro API zaman aşımı (30s)
+2026-05-24 15:08:26,408 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:08:28,226 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:08:47,437 ERROR [mikro_sync] Bakiye raporu hatası [more]: Mikro API bağlantı hatası (213.155.110.181): HTTPConnectionPool(host='213.155.110.181', port=8094): Max retries exceeded with url: /Api/APIMethods/SqlVeriOkuV2 (Caused by ConnectTimeoutError(<HTTPConnection(host='213.155.110.181', port=8094) at 0x19b61c10830>, 'Connection to 213.155.110.181 timed out. (connect timeout=30)'))
+2026-05-24 15:08:49,252 ERROR [mikro_sync] Bakiye raporu hatası [more]: Mikro API bağlantı hatası (213.155.110.181): HTTPConnectionPool(host='213.155.110.181', port=8094): Max retries exceeded with url: /Api/APIMethods/SqlVeriOkuV2 (Caused by ConnectTimeoutError(<HTTPConnection(host='213.155.110.181', port=8094) at 0x19b61ecd310>, 'Connection to 213.155.110.181 timed out. (connect timeout=30)'))
+2026-05-24 15:09:29,953 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:09:30,174 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'MA0082', 'cari_unvan1': ' EAGLE MIDDLE EAST FZCO', 'cari_VergiKimlikNo': '', 'cari_bakiye': -910.770658572772}, {'cari_kod': 'MU0743', 'cari_unvan1': ' SR NAVIGATION S.A', 'cari_VergiKimlikNo': '', 'cari_bakiye': -1288.32897359953}, {'cari_kod': 'CTMU0021', 'cari_unvan1': ' WAVE CHARTERING LIMITED', 'cari_VergiKimlikNo': '', 'cari_bakiye': -459.672616092015}, {'cari_kod': 'MT0076', 'cari_unvan1': 'A.RIZA KINAY VAPUR ACENTELİĞ
+2026-05-24 15:09:30,175 INFO [mikro_sync] Bakiye raporu [more]: 322 satır
+2026-05-24 15:09:36,219 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:09:36,587 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'MA0082', 'cari_unvan1': ' EAGLE MIDDLE EAST FZCO', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'MU0032', 'cari_unvan1': ' IMS SA', 'cari_unvan2': ' IMS SA', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'MA0074', 'cari_unvan1': ' MEDIMARE', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_vdaire_a
+2026-05-24 15:09:36,588 INFO [mikro_sync] Firma kartları çekildi [more]: 500 cari
+2026-05-24 15:09:44,051 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:09:44,201 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'MU0342', 'cari_unvan1': 'ADELE SHIPPING AND FREIGHT DMCC', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'MA0004', 'cari_unvan1': 'ADELE SHIPPING AND FREIGHT DMCC', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'ME0035', 'cari_unvan1': 'ADELE SHIPPING AND FREIGHT DMCC', 'cari_unvan2
+2026-05-24 15:09:44,202 INFO [mikro_sync] Firma kartları çekildi [more]: 6 cari
+2026-05-24 15:10:02,581 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:10:02,736 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'CEK_SENET_HAREKETLERI' - ", 'IsError': True}]}
+2026-05-24 15:10:02,737 WARNING [mikro_sync] sql_oku hatası [401]: Invalid object name 'CEK_SENET_HAREKETLERI' - 
+2026-05-24 15:10:02,737 INFO [mikro_sync] Ödeme planlama [more]: 0 çek/senet
+2026-05-24 15:10:05,186 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 15:10:05,364 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 401, 'Data': None, 'ErrorMessage': "Invalid object name 'CEK_SENET_HAREKETLERI' - ", 'IsError': True}]}
+2026-05-24 15:10:05,365 WARNING [mikro_sync] sql_oku hatası [401]: Invalid object name 'CEK_SENET_HAREKETLERI' - 
+2026-05-24 15:10:05,366 INFO [mikro_sync] Ödeme planlama [more]: 0 çek/senet
+2026-05-24 15:10:32,530 DEBUG [mikro_sync] Mikro API → GelenFaturalarV2
+2026-05-24 15:10:34,114 DEBUG [mikro_sync] Mikro API ← GelenFaturalarV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 400, 'Data': None, 'ErrorMessage': 'İstenilen aralıktaki kayıtlar getirilirken hata oluştu. Lütfen tekrar deneyin.', 'IsError': True}]}
+2026-05-24 15:10:34,114 DEBUG [mikro_sync] GelenFaturalarV2: 'result' anahtarında 1 fatura
+2026-05-24 16:19:41,532 INFO [mikro_sync] Bağlantı testi: firma=SIMSEKLER mod=yerel basarili=True
+2026-05-24 16:20:01,712 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:02,148 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL004', 'cari_unvan1': '', 'cari_unvan2': 'MAERSK LINE A/S ATT GRO
+2026-05-24 16:20:02,148 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:20:18,760 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:18,926 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_sicil_no': '', 'cari_muh_kod': ''}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:20:20,824 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:21,008 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': ''}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:20:21,009 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:21,308 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:20:21,308 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] DEL026: 0 satır
+2026-05-24 16:20:27,952 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:28,115 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': ''}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:20:28,116 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:28,304 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:20:28,305 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] DEL026: 0 satır
+2026-05-24 16:20:31,556 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:20:31,878 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL004', 'cari_unvan1': '', 'cari_unvan2': 'MAERSK LINE A/S ATT GRO
+2026-05-24 16:20:31,878 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:21:37,744 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:21:38,065 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL004', 'cari_unvan1': '', 'cari_unvan2': 'MAERSK LINE A/S ATT GRO
+2026-05-24 16:21:38,067 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:22:25,045 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:22:28,436 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:22:28,846 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_vdaire_adi': '', 'cari_CepTel': '', 'cari_EMail': ''}, {'cari_kod': 'DEL004', 'cari_unvan1': '', 'cari_unvan2': 'MAERSK LINE A/S ATT GRO
+2026-05-24 16:22:28,846 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:22:46,086 ERROR [mikro_sync] Firma kartları hatası [more]: Mikro API bağlantı hatası (213.155.110.181): HTTPConnectionPool(host='213.155.110.181', port=8094): Max retries exceeded with url: /Api/APIMethods/SqlVeriOkuV2 (Caused by ConnectTimeoutError(<HTTPConnection(host='213.155.110.181', port=8094) at 0x1f9de29dae0>, 'Connection to 213.155.110.181 timed out. (connect timeout=30)'))
+2026-05-24 16:26:33,797 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:26:34,101 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 16:26:34,101 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:28:05,239 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:28:05,424 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': 'MÜŞTERİLER', 'cari_doviz_cinsi': '1'}, {'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': 'MÜŞTERİLER', 'cari_doviz_cinsi': '1'}]}], '
+2026-05-24 16:28:05,425 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 2 cari
+2026-05-24 16:28:09,577 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:28:09,747 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:28:09,748 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:28:09,954 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cha_tarihi': '2026-05-20 00:00:00', 'cha_evrak_tip': '4', 'cha_evrakno_seri': '', 'cha_evrakno_sira': 77, 'cha_aciklama': '', 'cha_meblag': 15000, 'cha_normal_Iade': '0', 'cha_d_cins': '1', 'cha_d_kur': 45.4477, 'cha_belge_no': '', 'cha_tip': '1'}, {'cha_tarihi': '2026-05-20 00:00:00', 'cha_evrak_tip': '4', 'cha_evrakno_seri': '', 'cha_evrakno_sira': 77, 'cha_aciklama': '', 'cha_meblag': 35000, 'cha_normal_Iade': '0', 'cha_d_cins': '1', 
+2026-05-24 16:28:09,955 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M01852: 5 satır
+2026-05-24 16:28:40,584 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:28:40,905 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 16:28:40,906 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:28:47,010 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:28:47,318 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 16:28:47,319 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:30:55,524 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:30:55,688 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:30:55,689 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:30:56,124 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 16:30:56,125 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:31:15,105 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:31:15,275 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:31:15,275 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:31:15,447 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': 'MÜŞTERİLER', 'cari_doviz_cinsi': '1'}, {'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_unvan2': '', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': 'MÜŞTERİLER', 'cari_doviz_cinsi': '1'}]}], '
+2026-05-24 16:31:15,447 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 2 cari
+2026-05-24 16:31:19,592 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:31:20,139 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'S01872', 'cari_unvan1': 'FOLKART YAPI SANAYİ TİCARET AŞ.', 'cari_VergiKimlikNo': '', 'cari_bakiye': 27240600}, {'cari_kod': 'M01322', 'cari_unvan1': 'TURKISH PETROLEUM INTERNATIONAL ANONİM ŞİRKETİ', 'cari_VergiKimlikNo': '', 'cari_bakiye': 4336665.4172828}, {'cari_kod': 'TA0001', 'cari_unvan1': 'TAKİPLİ ALACAKLAR', 'cari_VergiKimlikNo': '', 'cari_bakiye': 1055321.23}, {'cari_kod': 'S00540', 'cari_unvan1': 'KÜLAHÇIOĞLU DIŞ TİC
+2026-05-24 16:31:20,141 INFO [mikro_sync] Bakiye raporu [SIMSEKLER]: 1000 satır
+2026-05-24 16:31:30,260 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:31:30,423 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:31:30,423 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:31:30,872 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 16:31:30,873 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:33:25,206 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:33:25,397 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:33:25,398 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:33:25,583 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:33:25,583 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] avs: 0 satır
+2026-05-24 16:36:45,977 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:36:46,134 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:36:46,135 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:36:46,308 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:36:46,309 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:36:46,484 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:36:46,484 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] avs: 0 satır
+2026-05-24 16:36:49,937 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:36:50,107 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:36:50,107 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:36:50,264 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:36:50,265 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:36:50,423 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:36:50,423 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] avs: 0 satır
+2026-05-24 16:37:49,526 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:37:49,684 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:37:49,685 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:37:49,877 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:37:49,878 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:37:50,054 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:37:50,055 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] avs: 0 satır
+2026-05-24 16:38:00,568 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:38:00,744 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:38:00,746 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:38:00,918 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:38:00,920 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:38:01,120 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:38:01,122 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] avs: 0 satır
+2026-05-24 16:39:01,638 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:01,909 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:01,910 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:02,079 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:02,079 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:02,250 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:02,251 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] avs: 0 satır
+2026-05-24 16:39:04,403 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:04,962 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'S01872', 'cari_unvan1': 'FOLKART YAPI SANAYİ TİCARET AŞ.', 'cari_VergiKimlikNo': '', 'cari_bakiye': 27240600}, {'cari_kod': 'M01322', 'cari_unvan1': 'TURKISH PETROLEUM INTERNATIONAL ANONİM ŞİRKETİ', 'cari_VergiKimlikNo': '', 'cari_bakiye': 4336665.41728279}, {'cari_kod': 'TA0001', 'cari_unvan1': 'TAKİPLİ ALACAKLAR', 'cari_VergiKimlikNo': '', 'cari_bakiye': 1055321.23}, {'cari_kod': 'S00540', 'cari_unvan1': 'KÜLAHÇIOĞLU DIŞ Tİ
+2026-05-24 16:39:04,963 INFO [mikro_sync] Bakiye raporu [SIMSEKLER]: 1000 satır
+2026-05-24 16:39:09,741 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:09,908 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.'}, {'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:11,176 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:11,350 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:11,350 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:11,522 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133226}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:11,522 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:11,710 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6'}, {'tarih': '2026-01-14 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157439', 'aciklama': 
+2026-05-24 16:39:11,710 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 16:39:14,342 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:14,499 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:14,500 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:14,796 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107438, 'alacak': 822186.072888771, 'bakiye': -4909.79978133272}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:39:14,797 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:39:15,016 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6'}, {'tarih': '2026-01-14 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157439', 'aciklama': 
+2026-05-24 16:39:15,017 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 16:40:58,326 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:40:58,486 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:40:58,487 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:40:58,925 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 16:40:58,925 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 16:41:09,505 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:41:09,684 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M01151', 'cari_unvan1': ' BUTROS MARITIME AND TRANSPORT S.A', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:41:09,684 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:41:09,956 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 20530.56, 'alacak': 20530.56, 'bakiye': 0}, {'doviz': '1', 'borc': 14344.3034707279, 'alacak': 13748.1050763141, 'bakiye': 596.198394413821}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:41:09,957 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:41:10,120 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-03-31 00:00:00', 'ba': '0', 'evrak_no': '-337', 'aciklama': '', 'kur': 44.3841, 'borc': 1.842528406806, 'alacak': 0, 'doviz': '1', 'vade': 20260331, 'kaynak': '5'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:41:10,121 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M01151: 1 satır
+2026-05-24 16:41:16,940 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:41:17,113 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M01151', 'cari_unvan1': ' BUTROS MARITIME AND TRANSPORT S.A', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:41:17,113 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:41:17,394 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 20530.56, 'alacak': 20530.56, 'bakiye': 0}, {'doviz': '1', 'borc': 14344.3034707279, 'alacak': 13748.1050763141, 'bakiye': 596.198394413825}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:41:17,395 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:41:17,557 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2023-07-04 00:00:00', 'ba': '0', 'evrak_no': 'EE2-2890', 'aciklama': '', 'kur': 26.0312, 'borc': 500.00021356, 'alacak': 0, 'doviz': '1', 'vade': 20230820, 'kaynak': '8'}, {'tarih': '2023-07-05 00:00:00', 'ba': '0', 'evrak_no': 'EE2-2889', 'aciklama': '', 'kur': 26.0035, 'borc': 5800, 'alacak': 0, 'doviz': '1', 'vade': 20230820, 'kaynak': '29'}, {'tarih': '2023-07-27 00:00:00', 'ba': '1', 'evrak_no': 'OHHE-367', 'aciklama': 'CEP
+2026-05-24 16:41:17,558 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M01151: 31 satır
+2026-05-24 16:43:05,553 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:05,737 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.'}, {'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:07,241 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:07,513 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:07,514 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:07,685 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133226}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:07,686 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:07,857 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:07,858 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:08,741 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:09,054 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:09,055 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:09,249 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133249}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:09,292 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:09,357 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 16:43:09,373 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:09,598 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 16:43:09,599 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 16:43:09,674 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:43:09,676 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:11,130 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 16:43:11,140 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:43:11,334 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 16:43:11,334 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 16:48:16,305 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:16,467 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:16,468 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:16,738 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133249}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:16,738 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:16,911 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:16,911 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:18,371 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 16:48:18,384 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:18,593 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 16:48:18,595 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 16:48:30,481 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:30,861 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_adet': 5364, 'toplam_alacak': 1101831738.02986, 'toplam_borc': 1081310077.68298}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:37,577 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:37,857 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_adet': 5364, 'toplam_alacak': 1101831738.02986, 'toplam_borc': 1081310077.68298}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:42,119 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:42,561 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'S01872', 'cari_unvan1': 'FOLKART YAPI SANAYİ TİCARET AŞ.', 'cari_VergiKimlikNo': '', 'cari_bakiye': 27240600}, {'cari_kod': 'M01322', 'cari_unvan1': 'TURKISH PETROLEUM INTERNATIONAL ANONİM ŞİRKETİ', 'cari_VergiKimlikNo': '', 'cari_bakiye': 4336665.4172828}, {'cari_kod': 'TA0001', 'cari_unvan1': 'TAKİPLİ ALACAKLAR', 'cari_VergiKimlikNo': '', 'cari_bakiye': 1055321.23}, {'cari_kod': 'S00540', 'cari_unvan1': 'KÜLAHÇIOĞLU DIŞ TİC
+2026-05-24 16:48:42,562 INFO [mikro_sync] Bakiye raporu [SIMSEKLER]: 1000 satır
+2026-05-24 16:48:48,085 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:48,275 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'S01872', 'cari_unvan1': 'FOLKART YAPI SANAYİ TİCARET AŞ.', 'cari_grup_kodu': 'DİĞER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:48,275 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:48,432 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 27240600, 'alacak': 0, 'bakiye': 27240600}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:48,432 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:48,608 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 22305000}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:48:48,609 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:50,253 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 16:48:50,267 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:48:50,444 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-16 00:00:00', 'ba': '0', 'evrak_no': '-50522', 'aciklama': 'CARİ ÖDEME', 'sm': '', 'kur': 1, 'borc': 1233900, 'alacak': 0, 'doviz': '0', 'vade': 20260116, 'kaynak': '0', 'gecersiz_fl': '0'}, {'tarih': '2026-02-19 00:00:00', 'ba': '0', 'evrak_no': '-51033', 'aciklama': 'FMO-E-02-05 TAKSİT ÖDEMESİ', 'sm': '', 'kur': 1, 'borc': 1233900, 'alacak': 0, 'doviz': '0', 'vade': 20260219, 'kaynak': '0', 'gecersiz_fl': '0'}, {'tarih
+2026-05-24 16:48:50,445 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] S01872: 4 satır
+2026-05-24 16:49:11,524 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:11,694 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.'}, {'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:14,198 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:14,379 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:14,379 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:14,675 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133249}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:14,676 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:14,847 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:14,848 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:15,592 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:15,817 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:15,818 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:16,050 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107438, 'alacak': 822186.072888771, 'bakiye': -4909.79978133261}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:16,051 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:16,232 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 16:49:16,232 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:16,345 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 16:49:16,359 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:17,159 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 16:49:17,160 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 16:49:17,766 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 16:49:17,783 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 16:49:17,977 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 16:49:17,978 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 17:31:05,005 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:31:05,176 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:31:05,188 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:31:05,379 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133261}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:31:05,380 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:31:05,662 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:31:05,662 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:31:08,343 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 17:31:08,352 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:31:08,685 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 17:31:08,687 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 17:41:31,187 ERROR [mikro_sync] Test maili hatası: 'ascii' codec can't encode character '\u0131' in position 0: ordinal not in range(128)
+Traceback (most recent call last):
+  File "C:\mikro_jump_bridge\posta\views.py", line 75, in posta_test
+    test_maili_gonder(ayar, alici)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\mikro_jump_bridge\posta\utils.py", line 123, in test_maili_gonder
+    msg.send()
+    ~~~~~~~~^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\message.py", line 358, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 130, in send_messages
+    new_conn_created = self.open()
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 97, in open
+    self.connection.login(self.username, self.password)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\smtplib.py", line 751, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\smtplib.py", line 659, in auth
+    authobject(challenge).encode('ascii'), eol='')
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+UnicodeEncodeError: 'ascii' codec can't encode character '\u0131' in position 0: ordinal not in range(128)
+2026-05-24 17:43:34,084 ERROR [mikro_sync] Test maili hatası: (535, b'5.7.139 Authentication unsuccessful, SmtpClientAuthentication is disabled for the Tenant. Visit https://aka.ms/smtp_auth_disabled for more information. [MI1P293CA0003.ITAP293.PROD.OUTLOOK.COM 2026-05-24T14:43:34.727Z 08DEB94382CA55E1]')
+Traceback (most recent call last):
+  File "C:\mikro_jump_bridge\posta\views.py", line 75, in posta_test
+    test_maili_gonder(ayar, alici)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\mikro_jump_bridge\posta\utils.py", line 123, in test_maili_gonder
+    msg.send()
+    ~~~~~~~~^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\message.py", line 358, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 130, in send_messages
+    new_conn_created = self.open()
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 97, in open
+    self.connection.login(self.username, self.password)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\smtplib.py", line 762, in login
+    raise last_exception
+  File "C:\Python314\Lib\smtplib.py", line 751, in login
+    (code, resp) = self.auth(
+                   ~~~~~~~~~^
+        authmethod, getattr(self, method_name),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        initial_response_ok=initial_response_ok)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\smtplib.py", line 669, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.139 Authentication unsuccessful, SmtpClientAuthentication is disabled for the Tenant. Visit https://aka.ms/smtp_auth_disabled for more information. [MI1P293CA0003.ITAP293.PROD.OUTLOOK.COM 2026-05-24T14:43:34.727Z 08DEB94382CA55E1]')
+2026-05-24 17:52:24,721 ERROR [mikro_sync] Test maili hatası: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mail.malihaber.com.tr'. (_ssl.c:1081)
+Traceback (most recent call last):
+  File "C:\mikro_jump_bridge\posta\views.py", line 75, in posta_test
+    test_maili_gonder(ayar, alici)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\mikro_jump_bridge\posta\utils.py", line 123, in test_maili_gonder
+    msg.send()
+    ~~~~~~~~^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\message.py", line 358, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 130, in send_messages
+    new_conn_created = self.open()
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 95, in open
+    self.connection.starttls(context=self.ssl_context)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\smtplib.py", line 791, in starttls
+    self.sock = context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                    server_hostname=self._host)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Python314\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Python314\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mail.malihaber.com.tr'. (_ssl.c:1081)
+2026-05-24 17:52:52,962 ERROR [mikro_sync] Test maili hatası: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mail.malihaber.com.tr'. (_ssl.c:1081)
+Traceback (most recent call last):
+  File "C:\mikro_jump_bridge\posta\views.py", line 75, in posta_test
+    test_maili_gonder(ayar, alici)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\mikro_jump_bridge\posta\utils.py", line 123, in test_maili_gonder
+    msg.send()
+    ~~~~~~~~^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\message.py", line 358, in send
+    return self.get_connection(fail_silently).send_messages([self])
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 130, in send_messages
+    new_conn_created = self.open()
+  File "C:\mikro_jump_bridge\.venv\Lib\site-packages\django\core\mail\backends\smtp.py", line 95, in open
+    self.connection.starttls(context=self.ssl_context)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\smtplib.py", line 791, in starttls
+    self.sock = context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                    server_hostname=self._host)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python314\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Python314\Lib\ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Python314\Lib\ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'mail.malihaber.com.tr'. (_ssl.c:1081)
+2026-05-24 17:55:52,913 INFO [mikro_sync] Test maili gönderildi → simseklerinc@gmail.com
+2026-05-24 17:56:53,358 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:53,531 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.'}, {'cari_kod': 'M01852', 'cari_unvan1': 'AVS INTERNATIONAL TRADING LIMITED'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:55,277 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:55,467 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:55,468 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:55,632 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107439, 'alacak': 822186.072888771, 'bakiye': -4909.79978133249}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:55,634 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:55,817 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:55,818 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:56,821 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:56,999 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00483', 'cari_unvan1': 'AVS KÜRESEL GEMİ TEDARİĞİ VE YÖNETİMİ A.Ş.', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:57,000 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:57,300 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'borc': 42853.46, 'alacak': 0, 'bakiye': 42853.46}, {'doviz': '1', 'borc': 817276.273107438, 'alacak': 822186.072888771, 'bakiye': -4909.79978133296}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:57,301 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:57,586 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '0', 'bakiye': 42853.46}, {'doviz': '1', 'bakiye': 59424.805206671}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:56:57,586 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:58,460 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 17:56:58,468 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:58,803 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 17:56:58,806 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 17:56:59,594 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 17:56:59,601 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:56:59,820 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157433', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 8421.8241, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tarih': '2026-01-12 00:00:00', 'ba': '0', 'evrak_no': 'EE9-157434', 'aciklama': '', 'sm': '2601-002', 'kur': 42.9863, 'borc': 177.76, 'alacak': 0, 'doviz': '1', 'vade': 20260220, 'kaynak': '6', 'gecersiz_fl': '0'}, {'tari
+2026-05-24 17:56:59,821 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 17:57:24,518 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:24,683 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:57:24,685 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:25,130 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 17:57:25,131 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 17:57:45,049 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:45,207 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M01753', 'cari_unvan1': ' C/O MIRAI MARINE ISTANBUL DENIZÇILIK TIC LTD STI', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:57:45,209 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:45,394 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '1', 'borc': 2572.34152876879, 'alacak': 2473.71005069, 'bakiye': 98.6314780787911}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:57:45,395 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:45,583 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '1', 'bakiye': 98.6314780787911}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:57:45,585 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:47,310 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 17:57:47,318 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:57:47,501 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:57:47,503 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M01753: 0 satır
+2026-05-24 17:58:44,031 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:44,199 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:58:44,200 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:44,526 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 17:58:44,527 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 17:58:49,124 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:49,296 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'M00988', 'cari_unvan1': ' NEW SHIP CO SA PANAMA', 'cari_grup_kodu': 'MÜŞTERİLER'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:58:49,298 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:49,483 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '2', 'borc': 7263.10326197815, 'alacak': 7512.07626594721, 'bakiye': -248.973003969059}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:58:49,485 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:49,771 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '2', 'bakiye': -248.97300396906}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:58:49,772 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:51,478 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 17:58:51,489 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:58:51,755 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:58:51,755 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00988: 0 satır
+2026-05-24 17:59:01,401 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:59:01,572 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:59:01,574 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:59:02,009 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 17:59:02,009 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 17:59:28,703 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:59:28,873 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 17:59:28,874 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 17:59:29,294 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 17:59:29,294 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 18:00:24,760 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:24,939 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_grup_kodu': 'ÇEK KESİLEN'}, {'cari_grup_kodu': 'DİĞER'}, {'cari_grup_kodu': 'FARKLI'}, {'cari_grup_kodu': 'GÜMRÜK'}, {'cari_grup_kodu': 'IHRACAT'}, {'cari_grup_kodu': 'KAPALI'}, {'cari_grup_kodu': 'KUMANYA'}, {'cari_grup_kodu': 'MÜŞTERİLER'}, {'cari_grup_kodu': 'ÖNCELİKLİ'}, {'cari_grup_kodu': 'ŞÜPHELİ'}, {'cari_grup_kodu': 'TRANSIT'}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 18:00:24,940 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:25,259 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL026', 'cari_unvan1': '', 'cari_unvan2': 'c/o Teekay Business Process Services, Inc', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL010', 'cari_unvan1': '', 'cari_unvan2': 'SEA JETS MARITIME COMPANY', 'cari_VergiKimlikNo': '', 'cari_CepTel': '', 'cari_EMail': '', 'cari_grup_kodu': '', 'cari_doviz_cinsi': '2'}, {'cari_kod': 'DEL004', 'cari_unva
+2026-05-24 18:00:25,260 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 18:00:28,582 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:28,751 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'DEL002', 'cari_unvan1': '', 'cari_grup_kodu': ''}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 18:00:28,751 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:29,019 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '1', 'borc': 1590.45274695386, 'alacak': 1179.58430381552, 'bakiye': 410.868443138331}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 18:00:29,020 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:29,321 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'doviz': '1', 'bakiye': 410.868443138331}]}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 18:00:29,322 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:30,963 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'som_kod': '1503-070', 'som_isim': 'M/V MSC ADRIANA'}, {'som_kod': '1709-012', 'som_isim': 'M/V AS AMALIA'}, {'som_kod': '2203-031', 'som_isim': 'M/V MARTINE A'}, {'som_kod': '2209-007', 'som_isim': 'M/N VIKTOR TSOI'}, {'som_kod': '2209-016', 'som_isim': 'M/V FRANKFURT EXPRESS'}, {'som_kod': '2605-036', 'som_isim': 'M/V TITTERI'}, {'som_kod': '2605-037', 'som_isim': 'M/T GAZ INTERCEPTOR'}, {'som_kod': '2605-038', 'som_isim': 'M/V MSC DELH
+2026-05-24 18:00:30,970 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:00:31,265 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': []}], 'ErrorMessage': '', 'IsError': False}]}
+2026-05-24 18:00:31,266 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] DEL002: 0 satır
+2026-05-24 18:02:11,311 DEBUG [mikro_sync] Mikro API → SqlVeriOkuV2
+2026-05-24 18:02:11,739 DEBUG [mikro_sync] Mikro API ← SqlVeriOkuV2 | dict, anahtarlar=['result'] | içerik={'result': [{'StatusCode': 200, 'Data': [{'SQLResult1': [{'cari_kod': 'S01872', 'cari_unvan1': 'FOLKART YAPI SANAYİ TİCARET AŞ.', 'cari_VergiKimlikNo': '', 'cari_bakiye': 27240600}, {'cari_kod': 'M01322', 'cari_unvan1': 'TURKISH PETROLEUM INTERNATIONAL ANONİM ŞİRKETİ', 'cari_VergiKimlikNo': '', 'cari_bakiye': 4336665.4172828}, {'cari_kod': 'TA0001', 'cari_unvan1': 'TAKİPLİ ALACAKLAR', 'cari_VergiKimlikNo': '', 'cari_bakiye': 1055321.23}, {'cari_kod': 'S00540', 'cari_unvan1': 'KÜLAHÇIOĞLU DIŞ TİC
+2026-05-24 18:02:11,739 INFO [mikro_sync] Bakiye raporu [SIMSEKLER]: 1000 satır
+2026-05-24 18:09:41,503 INFO [mikro_sync] Bağlantı testi: firma=SIMSEKLER mod=yerel basarili=True
+2026-05-24 18:09:52,522 INFO [mikro_sync] Bağlantı testi: firma=more mod=yerel basarili=False
+2026-05-24 18:09:55,879 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 18:09:56,744 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] M00483: 81 satır
+2026-05-24 18:10:05,749 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 18:10:17,646 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] DEL035: 0 satır
+2026-05-24 18:10:22,781 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] DEL035: 0 satır
+2026-05-24 18:10:24,129 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari
+2026-05-24 18:10:33,859 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] S02898: 0 satır
+2026-05-24 18:10:39,684 INFO [mikro_sync] Hesap hareketleri [SIMSEKLER] S02898: 0 satır
+2026-05-24 20:18:22,681 INFO [mikro_sync] Bağlantı testi: firma=SIMSEKLER mod=yerel basarili=True
+2026-05-24 20:18:33,709 INFO [mikro_sync] Bağlantı testi: firma=SIMSEKLER mod=yerel basarili=True
+2026-05-24 20:22:36,961 INFO [mikro_sync] Bağlantı testi: firma=SIMSEKLER mod=yerel basarili=True
+2026-05-24 20:24:44,107 INFO [mikro_sync] Firma kartları çekildi [SIMSEKLER]: 500 cari

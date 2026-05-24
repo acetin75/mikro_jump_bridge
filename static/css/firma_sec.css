@@ -1,0 +1,25 @@
+/* firma_sec sayfası — bağımsız (base.html extend etmez) */
+body {
+  background: linear-gradient(135deg, #1e3a5f, #0d2137);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+.secim-kart {
+  width: 100%;
+  max-width: 520px;
+}
+.firma-kart {
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.firma-kart:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, .15);
+}
+.firma-kart.secili {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, .2);
+}

@@ -4,6 +4,7 @@ Hesap Yönetimi — Mikro ERP cari hesap sorgulama ekranları.
 Tüm sorgular seçili firmaya ait MikroApiClient üzerinden yapılır.
 Aktif firma session'da tutulur: request.session["aktif_firma_id"]
 """
+
 import json
 import logging
 from datetime import date, timedelta
@@ -58,6 +59,7 @@ def _aktif_client(request):
 # AKTİF FİRMA SEÇİMİ
 # ---------------------------------------------------------------------------
 
+
 @login_required
 def firma_sec(request):
     """
@@ -80,18 +82,24 @@ def firma_sec(request):
                 baglanti_modu = gecerli_modlar[0] if gecerli_modlar else "yerel"
             request.session["aktif_firma_id"] = int(firma_id)
             request.session["aktif_baglanti_modu"] = baglanti_modu
-            mod_adi = dict([(m[0], m[1]) for m in firma.baglanti_modlari]).get(baglanti_modu, baglanti_modu)
+            mod_adi = dict([(m[0], m[1]) for m in firma.baglanti_modlari]).get(
+                baglanti_modu, baglanti_modu
+            )
             messages.success(request, f"{firma.ad} — {mod_adi} bağlantısı seçildi.")
         next_url = _guvenli_next(request, request.POST.get("next"))
         return redirect(next_url)
 
     firmalar_ile_form = [(f, FirmaAyarForm(instance=f)) for f in firmalar]
-    return render(request, "hesap_yonetimi/firma_sec.html", {
-        "firmalar": firmalar,
-        "firmalar_ile_form": firmalar_ile_form,
-        "aktif_firma": _aktif_firma(request),
-        "aktif_mod": request.session.get("aktif_baglanti_modu", "yerel"),
-    })
+    return render(
+        request,
+        "hesap_yonetimi/firma_sec.html",
+        {
+            "firmalar": firmalar,
+            "firmalar_ile_form": firmalar_ile_form,
+            "aktif_firma": _aktif_firma(request),
+            "aktif_mod": request.session.get("aktif_baglanti_modu", "yerel"),
+        },
+    )
 
 
 @login_required
@@ -113,7 +121,10 @@ def cari_ara_api(request):
               AND (cari_kod LIKE '%{temiz_q}%' OR cari_unvan1 LIKE '%{temiz_q}%')
             ORDER BY cari_kod
         """)
-        results = [{"id": r["cari_kod"], "text": f"{r['cari_kod']} \u2014 {r['cari_unvan1']}"} for r in data]
+        results = [
+            {"id": r["cari_kod"], "text": f"{r['cari_kod']} \u2014 {r['cari_unvan1']}"}
+            for r in data
+        ]
     except MikroApiHatasi:
         results = []
     return JsonResponse({"results": results})
@@ -133,13 +144,16 @@ def baglanti_test_ajax(request):
     client = MikroApiClient(firma, sunucu_ip=sunucu_ip)
     sonuc = client.baglanti_test()
     sonuc["sunucu"] = sunucu_ip
-    logger.info("Bağlantı testi: firma=%s mod=%s basarili=%s", firma.ad, baglanti_modu, sonuc["basarili"])
+    logger.info(
+        "Bağlantı testi: firma=%s mod=%s basarili=%s", firma.ad, baglanti_modu, sonuc["basarili"]
+    )
     return JsonResponse(sonuc)
 
 
 # ---------------------------------------------------------------------------
 # PANEL
 # ---------------------------------------------------------------------------
+
 
 @login_required
 def panel(request):
@@ -175,16 +189,21 @@ def panel(request):
         logger.error("Panel özet hatası [%s]: %s", aktif_firma.ad, e)
         messages.error(request, f"API hatası: {e}")
 
-    return render(request, "hesap_yonetimi/panel.html", {
-        "aktif_firma": aktif_firma,
-        "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
-        "ozet": ozet,
-    })
+    return render(
+        request,
+        "hesap_yonetimi/panel.html",
+        {
+            "aktif_firma": aktif_firma,
+            "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
+            "ozet": ozet,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # FİRMA KARTLARI (CARİ LİSTESİ)
 # ---------------------------------------------------------------------------
+
 
 @login_required
 def firma_kartlari(request):
@@ -236,19 +255,24 @@ def firma_kartlari(request):
         logger.error("Firma kartları hatası [%s]: %s", aktif_firma.ad, e)
         messages.error(request, f"Mikro API hatası: {e}")
 
-    return render(request, "hesap_yonetimi/firma_kartlari.html", {
-        "aktif_firma": aktif_firma,
-        "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
-        "cariler": cariler,
-        "gruplar": gruplar,
-        "arama": arama,
-        "grup_filtre": grup_filtre,
-    })
+    return render(
+        request,
+        "hesap_yonetimi/firma_kartlari.html",
+        {
+            "aktif_firma": aktif_firma,
+            "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
+            "cariler": cariler,
+            "gruplar": gruplar,
+            "arama": arama,
+            "grup_filtre": grup_filtre,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # CARİ DETAY
 # ---------------------------------------------------------------------------
+
 
 @login_required
 def cari_detay(request, cari_kod: str):
@@ -277,19 +301,24 @@ def cari_detay(request, cari_kod: str):
         logger.error("Cari detay hatası [%s] %s: %s", aktif_firma.ad, cari_kod, e)
         messages.error(request, f"Mikro API hatası: {e}")
 
-    return render(request, "hesap_yonetimi/cari_detay.html", {
-        "aktif_firma": aktif_firma,
-        "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
-        "cari": cari,
-        "cari_kod": cari_kod,
-        "bakiye_doviz": bakiye_doviz,
-        "today": date.today(),
-    })
+    return render(
+        request,
+        "hesap_yonetimi/cari_detay.html",
+        {
+            "aktif_firma": aktif_firma,
+            "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
+            "cari": cari,
+            "cari_kod": cari_kod,
+            "bakiye_doviz": bakiye_doviz,
+            "today": date.today(),
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # HESAP HAREKETLERİ
 # ---------------------------------------------------------------------------
+
 
 @login_required
 def hesap_hareketleri(request):
@@ -300,7 +329,9 @@ def hesap_hareketleri(request):
         return redirect("hy_firma_sec")
 
     cari_kod = request.GET.get("cari_kod", "").strip()
-    ilk_tarih = request.GET.get("ilk_tarih", date.today().replace(month=1, day=1).strftime("%Y-%m-%d"))
+    ilk_tarih = request.GET.get(
+        "ilk_tarih", date.today().replace(month=1, day=1).strftime("%Y-%m-%d")
+    )
     son_tarih = request.GET.get("son_tarih", date.today().strftime("%Y-%m-%d"))
 
     DOVIZ_MAP = {0: "TL", 1: "USD", 2: "EUR", 8: "JPY", 12: "AED", 20: "GBP"}
@@ -426,46 +457,53 @@ def hesap_hareketleri(request):
             # JSON verisi — SM gruplama için (template'te json_script ile gömülür)
             hareketler_json_data = [
                 {
-                    "tarih":     h.get("tarih") or "",
-                    "ba":        int(h.get("ba") or 0),
-                    "evrak_no":  str(h.get("evrak_no") or ""),
-                    "aciklama":  str(h.get("aciklama") or ""),
-                    "sm":        str(h.get("sm") or ""),
-                    "sm_adi":    str(h.get("sm_adi") or ""),
-                    "kur":       float(h.get("kur") or 0),
-                    "borc":      float(h.get("borc") or 0),
-                    "alacak":    float(h.get("alacak") or 0),
+                    "tarih": h.get("tarih") or "",
+                    "ba": int(h.get("ba") or 0),
+                    "evrak_no": str(h.get("evrak_no") or ""),
+                    "aciklama": str(h.get("aciklama") or ""),
+                    "sm": str(h.get("sm") or ""),
+                    "sm_adi": str(h.get("sm_adi") or ""),
+                    "kur": float(h.get("kur") or 0),
+                    "borc": float(h.get("borc") or 0),
+                    "alacak": float(h.get("alacak") or 0),
                     "doviz_adi": str(h.get("doviz_adi") or "TL"),
-                    "vade":      str(h.get("vade") or ""),
-                    "kaynak":    str(h.get("kaynak") or ""),
-                    "bakiye":    float(h.get("bakiye") or 0),
+                    "vade": str(h.get("vade") or ""),
+                    "kaynak": str(h.get("kaynak") or ""),
+                    "bakiye": float(h.get("bakiye") or 0),
                 }
                 for h in hareketler
             ]
 
-            logger.info("Hesap hareketleri [%s] %s: %d satır", aktif_firma.ad, cari_kod, len(hareketler))
+            logger.info(
+                "Hesap hareketleri [%s] %s: %d satır", aktif_firma.ad, cari_kod, len(hareketler)
+            )
         except MikroApiHatasi as e:
             logger.error("Hesap hareketleri hatası [%s] %s: %s", aktif_firma.ad, cari_kod, e)
             messages.error(request, f"Mikro API hatası: {e}")
 
-    return render(request, "hesap_yonetimi/hesap_hareketleri.html", {
-        "aktif_firma": aktif_firma,
-        "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
-        "cari_kod": cari_kod,
-        "ilk_tarih": ilk_tarih,
-        "son_tarih": son_tarih,
-        "firma": firma,
-        "bakiye_ozet": bakiye_ozet,
-        "acilis_liste": acilis_liste,
-        "hareketler": hareketler,
-        "hareketler_json_data": hareketler_json_data,
-        "DOVIZ_MAP": DOVIZ_MAP,
-    })
+    return render(
+        request,
+        "hesap_yonetimi/hesap_hareketleri.html",
+        {
+            "aktif_firma": aktif_firma,
+            "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
+            "cari_kod": cari_kod,
+            "ilk_tarih": ilk_tarih,
+            "son_tarih": son_tarih,
+            "firma": firma,
+            "bakiye_ozet": bakiye_ozet,
+            "acilis_liste": acilis_liste,
+            "hareketler": hareketler,
+            "hareketler_json_data": hareketler_json_data,
+            "DOVIZ_MAP": DOVIZ_MAP,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # BAKİYE RAPORU
 # ---------------------------------------------------------------------------
+
 
 @login_required
 def bakiye_raporu(request):
@@ -529,21 +567,26 @@ def bakiye_raporu(request):
         if float(r.get("cari_bakiye", 0) or 0) < 0
     )
 
-    return render(request, "hesap_yonetimi/bakiye_raporu.html", {
-        "aktif_firma": aktif_firma,
-        "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
-        "bakiyeler": bakiyeler,
-        "sadece_borclular": sadece_borclular,
-        "sadece_alacaklilar": sadece_alacaklilar,
-        "sirala": sirala,
-        "toplam_alacak": toplam_alacak,
-        "toplam_borc": toplam_borc,
-    })
+    return render(
+        request,
+        "hesap_yonetimi/bakiye_raporu.html",
+        {
+            "aktif_firma": aktif_firma,
+            "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
+            "bakiyeler": bakiyeler,
+            "sadece_borclular": sadece_borclular,
+            "sadece_alacaklilar": sadece_alacaklilar,
+            "sirala": sirala,
+            "toplam_alacak": toplam_alacak,
+            "toplam_borc": toplam_borc,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # ÖDEME PLANLAMA / VADESİ YAKLAŞAN ÇEKLER
 # ---------------------------------------------------------------------------
+
 
 @login_required
 def odeme_planlama(request):
@@ -578,9 +621,13 @@ def odeme_planlama(request):
         logger.error("Ödeme planlama hatası [%s]: %s", aktif_firma.ad, e)
         messages.error(request, f"Mikro API hatası: {e}")
 
-    return render(request, "hesap_yonetimi/odeme_planlama.html", {
-        "aktif_firma": aktif_firma,
-        "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
-        "cekler": cekler,
-        "gun": gun,
-    })
+    return render(
+        request,
+        "hesap_yonetimi/odeme_planlama.html",
+        {
+            "aktif_firma": aktif_firma,
+            "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
+            "cekler": cekler,
+            "gun": gun,
+        },
+    )

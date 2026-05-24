@@ -70,14 +70,7 @@ jobs:
         run: choco install innosetup --yes --no-progress --quiet
 
       # ------------------------------------------------------------------
-      # 5) .env.example → env.example (ISS dosyası bu adla referans eder)
-      # ------------------------------------------------------------------
-      - name: env.example kopyala
-        shell: pwsh
-        run: Copy-Item ".env.example" "env.example"
-
-      # ------------------------------------------------------------------
-      # 6) Installer derle
+      # 5) Installer derle (setup.iss doğrudan .env.example referans eder)
       # ------------------------------------------------------------------
       - name: Installer derle
         shell: pwsh

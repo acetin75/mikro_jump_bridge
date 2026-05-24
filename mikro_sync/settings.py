@@ -28,9 +28,18 @@ def _secret_key_zayif_mi(deger: str) -> str | None:
         return f"çok kısa ({len(deger)} karakter, en az 50 olmalı)"
     dusuk = deger.lower()
     yasak_kaliplar = (
-        "buraya", "degistir", "değiştir", "change", "changeme",
-        "default", "example", "placeholder", "test", "ci-test",
-        "secret-key", "your-secret",
+        "buraya",
+        "degistir",
+        "değiştir",
+        "change",
+        "changeme",
+        "default",
+        "example",
+        "placeholder",
+        "test",
+        "ci-test",
+        "secret-key",
+        "your-secret",
     )
     for kalip in yasak_kaliplar:
         if kalip in dusuk:
@@ -45,7 +54,7 @@ if not DEBUG:
             f"Üretim ortamında SECRET_KEY geçersiz: {_hata_sebebi}. "
             ".env dosyasına güçlü, rastgele üretilmiş (>= 50 karakter) "
             "bir SECRET_KEY ekleyin. Örn: "
-            "python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+            'python -c "import secrets; print(secrets.token_urlsafe(50))"'
         )
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
@@ -139,6 +148,7 @@ USE_TZ = True
 # ---------------------------------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -192,6 +202,10 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
     CSRF_TRUSTED_ORIGINS = [
-        x for x in config("CSRF_TRUSTED_ORIGINS", default="http://127.0.0.1:8001,http://localhost:8001").split(",") if x
+        x
+        for x in config(
+            "CSRF_TRUSTED_ORIGINS", default="http://127.0.0.1:8001,http://localhost:8001"
+        ).split(",")
+        if x
     ]
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)

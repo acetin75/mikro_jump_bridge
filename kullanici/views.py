@@ -53,7 +53,9 @@ def kullanici_ekle(request):
                 kullanici.is_staff = True
                 kullanici.save()
 
-            logger.info("Yeni kullanıcı oluşturuldu: %s (yönetici=%s)", kullanici.username, cd["yonetici"])
+            logger.info(
+                "Yeni kullanıcı oluşturuldu: %s (yönetici=%s)", kullanici.username, cd["yonetici"]
+            )
             messages.success(request, f"'{kullanici.username}' kullanıcısı oluşturuldu.")
             return redirect("kullanici_liste")
     else:

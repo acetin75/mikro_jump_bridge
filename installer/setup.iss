@@ -65,7 +65,7 @@ Source: "..\pyproject.toml";  DestDir: "{app}"; Flags: ignoreversion
 Source: "..\olustur_admin.py"; DestDir: "{app}"; Flags: ignoreversion
 
 ; .env.example → .env (yalnızca henüz yoksa yaz — kullanıcı verisini korur)
-Source: "..\env.example"; DestDir: "{app}"; DestName: ".env"; Flags: onlyifdoesntexist uninsneverdelete
+Source: "..\.env.example"; DestDir: "{app}"; DestName: ".env"; Flags: onlyifdoesntexist uninsneverdelete
 
 ; Launcher (installer sürümü — bundled Python kullanır)
 Source: "baslat_kurulu.bat"; DestDir: "{app}"; DestName: "baslat.bat"; Flags: ignoreversion

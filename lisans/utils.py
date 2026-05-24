@@ -8,6 +8,7 @@ Güvenlik notu:
   Müşteriye sadece lisans anahtarı verilir; imzalama anahtarı paylaşılmaz.
   Anahtarı yalnızca geliştirici üretebilir.
 """
+
 import base64
 import hashlib
 import hmac
@@ -17,14 +18,14 @@ from datetime import date
 def _imza_anahtari() -> bytes:
     """İmzalama anahtarını döndürür — .env'den okunur."""
     from decouple import UndefinedValueError, config
+
     try:
         return config("LISANS_IMZA_ANAHTARI").encode()
     except UndefinedValueError:
         # .env tanımlı değilse Django SECRET_KEY'den türet
         from django.conf import settings
-        return hashlib.sha256(
-            (settings.SECRET_KEY + "-lisans").encode()
-        ).digest()
+
+        return hashlib.sha256((settings.SECRET_KEY + "-lisans").encode()).digest()
 
 
 def lisans_al():
@@ -34,6 +35,7 @@ def lisans_al():
     ``LisansBilgisi.objects.first()`` çağrısı yapılmamalıdır.
     """
     from .models import LisansBilgisi
+
     lisans = LisansBilgisi.objects.first()
     if lisans is None:
         lisans = LisansBilgisi.objects.create()
@@ -68,9 +70,7 @@ def lisans_anahtari_dogrula(anahtar: str) -> dict | None:
             return None
         musteri, bitis_str, tip, received_imza = parts
         payload = f"{musteri}|{bitis_str}|{tip}"
-        expected_imza = hmac.new(
-            _imza_anahtari(), payload.encode(), hashlib.sha256
-        ).hexdigest()
+        expected_imza = hmac.new(_imza_anahtari(), payload.encode(), hashlib.sha256).hexdigest()
         if not hmac.compare_digest(received_imza, expected_imza):
             return None
         bitis = date.fromisoformat(bitis_str)

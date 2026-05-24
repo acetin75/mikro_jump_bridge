@@ -19,15 +19,30 @@ class FirmaAyar(models.Model):
     aktif = models.BooleanField("Aktif", default=True)
 
     # API bağlantı
-    baglanti_tipi = models.CharField("Bağlantı Tipi", max_length=10, choices=BAGLANTI, default="api")
-    mikro_sunucu = models.CharField("Yerel LAN IP", max_length=100, blank=True, help_text="örn: 192.168.1.10")
-    mikro_sunucu_vpn = models.CharField("FortiClient VPN IP", max_length=100, blank=True, help_text="örn: 10.8.0.5")
-    mikro_sunucu_uzak = models.CharField("Uzak Masaüstü IP", max_length=100, blank=True, help_text="RDP ile sunucudaysanız genellikle 127.0.0.1")
+    baglanti_tipi = models.CharField(
+        "Bağlantı Tipi", max_length=10, choices=BAGLANTI, default="api"
+    )
+    mikro_sunucu = models.CharField(
+        "Yerel LAN IP", max_length=100, blank=True, help_text="örn: 192.168.1.10"
+    )
+    mikro_sunucu_vpn = models.CharField(
+        "FortiClient VPN IP", max_length=100, blank=True, help_text="örn: 10.8.0.5"
+    )
+    mikro_sunucu_uzak = models.CharField(
+        "Uzak Masaüstü IP",
+        max_length=100,
+        blank=True,
+        help_text="RDP ile sunucudaysanız genellikle 127.0.0.1",
+    )
     mikro_port = models.PositiveIntegerField("API Port", default=8094)
     mikro_kullanici = models.CharField("Mikro Kullanıcı", max_length=100, blank=True)
     _mikro_sifre_sifreli = models.TextField("Şifreli Parola", blank=True)
-    firma_kodu = models.CharField("Firma Kodu", max_length=50, blank=True, help_text="Mikro firma kodu (örn: MORE)")
-    calisma_yili = models.CharField("Çalışma Yılı", max_length=4, default="2025", help_text="Örn: 2025")
+    firma_kodu = models.CharField(
+        "Firma Kodu", max_length=50, blank=True, help_text="Mikro firma kodu (örn: MORE)"
+    )
+    calisma_yili = models.CharField(
+        "Çalışma Yılı", max_length=4, default="2025", help_text="Örn: 2025"
+    )
     mikro_api_key = models.TextField("Mikro API Key", blank=True)
 
     # SQL Server
@@ -96,7 +111,6 @@ class FirmaAyar(models.Model):
             return ""
 
 
-
 class ImportLog(models.Model):
     """Her import işleminin kayıt defteri."""
 
@@ -110,7 +124,9 @@ class ImportLog(models.Model):
         ("iptal", "İptal"),
     ]
 
-    firma_ayar = models.ForeignKey(FirmaAyar, on_delete=models.PROTECT, related_name="import_loglari")
+    firma_ayar = models.ForeignKey(
+        FirmaAyar, on_delete=models.PROTECT, related_name="import_loglari"
+    )
     baslangic_tarih = models.DateField("Başlangıç Tarihi", null=True, blank=True)
     bitis_tarih = models.DateField("Bitiş Tarihi", null=True, blank=True)
     durum = models.CharField("Durum", max_length=20, choices=DURUM, default="beklemede")

@@ -23,6 +23,7 @@ logger = logging.getLogger("mikro_sync")
 
 class MikroApiHatasi(Exception):
     """Mikro API bağlantı veya yanıt hatası."""
+
     pass
 
 
@@ -67,7 +68,9 @@ class MikroApiClient:
             "SubeNo": 0,
         }
 
-    def _post(self, endpoint: str, ekstra_params: Optional[dict] = None, calisma_yili: str = None) -> dict:
+    def _post(
+        self, endpoint: str, ekstra_params: Optional[dict] = None, calisma_yili: str = None
+    ) -> dict:
         """
         Mikro API'ye POST isteği gönderir.
         ekstra_params: Mikro objesinin DIŞINA eklenen parametreler (IlkTarih, SonTarih vb.)
@@ -89,7 +92,9 @@ class MikroApiClient:
             )
             response.raise_for_status()
         except requests.exceptions.ConnectionError as e:
-            raise MikroApiHatasi(f"Mikro API bağlantı hatası ({self.firma_ayar.mikro_sunucu}): {e}") from e
+            raise MikroApiHatasi(
+                f"Mikro API bağlantı hatası ({self.firma_ayar.mikro_sunucu}): {e}"
+            ) from e
         except requests.exceptions.Timeout:
             raise MikroApiHatasi(f"Mikro API zaman aşımı ({self.timeout}s)") from None
         except requests.exceptions.HTTPError as e:
@@ -106,7 +111,12 @@ class MikroApiClient:
         if isinstance(veri, list):
             logger.debug("Mikro API ← %s | liste, %d eleman", endpoint, len(veri))
         else:
-            logger.debug("Mikro API ← %s | dict, anahtarlar=%s | içerik=%s", endpoint, list(veri.keys()) if isinstance(veri, dict) else "?", str(veri)[:500])
+            logger.debug(
+                "Mikro API ← %s | dict, anahtarlar=%s | içerik=%s",
+                endpoint,
+                list(veri.keys()) if isinstance(veri, dict) else "?",
+                str(veri)[:500],
+            )
         return veri
 
     def baglanti_test(self) -> dict:
@@ -131,9 +141,16 @@ class MikroApiClient:
         sonuc,
         endpoint: str,
         tercih_anahtarlar: tuple[str, ...] = (
-            "Data", "data", "Result", "result",
-            "Items", "items", "Liste", "liste",
-            "Rows", "rows",
+            "Data",
+            "data",
+            "Result",
+            "result",
+            "Items",
+            "items",
+            "Liste",
+            "liste",
+            "Rows",
+            "rows",
         ),
     ) -> list:
         """Mikro API yanıtından liste içeriğini çıkarır.
@@ -155,7 +172,9 @@ class MikroApiClient:
             if isinstance(v, list):
                 logger.debug("%s: fallback '%s' anahtarında %d eleman", endpoint, k, len(v))
                 return v
-        logger.warning("%s: dict yanıt liste içermiyor, anahtarlar=%s", endpoint, list(sonuc.keys()))
+        logger.warning(
+            "%s: dict yanıt liste içermiyor, anahtarlar=%s", endpoint, list(sonuc.keys())
+        )
         return []
 
     def gelen_faturalar(self, baslangic: date, bitis: date) -> list:
@@ -167,15 +186,31 @@ class MikroApiClient:
         """
         # CalismaYili evrak tarihinin yılına göre dinamik seçilir
         yil = str(baslangic.year)
-        sonuc = self._post("GelenFaturalarV2", {
-            "IlkTarih": baslangic.strftime("%Y-%m-%d"),
-            "SonTarih": bitis.strftime("%Y-%m-%d"),
-        }, calisma_yili=yil)
+        sonuc = self._post(
+            "GelenFaturalarV2",
+            {
+                "IlkTarih": baslangic.strftime("%Y-%m-%d"),
+                "SonTarih": bitis.strftime("%Y-%m-%d"),
+            },
+            calisma_yili=yil,
+        )
         return self._extract_list_response(
-            sonuc, "GelenFaturalarV2",
-            tercih_anahtarlar=("Faturalar", "faturalar", "Data", "data",
-                               "Result", "result", "Items", "items",
-                               "Liste", "liste", "Rows", "rows"),
+            sonuc,
+            "GelenFaturalarV2",
+            tercih_anahtarlar=(
+                "Faturalar",
+                "faturalar",
+                "Data",
+                "data",
+                "Result",
+                "result",
+                "Items",
+                "items",
+                "Liste",
+                "liste",
+                "Rows",
+                "rows",
+            ),
         )
 
     def fatura_xml(self, fat_guid: str) -> str:
@@ -188,6 +223,7 @@ class MikroApiClient:
     def fatura_pdf(self, fat_guid: str) -> bytes:
         """Belirli bir faturanın PDF içeriğini çeker (GelenFaturaPdfV2)."""
         import base64
+
         sonuc = self._post("GelenFaturaPdfV2", {"fat_Guid": fat_guid})
         if isinstance(sonuc, dict):
             pdf_b64 = sonuc.get("Pdf", sonuc.get("pdf", ""))
@@ -205,17 +241,29 @@ class MikroApiClient:
             temiz = arama.replace("'", "''")
             where += f" and (cari_unvan1 like '%{temiz}%' or cari_kod like '%{temiz}%')"
 
-        sonuc = self._post("CariListesiV2", {
-            "FieldName": "cari_kod, cari_unvan1, cari_unvan2, cari_vkn_vd, cari_baglanti_tipi",
-            "WhereStr": where,
-            "Sort": "cari_unvan1",
-            "Size": "1000",
-            "Index": 0,
-        })
+        sonuc = self._post(
+            "CariListesiV2",
+            {
+                "FieldName": "cari_kod, cari_unvan1, cari_unvan2, cari_vkn_vd, cari_baglanti_tipi",
+                "WhereStr": where,
+                "Sort": "cari_unvan1",
+                "Size": "1000",
+                "Index": 0,
+            },
+        )
         return self._extract_list_response(
-            sonuc, "CariListesiV2",
-            tercih_anahtarlar=("Cariler", "cariler", "Data", "data",
-                               "Result", "result", "Items", "items"),
+            sonuc,
+            "CariListesiV2",
+            tercih_anahtarlar=(
+                "Cariler",
+                "cariler",
+                "Data",
+                "data",
+                "Result",
+                "result",
+                "Items",
+                "items",
+            ),
         )
 
     def sql_oku(self, sorgu: str) -> list:
@@ -231,7 +279,11 @@ class MikroApiClient:
             if result and isinstance(result, list):
                 kayit = result[0]
                 if kayit.get("IsError") or (kayit.get("StatusCode", 200) not in (200, 0)):
-                    logger.warning("sql_oku hatası [%s]: %s", kayit.get("StatusCode"), kayit.get("ErrorMessage"))
+                    logger.warning(
+                        "sql_oku hatası [%s]: %s",
+                        kayit.get("StatusCode"),
+                        kayit.get("ErrorMessage"),
+                    )
                     return []
                 data = kayit.get("Data") or []
                 if data and isinstance(data, list):
@@ -246,17 +298,29 @@ class MikroApiClient:
         Mikro stok kartı listesini çeker (StokListesiV2).
         Döner: [{"sto_kod":..., "sto_isim":..., "sto_birim1_ad":...}, ...]
         """
-        sonuc = self._post("StokListesiV2", {
-            "StokKod": arama,
-            "TarihTipi": 2,
-            "IlkTarih": "2020-01-01",
-            "SonTarih": date.today().strftime("%Y-%m-%d"),
-            "Sort": "sto_kod",
-            "Size": "1000",
-            "Index": 0,
-        })
+        sonuc = self._post(
+            "StokListesiV2",
+            {
+                "StokKod": arama,
+                "TarihTipi": 2,
+                "IlkTarih": "2020-01-01",
+                "SonTarih": date.today().strftime("%Y-%m-%d"),
+                "Sort": "sto_kod",
+                "Size": "1000",
+                "Index": 0,
+            },
+        )
         return self._extract_list_response(
-            sonuc, "StokListesiV2",
-            tercih_anahtarlar=("Stoklar", "stoklar", "Data", "data",
-                               "Result", "result", "Items", "items"),
+            sonuc,
+            "StokListesiV2",
+            tercih_anahtarlar=(
+                "Stoklar",
+                "stoklar",
+                "Data",
+                "data",
+                "Result",
+                "result",
+                "Items",
+                "items",
+            ),
         )

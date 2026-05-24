@@ -54,7 +54,14 @@ if errorlevel 1 (
 echo [5/5] Admin hesabı kontrol ediliyor...
 .venv\Scripts\python.exe olustur_admin.py
 if errorlevel 1 (
-    echo UYARI: Admin hesabı oluşturulamadı, devam ediliyor...
+    echo.
+    echo HATA: Admin hesabı oluşturulamadı / şifre zayıf.
+    echo   - .env dosyasında ADMIN_KULLANICI ve ADMIN_SIFRE tanımlı olmalı.
+    echo   - Şifre 'admin123', 'change', 'buraya' gibi kalıp içeremez.
+    echo   - Şifre en az 12 karakter, harf+rakam+sembol önerilir.
+    echo.
+    pause
+    exit /b 1
 )
 
 echo.

@@ -2,6 +2,7 @@
 Lisans kontrolü middleware.
 Deneme süresi veya lisans bitmişse /lisans/bitti/ sayfasına yönlendirir.
 """
+
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -33,6 +34,7 @@ class LisansKontrolMiddleware:
 
         # Lisans geçerlilik kontrolü
         from lisans.utils import lisans_al
+
         lisans = lisans_al()
 
         if not lisans.gecerli_mi:

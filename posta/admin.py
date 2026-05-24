@@ -15,12 +15,26 @@ class MailAyarAdmin(admin.ModelAdmin):
 @admin.register(EkstreGonderimLog)
 class EkstreGonderimLogAdmin(admin.ModelAdmin):
     list_display = [
-        "cari_kod", "cari_unvan", "alici_email",
-        "firma_ayar", "donem_baslangic", "donem_bitis", "durum", "olusturuldu",
+        "cari_kod",
+        "cari_unvan",
+        "alici_email",
+        "firma_ayar",
+        "donem_baslangic",
+        "donem_bitis",
+        "durum",
+        "olusturuldu",
     ]
     list_filter = ["durum", "firma_ayar"]
     search_fields = ["cari_kod", "cari_unvan", "alici_email"]
     readonly_fields = [
-        "firma_ayar", "cari_kod", "cari_unvan", "alici_email",
-        "donem_baslangic", "donem_bitis", "konu", "durum", "hata_mesaji", "olusturuldu",
+        "firma_ayar",
+        "cari_kod",
+        "cari_unvan",
+        "alici_email",
+        "donem_baslangic",
+        "donem_bitis",
+        "konu",
+        "durum",
+        "hata_mesaji",
+        "olusturuldu",
     ]

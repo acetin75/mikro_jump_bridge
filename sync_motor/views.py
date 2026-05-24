@@ -14,10 +14,14 @@ logger = logging.getLogger("mikro_sync")
 def anasayfa(request):
     firmalar = FirmaAyar.objects.filter(aktif=True)
     son_importlar = ImportLog.objects.select_related("firma_ayar").order_by("-olusturuldu")[:10]
-    return render(request, "sync_motor/anasayfa.html", {
-        "firmalar": firmalar,
-        "son_importlar": son_importlar,
-    })
+    return render(
+        request,
+        "sync_motor/anasayfa.html",
+        {
+            "firmalar": firmalar,
+            "son_importlar": son_importlar,
+        },
+    )
 
 
 @login_required
@@ -53,7 +57,11 @@ def firma_duzenle(request, pk):
             return redirect(next_url)
     else:
         form = FirmaAyarForm(instance=firma)
-    return render(request, "sync_motor/firma_form.html", {"form": form, "baslik": "Firma Düzenle", "firma": firma})
+    return render(
+        request,
+        "sync_motor/firma_form.html",
+        {"form": form, "baslik": "Firma Düzenle", "firma": firma},
+    )
 
 
 @login_required
@@ -62,6 +70,7 @@ def firma_test(request, pk):
     sonuc = None
     if request.method == "POST":
         from .client import MikroApiClient, MikroApiHatasi
+
         client = MikroApiClient(firma)
         sonuc = client.baglanti_test()
         if sonuc["basarili"]:

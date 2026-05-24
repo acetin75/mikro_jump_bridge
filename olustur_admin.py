@@ -7,6 +7,7 @@ Tanımlı değilse interaktif olarak sorar.
 
 Zayıf veya yer tutucu şifreler (`admin123`, `buraya-yazin`, vb.) reddedilir.
 """
+
 import os
 import sys
 
@@ -23,8 +24,14 @@ from django.core.exceptions import ValidationError  # noqa: E402
 User = get_user_model()
 
 ZAYIF_KALIPLAR = (
-    "buraya", "degistir", "değiştir", "change", "changeme",
-    "example", "placeholder", "your-password",
+    "buraya",
+    "degistir",
+    "değiştir",
+    "change",
+    "changeme",
+    "example",
+    "placeholder",
+    "your-password",
 )
 
 
@@ -77,4 +84,3 @@ if User.objects.filter(username=username).exists():
 else:
     User.objects.create_superuser(username=username, email=email, password=password)
     print(f"'{username}' admin kullanıcısı oluşturuldu.")
-

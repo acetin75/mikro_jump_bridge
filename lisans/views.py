@@ -24,16 +24,15 @@ def lisans_durum(request):
         anahtar = request.POST.get("lisans_anahtari", "").strip()
         sonuc = lisans_anahtari_dogrula(anahtar)
         if sonuc:
-            lisans.lisans_tipi     = sonuc["tip"]
+            lisans.lisans_tipi = sonuc["tip"]
             lisans.lisans_anahtari = anahtar
-            lisans.musteri_kodu    = sonuc["musteri"]
-            lisans.lisans_bitis    = sonuc["bitis"]
+            lisans.musteri_kodu = sonuc["musteri"]
+            lisans.lisans_bitis = sonuc["bitis"]
             lisans.save()
             logger.info("Lisans aktifleştirildi: %s / %s", sonuc["musteri"], sonuc["bitis"])
             messages.success(
                 request,
-                f"✅ Lisans aktifleştirildi! "
-                f"Müşteri: {sonuc['musteri']} — Bitiş: {sonuc['bitis']}",
+                f"✅ Lisans aktifleştirildi! Müşteri: {sonuc['musteri']} — Bitiş: {sonuc['bitis']}",
             )
             return redirect("lisans_durum")
         else:
@@ -53,10 +52,10 @@ def lisans_suresi_doldu(request):
         anahtar = request.POST.get("lisans_anahtari", "").strip()
         sonuc = lisans_anahtari_dogrula(anahtar)
         if sonuc:
-            lisans.lisans_tipi     = sonuc["tip"]
+            lisans.lisans_tipi = sonuc["tip"]
             lisans.lisans_anahtari = anahtar
-            lisans.musteri_kodu    = sonuc["musteri"]
-            lisans.lisans_bitis    = sonuc["bitis"]
+            lisans.musteri_kodu = sonuc["musteri"]
+            lisans.lisans_bitis = sonuc["bitis"]
             lisans.save()
             logger.info("Süresi dolmuş lisans yenilendi: %s / %s", sonuc["musteri"], sonuc["bitis"])
             messages.success(request, "✅ Lisans başarıyla yenilendi!")

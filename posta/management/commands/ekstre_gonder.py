@@ -118,9 +118,7 @@ class Command(BaseCommand):
             toplam_hata += h
 
         self.stdout.write(
-            self.style.SUCCESS(
-                f"\nSonuç — Gönderilen: {toplam_gonderilen}  |  Hata: {toplam_hata}"
-            )
+            self.style.SUCCESS(f"\nSonuç — Gönderilen: {toplam_gonderilen}  |  Hata: {toplam_hata}")
         )
 
     # ---------------------------------------------------------------------------
