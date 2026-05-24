@@ -30,7 +30,10 @@ ignore = [
 known-first-party = [
     "mikro_sync",
     "sync_motor",
-    "mikro_gelen",
+    "hesap_yonetimi",
+    "lisans",
+    "posta",
+    "kullanici",
 ]
 
 [tool.ruff.format]
@@ -43,7 +46,7 @@ line-ending = "lf"
 # ---------------------------------------------------------------------------
 [tool.vulture]
 min_confidence = 80
-paths = ["sync_motor", "mikro_gelen", "hesap_yonetimi", "mikro_sync"]
+paths = ["sync_motor", "hesap_yonetimi", "lisans", "posta", "kullanici", "mikro_sync"]
 ignore_names = [
     "urlpatterns", "admin", "app_name", "verbose_name*",
     "Meta", "clean*", "save", "delete", "get_*", "post",

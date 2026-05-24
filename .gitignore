@@ -17,6 +17,9 @@ db_yedek_*.sqlite3
 staticfiles/
 media/
 
+# Yerel yedek dizini — DB ve .env kopyaları
+yedek/
+
 # Ortam değişkenleri — asla Git'e gönderilmez
 .env
 
