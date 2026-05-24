@@ -78,6 +78,31 @@ def firma_sec(request):
 
 
 @login_required
+def cari_ara_api(request):
+    """Cari arama JSON API — Select2 autocomplete için."""
+    q = request.GET.get("q", "").strip()
+    if len(q) < 2:
+        return JsonResponse({"results": []})
+    aktif_firma = _aktif_firma(request)
+    if not aktif_firma:
+        return JsonResponse({"results": []})
+    temiz_q = q.replace("'", "''")
+    try:
+        client = _aktif_client(request)
+        data = client.sql_oku(f"""
+            SELECT TOP 20 cari_kod, cari_unvan1
+            FROM CARI_HESAPLAR
+            WHERE cari_baglanti_tipi = 0
+              AND (cari_kod LIKE '%{temiz_q}%' OR cari_unvan1 LIKE '%{temiz_q}%')
+            ORDER BY cari_kod
+        """)
+        results = [{"id": r["cari_kod"], "text": f"{r['cari_kod']} \u2014 {r['cari_unvan1']}"} for r in data]
+    except MikroApiHatasi:
+        results = []
+    return JsonResponse({"results": results})
+
+
+@login_required
 def baglanti_test_ajax(request):
     """AJAX: Seçili firma + bağlantı modu için bağlantı testi. JSON döner."""
     if request.method != "POST":
@@ -257,35 +282,84 @@ def hesap_hareketleri(request):
         return redirect("hy_firma_sec")
 
     cari_kod = request.GET.get("cari_kod", "").strip()
-    baslangic = request.GET.get("baslangic", (date.today() - timedelta(days=30)).strftime("%Y-%m-%d"))
-    bitis = request.GET.get("bitis", date.today().strftime("%Y-%m-%d"))
+    ilk_tarih = request.GET.get("ilk_tarih", date.today().replace(month=1, day=1).strftime("%Y-%m-%d"))
+    son_tarih = request.GET.get("son_tarih", date.today().strftime("%Y-%m-%d"))
+
+    DOVIZ_MAP = {0: "TL", 1: "USD", 2: "EUR", 8: "JPY", 12: "AED", 20: "GBP"}
     hareketler = []
-    secili_cari = None
+    bakiye_ozet = []
+    firma = None
 
     if cari_kod:
         try:
             client = _aktif_client(request)
             temiz_kod = cari_kod.replace("'", "''")
-            cari_sorgu = f"""
-                SELECT cari_kod, cari_unvan1
+
+            # Firma bilgisi
+            cari_sonuc = client.sql_oku(f"""
+                SELECT cari_kod, cari_unvan1, cari_grup_kodu
                 FROM CARI_HESAPLAR
                 WHERE cari_kod = '{temiz_kod}' AND cari_baglanti_tipi = 0
-            """
-            cari_sonuc = client.sql_oku(cari_sorgu)
-            if cari_sonuc:
-                secili_cari = cari_sonuc[0]
+            """)
+            firma = cari_sonuc[0] if cari_sonuc else None
 
-            sorgu = f"""
+            # Bakiye özeti — tüm zamanlar, döviz bazlı
+            bakiye_ozet = client.sql_oku(f"""
                 SELECT
-                    cha_tarihi, cha_evrak_tip, cha_evrakno_seri, cha_evrakno_sira,
-                    cha_aciklama, cha_meblag, cha_normal_Iade,
-                    cha_d_cins, cha_d_kur, cha_belge_no, cha_tip
+                    cha_d_cins AS doviz,
+                    SUM(CASE WHEN cha_tip = 0 THEN cha_meblag ELSE 0 END) AS borc,
+                    SUM(CASE WHEN cha_tip = 1 THEN cha_meblag ELSE 0 END) AS alacak,
+                    SUM(CASE WHEN cha_tip = 0 THEN cha_meblag ELSE 0 END) -
+                    SUM(CASE WHEN cha_tip = 1 THEN cha_meblag ELSE 0 END) AS bakiye
+                FROM CARI_HESAP_HAREKETLERI
+                WHERE cha_kod = '{temiz_kod}' AND cha_iptal = 0
+                GROUP BY cha_d_cins
+                ORDER BY cha_d_cins
+            """)
+            for oz in bakiye_ozet:
+                d = int(oz.get("doviz") or 0)
+                oz["doviz_adi"] = DOVIZ_MAP.get(d, str(d))
+                oz["borc"] = float(oz.get("borc") or 0)
+                oz["alacak"] = float(oz.get("alacak") or 0)
+                oz["bakiye"] = float(oz.get("bakiye") or 0)
+
+            # Hareketler — tarih aralığı, ESKİDEN YENİYE (kümülatif için)
+            hareketler = client.sql_oku(f"""
+                SELECT TOP 2000
+                    cha_tarihi AS tarih,
+                    cha_tip AS ba,
+                    cha_evrakno_seri + '-' + CAST(cha_evrakno_sira AS VARCHAR) AS evrak_no,
+                    cha_aciklama AS aciklama,
+                    cha_d_kur AS kur,
+                    CASE WHEN cha_tip = 0 THEN cha_meblag ELSE 0 END AS borc,
+                    CASE WHEN cha_tip = 1 THEN cha_meblag ELSE 0 END AS alacak,
+                    cha_d_cins AS doviz,
+                    cha_vade AS vade,
+                    cha_cinsi AS kaynak
                 FROM CARI_HESAP_HAREKETLERI
                 WHERE cha_kod = '{temiz_kod}'
-                  AND cha_tarihi BETWEEN '{baslangic}' AND '{bitis}'
-                ORDER BY cha_tarihi DESC, cha_evrakno_sira DESC
-            """
-            hareketler = client.sql_oku(sorgu)
+                  AND cha_iptal = 0
+                  AND cha_tarihi >= '{ilk_tarih}'
+                  AND cha_tarihi <= '{son_tarih}'
+                ORDER BY cha_tarihi ASC, cha_evrakno_sira ASC
+            """)
+
+            # Kümülatif bakiye hesapla (döviz bazlı)
+            running = {}
+            for h in hareketler:
+                d = int(h.get("doviz") or 0)
+                borc = float(h.get("borc") or 0)
+                alacak = float(h.get("alacak") or 0)
+                running[d] = running.get(d, 0) + borc - alacak
+                h["bakiye"] = running[d]
+                h["doviz_adi"] = DOVIZ_MAP.get(d, str(d))
+                # Tarih: ilk 10 karakter (YYYY-MM-DD)
+                h["tarih"] = str(h.get("tarih") or "")[:10]
+                h["vade"] = str(h.get("vade") or "")[:10]
+                h["kur"] = float(h.get("kur") or 0)
+
+            # Görüntüde YENİDEN ESKİYE sırala
+            hareketler = list(reversed(hareketler))
             logger.info("Hesap hareketleri [%s] %s: %d satır", aktif_firma.ad, cari_kod, len(hareketler))
         except MikroApiHatasi as e:
             logger.error("Hesap hareketleri hatası [%s] %s: %s", aktif_firma.ad, cari_kod, e)
@@ -295,10 +369,12 @@ def hesap_hareketleri(request):
         "aktif_firma": aktif_firma,
         "firmalar": FirmaAyar.objects.filter(aktif=True).order_by("ad"),
         "cari_kod": cari_kod,
-        "baslangic": baslangic,
-        "bitis": bitis,
+        "ilk_tarih": ilk_tarih,
+        "son_tarih": son_tarih,
+        "firma": firma,
+        "bakiye_ozet": bakiye_ozet,
         "hareketler": hareketler,
-        "secili_cari": secili_cari,
+        "DOVIZ_MAP": DOVIZ_MAP,
     })
 
 

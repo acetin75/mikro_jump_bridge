@@ -1,114 +1,196 @@
 {% extends "base.html" %}
 {% block title %}Hesap Hareketleri{% endblock %}
-{% block page_title %}Hesap Hareketleri — {{ aktif_firma.ad }}{% endblock %}
+{% block page_title %}Hesap Hareketleri{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+<style>
+  .select2-container .select2-selection--single {
+    height: 31px;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 29px;
+    font-size: 0.875rem;
+    color: #212529;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 29px;
+  }
+  .select2-dropdown { font-size: 0.875rem; border-color: #ced4da; }
+  .kumulatif-borc { color: #dc3545; font-weight: 600; }
+  .kumulatif-alacak { color: #198754; font-weight: 600; }
+  .kumulatif-bakiye { font-weight: 700; }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<!-- Firma Seçici -->
-<div class="card mb-3 border-0 shadow-sm">
-  <div class="card-body py-2">
-    <form method="post" action="{% url 'hy_firma_sec' %}" class="d-flex align-items-center gap-3">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="hy_hesap_hareketleri">
-      <span class="text-muted small fw-semibold"><i class="bi bi-building me-1"></i>Aktif Firma:</span>
-      <select name="firma_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
-        {% for f in firmalar %}
-          <option value="{{ f.pk }}" {% if aktif_firma.pk == f.pk %}selected{% endif %}>{{ f.ad }}</option>
-        {% endfor %}
-      </select>
-    </form>
-  </div>
-</div>
-
-<!-- Filtre -->
+<!-- Filtre Kartı -->
 <div class="card mb-3 border-0 shadow-sm">
   <div class="card-body py-3">
-    <form class="row g-2 align-items-end" method="get">
-      <div class="col-md-4">
-        <label class="form-label small mb-1">Cari Kodu</label>
-        <input type="text" name="cari_kod" value="{{ cari_kod }}"
-               class="form-control form-control-sm" placeholder="C001 veya XYZLTD">
+    <form class="row g-2 align-items-end" method="get" id="filtre-form">
+      <!-- Cari Seçimi (Select2 autocomplete) -->
+      <div class="col-md-5">
+        <label class="form-label small mb-1 fw-semibold">
+          <i class="bi bi-person-circle me-1"></i>Cari Hesap
+        </label>
+        <select name="cari_kod" id="cariSecim" class="form-select form-select-sm" style="width:100%">
+          {% if cari_kod and firma %}
+            <option value="{{ cari_kod }}" selected>{{ cari_kod }} — {{ firma.cari_unvan1 }}</option>
+          {% elif cari_kod %}
+            <option value="{{ cari_kod }}" selected>{{ cari_kod }}</option>
+          {% else %}
+            <option value="">Kod veya ünvanla arayın (min. 2 karakter)…</option>
+          {% endif %}
+        </select>
       </div>
-      <div class="col-md-3">
-        <label class="form-label small mb-1">Başlangıç</label>
-        <input type="date" name="baslangic" value="{{ baslangic }}" class="form-control form-control-sm">
+      <!-- Tarih Aralığı -->
+      <div class="col-md-2">
+        <label class="form-label small mb-1 fw-semibold">Başlangıç</label>
+        <input type="date" name="ilk_tarih" value="{{ ilk_tarih }}" class="form-control form-control-sm">
       </div>
-      <div class="col-md-3">
-        <label class="form-label small mb-1">Bitiş</label>
-        <input type="date" name="bitis" value="{{ bitis }}" class="form-control form-control-sm">
+      <div class="col-md-2">
+        <label class="form-label small mb-1 fw-semibold">Bitiş</label>
+        <input type="date" name="son_tarih" value="{{ son_tarih }}" class="form-control form-control-sm">
       </div>
       <div class="col-auto">
         <button type="submit" class="btn btn-primary btn-sm">
           <i class="bi bi-search me-1"></i>Getir
         </button>
+        {% if cari_kod %}
+          <a href="{% url 'hy_hesap_hareketleri' %}" class="btn btn-outline-secondary btn-sm ms-1">
+            <i class="bi bi-x-lg"></i>
+          </a>
+        {% endif %}
       </div>
     </form>
   </div>
 </div>
 
-<!-- Cari Başlık -->
-{% if secili_cari %}
-  <div class="card border-0 shadow-sm mb-3" style="border-left: 4px solid #3b82f6 !important;">
-    <div class="card-body py-2 d-flex justify-content-between align-items-center">
-      <div>
-        <span class="fw-bold text-primary">{{ secili_cari.cari_kod }}</span>
-        <span class="ms-2">{{ secili_cari.cari_unvan1 }}</span>
-      </div>
-      <div class="fw-bold {% if secili_cari.cari_bakiye > 0 %}text-success{% elif secili_cari.cari_bakiye < 0 %}text-danger{% endif %}">
-        Bakiye: {{ secili_cari.cari_bakiye|floatformat:2 }} ₺
-      </div>
+{% if firma %}
+<!-- Firma Başlık Kartı -->
+<div class="card mb-3 border-0 shadow-sm" style="border-left: 4px solid #3b82f6 !important;">
+  <div class="card-body py-2 d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <span class="badge bg-primary me-2">{{ firma.cari_kod }}</span>
+      <span class="fw-semibold fs-6">{{ firma.cari_unvan1 }}</span>
+      {% if firma.cari_grup_kodu %}
+        <span class="badge bg-light text-secondary border ms-2">{{ firma.cari_grup_kodu }}</span>
+      {% endif %}
+    </div>
+    <div class="text-muted small">
+      <i class="bi bi-calendar-range me-1"></i>{{ ilk_tarih }} – {{ son_tarih }}
+      <span class="ms-2 badge bg-secondary">{{ hareketler|length }} hareket</span>
     </div>
   </div>
+</div>
 {% endif %}
 
-<!-- Tablo -->
+{% if bakiye_ozet %}
+<!-- Bakiye Özeti Kartları (Tüm Zamanlar, Döviz Bazlı) -->
+<div class="row g-3 mb-3">
+  {% for oz in bakiye_ozet %}
+    <div class="col-md-4 col-lg-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header py-1 px-3 bg-light d-flex justify-content-between align-items-center">
+          <span class="fw-bold small">{{ oz.doviz_adi }}</span>
+          <span class="text-muted" style="font-size:.7rem;">tüm zamanlar</span>
+        </div>
+        <div class="card-body py-2 px-3">
+          <div class="d-flex justify-content-between mb-1">
+            <span class="text-muted small">Borç</span>
+            <span class="text-danger fw-semibold small">{{ oz.borc|floatformat:2 }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-1">
+            <span class="text-muted small">Alacak</span>
+            <span class="text-success fw-semibold small">{{ oz.alacak|floatformat:2 }}</span>
+          </div>
+          <hr class="my-1">
+          <div class="d-flex justify-content-between">
+            <span class="small fw-bold">Bakiye</span>
+            <span class="fw-bold {% if oz.bakiye > 0 %}text-danger{% elif oz.bakiye < 0 %}text-success{% else %}text-secondary{% endif %}">
+              {{ oz.bakiye|floatformat:2 }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Hareketler Tablosu -->
 <div class="card border-0 shadow-sm">
   <div class="card-header d-flex justify-content-between align-items-center py-2">
     <span class="fw-semibold"><i class="bi bi-list-columns-reverse me-2"></i>Hareketler</span>
     <span class="badge bg-secondary">{{ hareketler|length }} satır</span>
   </div>
   <div class="table-responsive">
-    <table class="table table-hover table-sm align-middle mb-0">
+    <table class="table table-hover table-sm align-middle mb-0" style="font-size:.82rem;">
       <thead class="table-light">
         <tr>
-          <th>Tarih</th>
-          <th>Belge No</th>
+          <th class="text-nowrap">Tarih</th>
+          <th>B/A</th>
+          <th class="text-nowrap">Evrak No</th>
           <th>Açıklama</th>
-          <th class="text-end">Tutar</th>
-          <th>D/A</th>
+          <th class="text-end text-nowrap">Borç</th>
+          <th class="text-end text-nowrap">Alacak</th>
+          <th class="text-end text-nowrap">Bakiye</th>
           <th>Döviz</th>
+          <th class="text-end text-nowrap">Kur</th>
+          <th class="text-nowrap">Vade</th>
+          <th>Kaynak</th>
         </tr>
       </thead>
       <tbody>
         {% for h in hareketler %}
-          <tr class="{% if h.che_normal_iade == 1 %}table-warning{% endif %}">
-            <td class="text-nowrap">{{ h.che_tarih|slice:":10" }}</td>
-            <td><small class="text-muted">{{ h.che_evrak_seri }}{{ h.che_evrak_sira }}</small></td>
-            <td>{{ h.che_aciklama|default:"—"|truncatechars:50 }}</td>
-            <td class="text-end fw-semibold
-              {% if h.che_normal_iade == 0 %}text-success{% else %}text-danger{% endif %}">
-              {{ h.che_meblag|floatformat:2 }}
-            </td>
+          <tr>
+            <td class="text-nowrap text-muted">{{ h.tarih }}</td>
             <td>
-              {% if h.che_normal_iade == 0 %}
-                <span class="badge bg-success rounded-pill">Borç</span>
+              {% if h.ba == 0 %}
+                <span class="badge rounded-pill text-bg-danger" style="font-size:.7rem;">B</span>
               {% else %}
-                <span class="badge bg-danger rounded-pill">Alacak</span>
+                <span class="badge rounded-pill text-bg-success" style="font-size:.7rem;">A</span>
               {% endif %}
             </td>
-            <td>
-              {% if h.che_doviz_cinsi == 0 %}TL
-              {% elif h.che_doviz_cinsi == 1 %}USD
-              {% elif h.che_doviz_cinsi == 2 %}EUR
-              {% else %}{{ h.che_doviz_cinsi }}{% endif %}
+            <td class="text-nowrap"><small class="text-muted">{{ h.evrak_no|default:"—" }}</small></td>
+            <td>{{ h.aciklama|default:"—"|truncatechars:60 }}</td>
+            <td class="text-end text-nowrap">
+              {% if h.borc %}
+                <span class="kumulatif-borc">{{ h.borc|floatformat:2 }}</span>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
             </td>
+            <td class="text-end text-nowrap">
+              {% if h.alacak %}
+                <span class="kumulatif-alacak">{{ h.alacak|floatformat:2 }}</span>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td class="text-end text-nowrap kumulatif-bakiye
+              {% if h.bakiye > 0 %}text-danger{% elif h.bakiye < 0 %}text-success{% else %}text-secondary{% endif %}">
+              {{ h.bakiye|floatformat:2 }}
+            </td>
+            <td><span class="badge bg-light text-secondary border">{{ h.doviz_adi }}</span></td>
+            <td class="text-end text-nowrap text-muted">
+              {% if h.kur and h.kur != 1.0 %}{{ h.kur|floatformat:4 }}{% else %}—{% endif %}
+            </td>
+            <td class="text-nowrap text-muted">{{ h.vade|default:"—" }}</td>
+            <td><small class="text-muted">{{ h.kaynak|default:"—" }}</small></td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="6" class="text-center text-muted py-4">
-              <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-              {% if cari_kod %}Seçili tarih aralığında hareket bulunamadı.
-              {% else %}Cari kodu girerek arama yapın.{% endif %}
+            <td colspan="11" class="text-center text-muted py-5">
+              <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+              {% if cari_kod %}
+                Seçili tarih aralığında hareket bulunamadı.
+              {% else %}
+                Yukarıdan cari hesap seçerek sorgulayın.
+              {% endif %}
             </td>
           </tr>
         {% endfor %}
@@ -117,4 +199,36 @@
   </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(function () {
+  $('#cariSecim').select2({
+    placeholder: 'Kod veya ünvanla arayın…',
+    allowClear: true,
+    minimumInputLength: 2,
+    language: {
+      inputTooShort: function () { return 'En az 2 karakter girin'; },
+      noResults: function () { return 'Sonuç bulunamadı'; },
+      searching: function () { return 'Aranıyor…'; }
+    },
+    ajax: {
+      url: '{% url "hy_cari_ara_api" %}',
+      dataType: 'json',
+      delay: 300,
+      data: function (params) { return { q: params.term }; },
+      processResults: function (data) { return { results: data.results }; },
+      cache: true
+    }
+  });
+
+  // Seçim yapılınca formu otomatik gönder
+  $('#cariSecim').on('select2:select', function () {
+    $(this).closest('form').submit();
+  });
+});
+</script>
 {% endblock %}
