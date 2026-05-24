@@ -1,103 +1,75 @@
 # Runbook 03 — Veri bütünlüğü ve transaction standardı
 
-**Faz:** P0  
-**Durum:** 🟡 Kısmi (2026-05-23) — transaction koruması eklendi; servis katmanı P2'de
-
-### Yapılan değişiklikler
-
-| Dosya | Değişiklik |
-|---|---|
-| `fatura/views.py` | `fatura_ekle()` ve `fatura_durum_degistir()` — `transaction.atomic()` eklendi |
-| `tahsilat/views.py` | `tahsilat_ekle()` — `transaction.atomic()` eklendi |
-| `gider/views.py` | `gider_ekle()` — `transaction.atomic()` eklendi |
-| `banka/views.py` | `ekstre_yukle()` — hareket döngüsü + ekstre.islendi kaydı `transaction.atomic()` eklendi |
-
-**Açık kalan:** Domain servislerine taşıma (runbook 09, P2).
+**Faz:** P1
+**Durum:** ⛔ Açık — tespit edildi, uygulanmadı
 
 ## Amaç
 
-Bir iş akışında birden fazla kayıt oluşuyorsa, işlemin ya tamamen başarılı ya da tamamen geri alınmış olması gerekir. Bu runbook veri bütünlüğünü o standarda taşımayı hedefler.
+Import pipeline ve staging işlemlerinde birden fazla kayıt oluştuğunda işlemin ya tamamen başarılı ya da tamamen geri alınmış olmasını sağlamak.
+
+---
 
 ## Mevcut durum ve kanıtlar
 
-### 1) Fatura oluşturma çok adımlı ama transaction koruması yok
+### 1) Import pipeline transaction korumasız çalışıyor
 
 **Kanıt:**
 
-- `fatura/views.py` → `fatura_ekle()` içinde:
-  - `form.save()`
-  - `formset.save()`
-  - `_cari_hareket_ekle(fatura)`
-- Akışta `transaction.atomic` yok.
+- `sync_motor/views.py` → `import_baslat()` içinde:
+  - `ImportLog.save()` (durum: isleniyor)
+  - Mikro API çağrısı → her `MikroFatura` için `save()`
+  - `ImportLog.save()` (durum: tamamlandi / hata)
+- Döngü ortasında exception oluşursa `ImportLog` eski durumda kalır, yarım kaydedilmiş `MikroFatura` satırları temizlenmez.
 
 **Risk:**
 
-- Fatura oluşup kalemler veya cari hareket oluşmazsa finansal kayıtlar sapar.
-- Yarım kayıtlar işletme verisini bozar.
+- Ağ/API hatası sonrası import yeniden çalıştırıldığında `fat_guid` unique kısıtına çarpar.
+- `ImportLog.cekilen_adet` ve `aktarilan_adet` gerçeği yansıtmaz.
 
-### 3) Banka ekstre parse akışında toplu kayıtlar transaction dışında
+### 2) MikroFatura durum geçişleri korunmasız
 
 **Kanıt:**
 
-- `banka/views.py` → `ekstre_yukle()` içinde `BankaEkstre` kaydı ve ardından `for satir in satirlar` ile `BankaHareketi.objects.create(...)`
-- Akışta transaction yok.
+- `mikro_gelen/views.py` → fatura durum güncelleme (`ham` → `islendi` / `atla`) sırasında `transaction.atomic()` yok.
+- Durum değişikliği başarılı olsa bile bağlı başka bir kayıt güncellemesi başarısız olursa tutarsızlık oluşur.
 
-**Risk:**
-
-- Ekstre işlendi bilgisi ile üretilen hareket sayısı birbirinden kopabilir.
-- Kısmi import tekrar çalıştırmalarda mükerrer kayıt üretebilir.
-
-### 4) Tahsilat oluşturma çok adımlı ama transaction koruması yok
+### 3) Toplu aktarım döngüsü atomik değil
 
 **Kanıt:**
 
-- `tahsilat/views.py` → `tahsilat_ekle()` içinde sırasıyla:
-  - `form.save()` ile `Tahsilat` kaydı
-  - `HesapHareketi.objects.create(...)` ile cari hareketi
-  - `tahsilat_kasa_hareketi_olustur(t)` ile (nakit ise) kasa hareketi
-- Akışta `transaction.atomic` yok.
+- `sync_motor/client.py` içindeki `fatura_aktar()` her fatura için ayrı HTTP isteği yapar.
+- Başarılı aktarım sonrası `ImportLog.aktarilan_adet` artışı ayrı bir `save()` ile yapılır.
+- Sayaç ile gerçek aktarım arasında uçurum oluşabilir.
 
-**Risk:**
-
-- Cari bakiyesi tahsilat kaydı ile uyumsuz kalabilir.
-- Nakit kasa hareketinde hata olursa tahsilat kaydı yarım kayıt olarak sistemde durur.
-
-### 5) Domain etkileri view içinde dağınık
-
-**Kanıtlar:**
-
-- `fatura/views.py` → `_cari_hareket_ekle(fatura)`
-- `gider/views.py` → `gider_kasa_hareketi_olustur(gider)`
-- `fatura/views.py` → `fatura_kasa_hareketi_olustur(fatura)`
-- `kasa/utils.py` → finansal yan etkiler ayrı yardımcı fonksiyonlarda
-
-**Risk:**
-
-- Aynı domain kuralı birden fazla yerde çağrılabilir veya unutulabilir.
-- Test etmek zorlaşır.
+---
 
 ## Hedef standart
 
-- Çok kayıtlı tüm yazma operasyonları atomik olmalı.
-- İdempotent entegrasyon akışları tanımlanmalı.
-- Finansal yan etkiler servis katmanında tek noktada toplanmalı.
+- Import döngüsünün her bir birimi (tek fatura aktarımı + log sayaç güncellemesi) `transaction.atomic()` altında olmalı.
+- `ImportLog` durum güncellemeleri tutarlı ve geri alınabilir olmalı.
+- Toplu insert'lerde `bulk_create(ignore_conflicts=True)` kullanılmalı.
+
+---
 
 ## Önerilen uygulama yaklaşımı
 
-1. Çok adımlı tüm create/update akışlarını envanterle.
-2. `transaction.atomic` ile koru.
-3. Tekrarlı import senaryoları için idempotency anahtarları belirle.
-4. Finansal yan etkileri servis katmanına taşı.
-5. Veri bütünlüğü için hata durumlarında rollback testleri ekle.
+1. `sync_motor/views.py` → `import_baslat()` içinde her fatura döngüsünü `with transaction.atomic():` ile sar.
+2. `MikroFatura` toplu ekleme varsa `MikroFatura.objects.bulk_create(liste, ignore_conflicts=True)` kullan.
+3. `ImportLog` durum güncellemesini `update_fields=["durum", "aktarilan_adet", "hata_adet", "guncellendi"]` ile minimize et.
+4. Hata durumunda `ImportLog.durum = "hata"` + `logger.error(...)` birlikte atomik kaydet.
+
+---
 
 ## Kabul kriterleri
 
-- Fatura, gider, tahsilat, banka importu gibi çok adımlı işlemlerde yarım kayıt bırakan senaryo kalmaz.
-- Aynı entegrasyon payload'ı tekrar gönderildiğinde sistem tutarlı davranır.
-- Kritik yazma akışları transaction testleriyle doğrulanır.
+- Import döngüsü yarıda kesilirse DB tutarlı kalır.
+- Yeniden çalıştırılan import, yarım kalan kayıtları temiz işler.
+- `ImportLog.aktarilan_adet + hata_adet == cekilen_adet` her zaman sağlanır.
+
+---
 
 ## Sonraki iş paketleri
 
-- P0.5 — Kritik yazma akışlarını atomik hale getir (fatura, gider, tahsilat, banka import, API fatura aktarımı)
-- P1.3 — İdempotent import davranışı ekle (banka ekstre + Mikro fatura aktarımı için unique constraint + `update_or_create`)
-- P2.1 — Domain servisleri ile yan etkileri merkezileştir (bkz. runbook 09)
+- P1.1 — `import_baslat()` view'ında transaction koruması
+- P1.2 — `MikroFatura` toplu insert standardı
+- P1.3 — `ImportLog` sayaç güncellemesi güvencesi

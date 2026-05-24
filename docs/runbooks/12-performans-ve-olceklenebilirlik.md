@@ -1,117 +1,125 @@
-# Runbook 12 — Performans, sorgu optimizasyonu ve ölçeklenebilirlik
+# Runbook 12 — Performans ve ölçeklenebilirlik
 
-**Faz:** P2  
-**Durum:** Tespit edildi, uygulanmadı
+**Faz:** P2
+**Durum:** ⛔ Açık — önbellek yok, toplu veri koruması yok
 
 ## Amaç
 
-Veri büyüdükçe (binlerce fatura, on binlerce hareket) sayfaların açılma süresi ve raporların üretim süresi öngörülebilir kalmalı.
-SQLite + tek kullanıcı modelinde bile performans sessizce bozulabilir.
+Mikro ERP API gecikmelerinin kullanıcıya yansımasını azaltmak; büyük import ve sorgularda timeout ve bellek sorunlarını önlemek.
+
+---
 
 ## Mevcut durum ve kanıtlar
 
-### 1) Python tarafında toplulaştırma
+### 1) Her sayfa yüklemesi Mikro ERP'ye canlı sorgu yapıyor
 
-**Kanıtlar:**
+**Kanıt:** `hesap_yonetimi/views.py` — her view çağrısında `MikroApiClient.sql_oku()` → `requests.post()` → Mikro ERP API.
 
-- `dashboard/views.py` (214 satır) — bazı toplamlar `sum(...)` ile Python tarafında hesaplanıyor.
-- `gider/views.py` — KDV ve toplam tutarlar QuerySet üzerinde döngüyle hesaplanıyor.
-- `rapor/views.py` (318 satır) — dönem özetleri Python `for` ile birleştiriliyor.
+- `panel()` — bakiye özeti sorgusu
+- `firma_kartlari()` — tüm cari listesi sorgusu
+- `bakiye_raporu()` — tüm açık bakiyeler
 
-**Risk:**
+Mikro ERP sunucusu yavaş/meşgul olduğunda her sayfa yüklemesi kullanıcıyı bekletir.
 
-- N kayıt için N sorgu veya tüm tabloyu RAM'e çekme.
-- Veritabanı `SUM()`, `Count()`, `Coalesce` agregasyonları kullanılmıyor.
+### 2) Toplu import için chunk kontrolü yok
 
-### 2) N+1 sorgu riski
+**Kanıt:** `sync_motor/views.py` → `import_baslat()` — Mikro API'den çekilen tüm faturalar tek seferde işleniyor.
 
-**Kanıt:**
+Geniş tarih aralıklı import (ör. 6 aylık) beklenen sonuç: binlerce fatura, uzun işlem süresi, timeout.
 
-- Bazı view'larda `select_related` / `prefetch_related` kullanılmış (iyi); ancak `templates/fatura/detail.html`, `templates/cari/detail.html` gibi sayfalarda template içinde `{% for kalem in fatura.kalemler.all %}` döngüleri görülüyor.
-- Template'te `.all` çağrısı view'da `prefetch_related("kalemler")` yapılmamışsa N+1 üretir.
+### 3) `bakiye_raporu` / `firma_kartlari` pagination yok
 
-### 3) İndeks stratejisi tanımlı değil
+**Kanıt:** `hesap_yonetimi/views.py` → sorgu sonucu doğrudan template'e `{"kayitlar": veri}` ile geçiliyor, `Paginator` kullanılmıyor.
 
-**Kanıt:**
+Büyük firmalarda yüzlerce cari kartı veya binlerce bakiye satırı tek sayfada render ediliyor.
 
-- Model alanlarında `db_index=True` veya `Meta.indexes` neredeyse yok.
-- Sık filtrelenen alanlar (tarih, durum, cari FK, fatura_no) için indeks beyanı eksik.
-
-**Risk:**
-
-- 50k+ kayıt sonrası listeleme/filtre sorguları yavaşlar.
-- Kullanıcı "sistem ağırlaştı" şikayetiyle gelir.
-
-### 4) Pagination kullanımı tutarsız
-
-**Kanıt:**
-
-- Bazı liste view'larında sayfalama yok; tüm kayıtlar tek sayfada render ediliyor.
-- Tahsilat, gider, hareket listeleri büyük veride sayfayı bloklar.
-
-### 5) Performans ölçümü yapılmıyor
-
-**Kanıt:**
-
-- `django-debug-toolbar` DEBUG modda var (iyi) ama:
-- Üretim modunda yavaş sorgu logu yok.
-- Yavaş endpoint için bir threshold uyarısı yok.
-
-### 6) Statik dosyalar için cache yok
-
-**Kanıt:**
-
-- `whitenoise` mevcut ama `CompressedManifestStaticFilesStorage` aktif değil.
-- Tarayıcıya gönderilen `Cache-Control` başlığı varsayılan.
+---
 
 ## Hedef standart
 
-- Toplulaştırma DB seviyesinde yapılmalı (`aggregate`, `annotate`).
-- N+1 sorguları regresyon olarak yakalanmalı (assertNumQueries testleri).
-- Sık filtrelenen alanlarda indeks beyanı olmalı.
-- Tüm liste sayfalarında **pagination** veya tarih filtresi olmalı.
-- Yavaş sorgular loglanmalı (>500 ms).
+| Sorun | Çözüm | Öncelik |
+|---|---|---|
+| Tekrarlı Mikro ERP sorguları | Django cache (60 sn) | P1 |
+| Büyük import → timeout | Chunk işleme (100'lük paketler) | P1 |
+| Sayfalanmamış listeler | `Paginator` (sayfa başı 50) | P2 |
+| Panel bakiye çağrısı | `request.session` kısa önbellek | P2 |
+
+---
 
 ## Önerilen uygulama yaklaşımı
 
-1. **Performans envanteri:** En büyük 5 view (`rapor/views.py`, `dashboard/views.py`, `stok/views.py`, `fatura/views.py`, `tahsilat/views.py`) için `silk` veya `debug-toolbar` ile sorgu sayısı + süre kaydet.
-2. **Toplulaştırmayı DB'ye taşı:**
-   ```python
-   from django.db.models import Sum, Count
-   Fatura.objects.filter(tarih__year=yil).aggregate(
-       toplam=Sum("kalemler__tutar"),
-       adet=Count("id"),
-   )
-   ```
-3. **Indeks beyanları ekle:**
-   ```python
-   class Meta:
-       indexes = [
-           models.Index(fields=["tarih"]),
-           models.Index(fields=["cari", "tarih"]),
-           models.Index(fields=["durum"]),
-       ]
-   ```
-4. **Pagination standardı:** Tüm liste view'larında `Paginator(qs, 50)` veya filtreli liste zorunlu.
-5. **Yavaş sorgu logu:** `django.db.backends` logger'ına eşik tabanlı handler bağla.
-6. **Statik dosya cache:** `STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"`.
-7. **N+1 testi:**
-   ```python
-   with self.assertNumQueries(3):
-       self.client.get("/fatura/")
-   ```
+### 1. `hesap_yonetimi` sorgularına basit cache
+
+```python
+from django.core.cache import cache
+
+def firma_kartlari(request):
+    firma = _aktif_firma(request)
+    cache_key = f"cari_liste_{firma.pk}"
+    veri = cache.get(cache_key)
+    if veri is None:
+        client = MikroApiClient(firma)
+        veri = client.sql_oku(CARI_LISTESI_SQL)
+        cache.set(cache_key, veri, timeout=60)  # 60 saniye
+    ...
+```
+
+Django'nun varsayılan LocMemCache (settings'e ekstra kurulum gerekmez).
+
+### 2. Import chunk işleme
+
+```python
+# sync_motor/views.py
+CHUNK_BOYUT = 100
+
+def import_baslat(request, pk):
+    ...
+    faturalar = client.gelen_faturalar(baslangic, bitis)
+    for i in range(0, len(faturalar), CHUNK_BOYUT):
+        chunk = faturalar[i:i + CHUNK_BOYUT]
+        with transaction.atomic():
+            MikroFatura.objects.bulk_create(
+                [_fatura_nesne_olustur(f, firma) for f in chunk],
+                ignore_conflicts=True
+            )
+```
+
+### 3. Sayfalama
+
+```python
+from django.core.paginator import Paginator
+
+paginator = Paginator(veri, 50)
+sayfa = request.GET.get("sayfa", 1)
+kayitlar = paginator.get_page(sayfa)
+```
+
+### 4. `settings.py` — önbellek ayarı
+
+```python
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "mikro-sync-cache",
+    }
+}
+```
+
+---
 
 ## Kabul kriterleri
 
-- Dashboard ve rapor sayfaları için DB sorgu sayısı sabittir (veri büyüklüğüne göre artmaz).
-- Liste sayfalarının hiçbiri 100'den fazla kaydı tek seferde render etmez.
-- Kritik view'lar için `assertNumQueries` regresyon testleri vardır.
-- `>500 ms` süren sorgular `logs/uygulama.log` içinde uyarı seviyesinde görülür.
-- Statik dosyalar uzun süreli cache başlıkları ile servis edilir.
+- `firma_kartlari` aynı firma için 60 saniyede tekrar yüklenirse Mikro ERP'ye istek gitmiyor
+- 1000+ fatura import edildiğinde timeout oluşmuyor
+- `bakiye_raporu` 500+ satırda sayfa başı 50 gösteriyor
+- Cache sonrası `kontrol.bat` + django check temiz
+
+---
 
 ## Sonraki iş paketleri
 
-- P2.8 — Performans envanteri ve baseline ölçümü
-- P2.9 — Indeks beyanları + migration
-- P2.10 — Pagination standardı
-- P2.11 — N+1 regresyon test suite'i
+- P1.1 — `settings.py` LocMemCache tanımı
+- P1.2 — `firma_kartlari()` ve `panel()` cache
+- P1.3 — import chunk işleme
+- P2.1 — `bakiye_raporu` Paginator
+- P2.2 — cache invalidation (firma ayarı değişince)

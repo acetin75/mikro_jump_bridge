@@ -1,154 +1,139 @@
-# Runbook 15 — Frontend disiplini ve tasarım sistemi (design tokens)
+# Runbook 15 — Frontend disiplini ve tasarım sistemi
 
-**Faz:** P2  
-**Durum:** Tespit edildi, uygulanmadı
+**Faz:** P2
+**Durum:** ⛔ Açık — inline JS/CSS var, CDN yönetimi dağınık
 
 ## Amaç
 
-Arayüzde **renk, boşluk, tipografi** gibi tasarım kararlarının **tek bir kaynaktan** beslenmesini sağlamak.
-Hard-coded renk/inline stil dağılımını ortadan kaldırarak tema desteği, erişilebilirlik kontrastı ve marka tutarlılığı için temel kurmak.
+Template'lerdeki inline JavaScript ve CSS'i statik dosyalara taşımak; CDN bağımlılıklarını merkezi olarak yönetmek; Bootstrap 5.3 kullanımını tutarlı hale getirmek.
 
-> **Bağlantılı runbook'lar:** 14 (modülerlik / template parçalama), 09 (mimari).
+---
 
 ## Mevcut durum ve kanıtlar
 
-### 1) Inline hardcoded renkler template'lere yayılmış
-
-**Kanıt — `grep` ile bulunan inline hex renkler:**
-
-- `templates/dashboard/index.html:106` → `style="background:linear-gradient(135deg,#3b82f6,#6366f1)"`
-- `templates/dashboard/index.html:117` → `#10b981,#059669`
-- `templates/dashboard/index.html:128` → `#f59e0b,#d97706`
-- `templates/dashboard/index.html:139` → `#ef4444,#dc2626`
-- `templates/kasa/detay.html:22,33,44,55` → 4 farklı gradient inline
-- `templates/stok/degerleme.html:20,31,42` → 3 gradient inline
-- `templates/fatura/print.html:158` → `border:1px solid #ddd;color:#444`
-
-**Risk:**
-
-- Marka rengi değişirse **8+ dosyada** elle düzenleme gerekir.
-- Açık/koyu tema desteği imkânsız.
-- Aynı "başarı yeşili" için iki farklı tonlama mevcut (`#10b981/#059669` vs `#047857/#10b981`) — tutarsız.
-- Erişilebilirlik (WCAG kontrast oranı) hiç ölçülemiyor.
-
-### 2) Tasarım token kaynağı yok
+### 1) Büyük inline JavaScript blokları
 
 **Kanıt:**
 
-- `static/` altında `tokens.css` / `theme.css` / `variables.css` yok.
-- `templates/base.html` Bootstrap CDN'i çekiyor ama `:root { --primary: ... }` özel değişken seti tanımlı değil.
-- Bootstrap'in mevcut CSS değişkenleri (`--bs-primary` vb.) kullanılmıyor.
+- `templates/hesap_yonetimi/hesap_hareketleri.html` (385 satır):
+  - `toggleGrupla()`, `buildGruplama()`, toplam hesaplama fonksiyonları — template içinde `<script>` bloğu
+  - Select2 başlatma: `$(document).ready(function() { ... })`
+  - `formatPara()` yardımcı fonksiyonu — template içi tanımlı
 
-### 3) Stil dağılımı: inline + CDN + (yer yer) sınıf
+- `templates/hesap_yonetimi/firma_sec.html` (330 satır):
+  - Arama/filtreleme JS template içinde
 
-**Kanıt:**
+### 2) CDN bağımlılıkları tek tek template'lerde
 
-- Inline `style="..."` (yukarıdaki örnekler).
-- Bootstrap utility class'ları (`text-success`, `badge bg-warning`) — iyi yön.
-- Özel CSS dosyası ya yok ya da çok sınırlı.
-- Aynı görsel (stat-card) farklı template'lerde kopyalanmış — ortak CSS sınıfı yerine inline stil tekrarı.
+**Kanıt:** `templates/hesap_yonetimi/hesap_hareketleri.html` içinde:
 
-### 4) İkon ve emoji kullanımı belirsiz
+```html
+<!-- SADECE bu template'de, başka hiçbir yerde değil -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.full.min.js"></script>
+```
 
-**Kanıt:**
+`base.html` CDN listesinde Select2 yok. Tutarsız CDN yönetimi.
 
-- `copilot-instructions.md` Bootstrap Icons kullanılır diyor (iyi).
-- Bazı template'lerde emoji (`📊`, `✅`) kullanılmış olabilir (`grep` taranmalı).
-- Erişilebilir alternatif metin (`aria-label`, `sr-only`) disiplini yazılı değil.
+### 3) Hardcoded renkler ve stiller
 
-### 5) Erişilebilirlik (a11y) standardı yok
+**Kanıt:** Template'lerde `style="color: red"`, `style="background: #f8f9fa"` gibi satır içi stiller.
 
-**Kanıt:**
+### 4) jQuery bağımlılığı (Select2 için)
 
-- `templates/base.html` `lang="tr"` içeriyor (iyi).
-- Form etiket-input bağlantısı `BootstrapFormMixin` sayesinde büyük ölçüde sağlanıyor (iyi).
-- Ama `aria-*`, kontrast denetimi, klavye navigasyonu, odak halkası testi yok.
+**Kanıt:** Select2, jQuery gerektiriyor. jQuery `base.html`'de mi var kontrol edilmeli.  
+Bootstrap 5.x jQuery bağımlılığını kaldırdı — Select2 için jQuery eklemek gerekebilir.
 
-### 6) Dark mode / yazdırma stilleri ayrı yönetilmiyor
-
-**Kanıt:**
-
-- `templates/fatura/print.html` ayrı template — iyi.
-- Ama yazdırma için `@media print` global kuralları, marj/font ayarları tek bir CSS'te toplanmış değil.
+---
 
 ## Hedef standart
 
-- Tüm renk, boşluk, font değişiklikleri **bir tek CSS değişken seti** (design tokens) üzerinden yapılır.
-- Template'lerde **inline hex renk yasak** — sadece sınıf veya `var(--token)` kullanılır.
-- Tekrarlayan görsel bileşenler (stat-card, badge, filtre kutusu) **ortak CSS sınıfı**na sahiptir.
-- Tüm interaktif elemanlar `aria-*` etiketleri ve klavye desteğine sahiptir.
-- Açık/koyu tema değişimi tek bir attribute (`data-theme="dark"`) ile mümkündür.
+### Dosya organizasyonu
+
+```
+static/
+├── css/
+│   └── mikro.css          ← projeye özgü CSS (Bootstrap override'lar)
+└── js/
+    ├── hesap_hareketleri.js  ← gruplama + toplam JS
+    ├── firma_sec.js          ← cari seçim filtresi
+    └── utils.js              ← formatPara() gibi paylaşılan yardımcılar
+```
+
+### CDN yönetim kuralı
+
+Tüm CDN linkleri **yalnızca** `base.html` içinde olur.  
+Template bazlı CDN yasaktır.  
+Sayfa bazlı JS → `{% block extra_js %}` block ile yüklenir.
+
+### Bootstrap 5.3 kullanım kılavuzu
+
+| Amaç | Kullan | Kullanma |
+|---|---|---|
+| Renkler | `text-danger`, `bg-warning` | `style="color:red"` |
+| Aralıklar | `mt-3`, `p-2` | `style="margin-top:12px"` |
+| Tablolar | `table-striped table-hover` | özel CSS |
+| Butonlar | `btn btn-primary` | hardcoded renk |
+| Uyarı kutuları | `alert alert-warning` | custom div |
+
+---
 
 ## Önerilen uygulama yaklaşımı
 
-1. **Token dosyası oluştur:** `static/css/tokens.css`
-   ```css
-   :root {
-     /* Renk paleti */
-     --renk-primary:    #3b82f6;
-     --renk-primary-2:  #6366f1;
-     --renk-success:    #10b981;
-     --renk-success-2:  #059669;
-     --renk-warning:    #f59e0b;
-     --renk-warning-2:  #d97706;
-     --renk-danger:     #ef4444;
-     --renk-danger-2:   #dc2626;
-     --renk-info:       #1e40af;
-     --renk-muted:      #64748b;
+### 1. `hesap_hareketleri.js` oluştur
 
-     /* Yarıçap, gölge, boşluk */
-     --radius-md: 0.5rem;
-     --gap-card: 1rem;
+```javascript
+// static/js/hesap_hareketleri.js
+function formatPara(sayi) {
+    return new Intl.NumberFormat("tr-TR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(sayi);
+}
 
-     /* Tipografi */
-     --font-sans: system-ui, "Segoe UI", sans-serif;
-   }
+function toggleGrupla() { ... }
+function buildGruplama(veri) { ... }
 
-   [data-theme="dark"] {
-     /* ileride doldurulacak */
-   }
-   ```
-2. **Ortak bileşen CSS'i:** `static/css/components.css`
-   ```css
-   .stat-card { border-radius: var(--radius-md); padding: 1.25rem; color: #fff; }
-   .stat-card--primary { background: linear-gradient(135deg, var(--renk-primary), var(--renk-primary-2)); }
-   .stat-card--success { background: linear-gradient(135deg, var(--renk-success), var(--renk-success-2)); }
-   .stat-card--warning { background: linear-gradient(135deg, var(--renk-warning), var(--renk-warning-2)); }
-   .stat-card--danger  { background: linear-gradient(135deg, var(--renk-danger),  var(--renk-danger-2)); }
-   ```
-3. **Template'leri taşı:**
-   ```html
-   <!-- ÖNCE -->
-   <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">
+document.addEventListener("DOMContentLoaded", function () {
+    // Select2 başlatma buraya
+});
+```
 
-   <!-- SONRA -->
-   <div class="stat-card stat-card--primary">
-   ```
-4. **Ortak partial ekle:** `templates/_partials/stat_card.html` — runbook 14 ile birleşik.
-5. **Hardcoded renk yasağı CI kuralı:**
-   ```bash
-   # scripts/check_no_inline_color.py
-   # templates/ altında style="..." içinde #hex veya rgb() arar.
-   ```
-   CI'da bulursa PR kırılır.
-6. **Erişilebilirlik denetimi:**
-   - Form input'lar için `aria-describedby` (yardım metni varsa).
-   - Renkle ifade edilen durumların yanına metin/ikon ekle (renk körü kullanıcı için).
-   - Kontrast oranı WCAG AA (4.5:1) hedefi — token seti bu eşiğe göre seçilmelidir.
-7. **Yazdırma stili:** `static/css/print.css` ayrı dosyada, `@media print` blokları toplanmış.
+### 2. `base.html` içinde Select2 CDN
+
+Select2 birden fazla sayfada kullanılacaksa `base.html`'e taşı:
+
+```html
+<!-- base.html -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet">
+...
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.full.min.js"></script>
+```
+
+Tek sayfada kalacaksa `{% block extra_css %}` / `{% block extra_js %}` ile yükle.
+
+### 3. Inline stil tarama
+
+```bat
+grep -rn "style=" templates/ | grep -v "display:none" | grep -v "base.html"
+```
+
+Çıktıdaki `style=` satırlarını Bootstrap utility class'larıyla değiştir.
+
+---
 
 ## Kabul kriterleri
 
-- `grep -r 'style=.*#[0-9a-fA-F]\{3,6\}' templates/` boş sonuç döner (zorunlu istisnalar `# allow` listesinde).
-- Tüm gradient kart blokları `.stat-card--{varyant}` sınıfı ile çalışır.
-- Marka rengini değiştirmek için **yalnızca `tokens.css`** düzenlenir.
-- `templates/_partials/stat_card.html` en az 3 farklı sayfada `{% include %}` edilir.
-- Kontrast denetimi (manuel veya `axe`) ana sayfalarda hata vermez.
+- `hesap_hareketleri.html` içinde `<script>` bloğu kalmıyor
+- CDN bağımlılıkları `base.html` veya `{% block extra_js %}` üzerinden yönetiliyor
+- `templates/` içinde `style="color:` veya `style="background:` kalmıyor
+- `static/js/` altında en az bir modüler JS dosyası oluşturulmuş
+
+---
 
 ## Sonraki iş paketleri
 
-- P2.17 — `tokens.css` + `components.css` çıkar
-- P2.18 — Inline renkleri taşı (dashboard, kasa, stok, fatura print)
-- P2.19 — `templates/_partials/` ortak bileşenler (runbook 14 ile birlikte)
-- P2.20 — Hardcoded renk yasağı CI kuralı
-- P2.21 — Erişilebilirlik denetim listesi + manuel test prosedürü
+- P2.1 — `static/js/hesap_hareketleri.js` taşıma
+- P2.2 — `static/js/utils.js` (formatPara ve paylaşılan fonksiyonlar)
+- P2.3 — Inline stil temizliği (grep ile tespit, utility class ile replace)
+- P2.4 — Select2 CDN → `base.html` konsolidasyonu

@@ -1,114 +1,108 @@
-# Runbook 11 — KVKK, kişisel veri ve veri saklama
+# Runbook 11 — KVKK ve kişisel veri saklama
 
-**Faz:** P0  
-**Durum:** Tespit edildi, uygulanmadı
+**Faz:** P1
+**Durum:** ⛔ Açık — kişisel veri saklanıyor, politika yok
 
 ## Amaç
 
-Muhasebe büroları doğası gereği müşterilerinin **kişisel verilerini** (ad, vergi/TC no, telefon, e-posta, adres, banka bilgisi) işler.
-Bu runbook, projenin **6698 sayılı KVKK** uyumu için minimum gereksinimleri tanımlar; veri sızıntısı, hukuki risk ve müşteri güveninin kaybı sonuçlarını azaltır.
+`mikro_gelen` staging alanında biriken kişisel/ticari verilerin saklama süresini belirlemek, `ham_json` içindeki gizli veri alanlarını kontrol altına almak ve olası KVKK yükümlülüklerini minimize etmek.
 
-## Neden kritik
-
-KVKK ihlali, Türkiye'de muhasebe bürosu sahibine ciddi idari para cezası ve cezai sorumluluk doğurur.
-Yazılım "yerel" çalışıyor olması bu yükümlülüğü ortadan kaldırmaz — veriyi işleyen sistemin **veri güvenliğini sağlama** yükümlülüğü vardır.
+---
 
 ## Mevcut durum ve kanıtlar
 
-### 1) Kişisel veri envanteri yok
+### 1) `MikroFatura` kişisel veri alanları
 
-**Etkilenen modeller (örnek):**
+**Kanıt:** `mikro_gelen/models.py` satır 36-37:
 
-- `cari/models.py` → `Cari.ad`, `vergi_no`, `telefon`, `email`, `adres`, `vergi_dairesi`
-- `kullanici/models.py` → `User`, `AktiviteLogu` (IP dahil)
-- `banka/models.py` → IBAN, hesap sahibi
-- `ceksenet/models.py` → keşideci adı, banka şubesi
-- `sozlesme/models.py` → müşteri bilgisi
+```python
+fat_cari_unvan = models.CharField("Cari Ünvanı", max_length=300, blank=True)
+fat_cari_vkn   = models.CharField("Vergi No", max_length=20, blank=True)
+```
 
-**Eksik:**
+Ek risk: `ham_json` (satır 49) — Mikro ERP'den gelen ham veri, içinde e-posta, cep telefonu, adres gibi alanlar olabilir:
 
-- Hangi modelde hangi tür kişisel veri tutuluyor — yazılı envanter yok.
-- Veri sahibi kategorisi (müşteri / tedarikçi / personel) ayrımı yok.
-- Veri işleme amacı (faturalama, raporlama vb.) tanımlı değil.
+```python
+ham_json = models.TextField("Ham JSON", blank=True)
+```
 
-### 2) Veri saklama / silme politikası yok
+### 2) Veri saklama süresi tanımsız
 
-**Kanıt:**
+**Kanıt:** `MikroFatura.objects` üzerinde zamanlanmış temizleme, `retention_days` sabiti veya yönetim komutu yok.
 
-- Tüm modeller verileri **süresiz** tutar.
-- "Pasifleştirilen" cariler `aktif=False` ile işaretlenir ama silinmez.
-- `AktiviteLogu` zaman sınırı olmaksızın büyür.
+`durum` alanı `ham`, `islendi`, `hata`, `atla` değerlerini alıyor ama `islendi` durumundaki satırlar silinmiyor — ebediyen birikmeye devam ediyor.
 
-**Risk:**
+### 3) `hesap_yonetimi` sorgularında hassas veri
 
-- KVKK m.7 — amaca uygun saklama süresi sonunda silme/anonimleştirme zorunlu.
-- Sınırsız büyüyen log → veri minimizasyonu ilkesini ihlal eder.
+**Kanıt:** `hesap_yonetimi/views.py` → `firma_kartlari()`, `cari_detay()`, `hesap_hareketleri()` — cari e-posta, telefon, adres gibi alanlar Mikro ERP'den çekiliyor ancak bu veriler log'a düşebiliyor (`logger.debug()` çağrıları).
 
-### 3) Veri sahibi hakları için mekanizma yok
-
-**Eksik:**
-
-- Kişisel verilerin **dışa aktarımı** (taşınabilirlik hakkı) için kullanıcı arayüzü yok.
-- Belirli bir carinin tüm kişisel verisinin **silinmesi/anonimleştirilmesi** için fonksiyon yok.
-- Cari soft-delete uygulansa bile veri içeriği değişmiyor (ad/telefon/email duruyor).
-
-### 4) Veri tabanı şifrelenmemiş
-
-**Kanıt:**
-
-- `db.sqlite3` düz dosya — disk erişimi olan herkes okuyabilir.
-- Yedek dosyaları (`dashboard/views.py:yedek_indir`) düz SQLite olarak indiriliyor.
-
-**Risk:**
-
-- Çalınan/kaybolan dizüstü → tüm müşteri verisi sızar.
-
-### 5) Loglarda kişisel veri sızabilir
-
-**Kanıt:**
-
-- `mikro_sync/settings.py` log formatı düz metin.
-- View'larda hata mesajları örnek değişken dökümü içerebilir (`logger.error("...", exc_info=True)`).
-- `AktiviteLogu` IP adresi tutar — bu da kişisel veridir.
-
-### 6) Aydınlatma metni / KVKK uyum belgesi yok
-
-**Kanıt:**
-
-- Repoda KVKK aydınlatma metni, VERBİS kaydı, veri envanteri veya saklama planı bulunmuyor.
-- UI'da kullanıcıya gösterilen bir aydınlatma metni yok.
+---
 
 ## Hedef standart
 
-- Hangi alanın kişisel veri olduğu **kod seviyesinde işaretli** olmalı.
-- Her veri kategorisi için **saklama süresi** tanımlı olmalı.
-- Süre sonunda **otomatik anonimleştirme / silme** çalışmalı.
-- Veri sahibi talebi geldiğinde **tek komutla dışa aktarım ve silme** mümkün olmalı.
-- Yedek dosyaları **şifrelenmiş** dışarı çıkmalı.
-- Loglarda kişisel veri **maskelenmiş** olmalı.
+1. **Saklama süresi politikası**: `MikroFatura` → `islendi` durumuna geçtikten N gün sonra `ham_json` alanı temizlenir.
+2. **Veri minimizasyonu**: `ham_json` içindeki gereksiz kişisel alanlar (e-posta, cep telefonu) import sonrası temizlenir veya hiç kaydedilmez.
+3. **Log temizliği**: `logger.debug()` içinde hassas veri (`fat_cari_vkn`, e-posta, TC kimlik) log'a yazılmaz.
+4. **Yönetim komutu**: `python manage.py veri_temizle --gun 90` ile eski kayıtları sil.
+
+---
 
 ## Önerilen uygulama yaklaşımı
 
-1. **Veri envanteri çıkar:** `docs/kvkk/veri-envanteri.md` — model × alan × veri tipi × saklama süresi.
-2. **Saklama süresi tanımla:** ör. `AktiviteLogu` için 6 ay, ticari belgeler için VUK gereği 5 yıl.
-3. **Yönetim komutu yaz:** `python manage.py kvkk_temizle` — süresi dolmuş kayıtları anonimleştirir.
-4. **Cari için anonimleştirme aksiyonu:** `cari_anonimlestir(cari)` → ad="Silinen Cari #N", telefon/email/adres temizlenir, finansal kayıt tarih+tutar korunur (VUK gereği).
-5. **Veri sahibi dışa aktarım view'ı:** seçili cariye ait tüm veriyi JSON/PDF olarak indir.
-6. **Yedekleri şifrele:** `yedek_indir()` parolalı ZIP veya `cryptography.fernet` ile şifrele (bkz. runbook 07).
-7. **Log maskeleme filtresi ekle:** `logging.Filter` ile TC/vergi no/IBAN/e-posta düz metin yazılmasın.
-8. **Aydınlatma metni şablonu** ekle ve login sonrası tek seferlik gösterim onayı al.
+### 1. `ham_json` temizleme alanı ekle
+
+```python
+# mikro_gelen/models.py — EKLENECEKler
+ham_json_temizlendi = models.BooleanField("Ham Veri Temizlendi", default=False)
+```
+
+### 2. Yönetim komutu
+
+```python
+# mikro_gelen/management/commands/veri_temizle.py
+class Command(BaseCommand):
+    help = "İşlenmiş faturaların ham verisini ve eski ham kayıtları temizler"
+
+    def add_arguments(self, parser):
+        parser.add_argument("--gun", type=int, default=90)
+
+    def handle(self, *args, **options):
+        sinir = date.today() - timedelta(days=options["gun"])
+        # islendi olanların ham_json'unu temizle
+        temizlenen = MikroFatura.objects.filter(
+            durum="islendi", fat_tarih__lt=sinir, ham_json_temizlendi=False
+        ).update(ham_json="", ham_json_temizlendi=True)
+        self.stdout.write(f"{temizlenen} kaydın ham verisi temizlendi.")
+```
+
+### 3. Log güvenlik kuralı
+
+```python
+# YANLIŞ
+logger.debug("Cari %s, VKN: %s", fat_cari_unvan, fat_cari_vkn)
+
+# DOĞRU
+logger.debug("Cari kod: %s", fat_cari_kod)  # yalnızca kod
+```
+
+### 4. `baslat.bat` içine periyodik temizleme
+
+`baslat.bat` şu an migrate çalıştırıyor; ayrı bir `zamanlanmis_gorevler.bat` veya Windows Task Scheduler ile haftalık `veri_temizle --gun 90` koşulabilir.
+
+---
 
 ## Kabul kriterleri
 
-- `docs/kvkk/` altında envanter ve saklama planı yazılı.
-- Saklama süresi dolmuş loglar otomatik temizleniyor.
-- Bir cari için "veriyi anonimleştir" işlemi UI'dan çalıştırılabilir ve geri alınamaz şekilde uyarı verir.
-- Yedek dosyaları parolasız okunamaz.
-- Loglarda tam vergi no/TC/IBAN çıktısı bulunmaz (regex maskeleme testi geçer).
+- `MikroFatura` → `ham_json` 90 gün sonra otomatik temizlenebilir (komut var)
+- `logger.debug/info` çağrılarında VKN, e-posta, telefon log'a düşmüyor
+- `veri_temizle` komutu `python manage.py` ile sorunsuz çalışıyor
+- Temizleme işlemi yanlışlıkla canlı fatura verisini silmiyor (`islendi` + tarih kontrolü)
+
+---
 
 ## Sonraki iş paketleri
 
-- P0.6 — Veri envanteri ve saklama planı belgele
-- P0.7 — Cari anonimleştirme + dışa aktarım fonksiyonları
-- P1.19 — Yedek şifreleme (runbook 07 ile birlikte)
-- P1.20 — Log maskeleme filtresi
+- P1.1 — `mikro_gelen/management/commands/veri_temizle.py` yaz
+- P1.2 — `ham_json_temizlendi` alanı + migration
+- P1.3 — `hesap_yonetimi/views.py` log satırlarını tarıyarak hassas veri tespiti
+- P2.1 — Windows Task Scheduler ile haftalık `veri_temizle`
