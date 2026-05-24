@@ -43,8 +43,15 @@ if errorlevel 1 (
     exit /b 1
 )
 
+:: Statik dosyalar
+echo [4/5] Statik dosyalar hazırlanıyor...
+.venv\Scripts\python.exe manage.py collectstatic --noinput -v 0
+if errorlevel 1 (
+    echo UYARI: collectstatic başarısız oldu, devam ediliyor...
+)
+
 :: Admin kullanıcısı oluştur (yoksa)
-echo [4/4] Admin hesabı kontrol ediliyor...
+echo [5/5] Admin hesabı kontrol ediliyor...
 .venv\Scripts\python.exe olustur_admin.py
 if errorlevel 1 (
     echo UYARI: Admin hesabı oluşturulamadı, devam ediliyor...

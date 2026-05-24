@@ -100,11 +100,6 @@
     <i class="bi bi-cloud-download"></i> Import Geçmişi
   </a>
 
-  <div class="nav-section">Gelen Veriler</div>
-  <a href="{% url 'mikro_fatura_liste' %}" class="nav-link {% if 'fatura' in request.resolver_match.url_name %}active{% endif %}">
-    <i class="bi bi-receipt-cutoff"></i> Mikro Faturalar
-  </a>
-
   <div class="nav-section">Hesap Yönetimi</div>
   <a href="{% url 'hy_panel' %}" class="nav-link {% if request.resolver_match.url_name == 'hy_panel' %}active{% endif %}">
     <i class="bi bi-speedometer2"></i> Özet Panel
