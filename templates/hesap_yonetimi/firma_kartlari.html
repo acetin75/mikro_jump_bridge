@@ -59,51 +59,57 @@
         <tr>
           <th>Kod</th>
           <th>Ünvan</th>
-          <th>VKN / TC</th>
+          <th>Grup</th>
+          <th>Döviz</th>
           <th>Telefon</th>
-          <th class="text-end">Bakiye (₺)</th>
-          <th>Tip</th>
+          <th>E-posta</th>
+          <th>Vergi No</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         {% for c in cariler %}
           <tr>
-            <td><code class="text-primary">{{ c.cari_kod }}</code></td>
+            <td>
+              <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}" class="fw-bold text-primary">
+                {{ c.cari_kod }}
+              </a>
+            </td>
             <td>
               <div class="fw-semibold">{{ c.cari_unvan1 }}</div>
               {% if c.cari_unvan2 %}<div class="small text-muted">{{ c.cari_unvan2 }}</div>{% endif %}
             </td>
-            <td>{{ c.cari_vkn_vd|default:"—" }}</td>
-            <td>{{ c.cari_telefon1|default:"—" }}</td>
-            <td class="text-end fw-semibold
-              {% if c.cari_bakiye and c.cari_bakiye|floatformat:2 != '0.00' %}
-                {% if c.cari_bakiye > 0 %}text-success{% else %}text-danger{% endif %}
-              {% endif %}">
-              {{ c.cari_bakiye|floatformat:2|default:"0,00" }}
+            <td>
+              {% if c.cari_grup_kodu %}
+                <span class="badge bg-secondary rounded-pill">{{ c.cari_grup_kodu }}</span>
+              {% else %}—{% endif %}
             </td>
             <td>
-              {% if c.cari_isk_tip == 0 %}
-                <span class="badge bg-primary rounded-pill">Müşteri</span>
-              {% elif c.cari_isk_tip == 1 %}
-                <span class="badge bg-warning text-dark rounded-pill">Tedarikçi</span>
-              {% else %}
-                <span class="badge bg-secondary rounded-pill">Diğer</span>
-              {% endif %}
+              {% if c.cari_doviz_cinsi == 0 or c.cari_doviz_cinsi == '0' %}TL
+              {% elif c.cari_doviz_cinsi == 1 or c.cari_doviz_cinsi == '1' %}USD
+              {% elif c.cari_doviz_cinsi == 2 or c.cari_doviz_cinsi == '2' %}EUR
+              {% elif c.cari_doviz_cinsi == 8 or c.cari_doviz_cinsi == '8' %}JPY
+              {% elif c.cari_doviz_cinsi == 12 or c.cari_doviz_cinsi == '12' %}AED
+              {% elif c.cari_doviz_cinsi == 20 or c.cari_doviz_cinsi == '20' %}GBP
+              {% else %}{{ c.cari_doviz_cinsi|default:"—" }}{% endif %}
             </td>
+            <td>{{ c.cari_CepTel|default:"—" }}</td>
+            <td>{{ c.cari_EMail|default:"—" }}</td>
+            <td>{{ c.cari_VergiKimlikNo|default:"—" }}</td>
             <td>
-              <a href="{% url 'hy_cari_detay' c.cari_kod %}" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-eye"></i>
-              </a>
               <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}"
-                 class="btn btn-outline-success btn-sm ms-1">
+                 class="btn btn-outline-primary btn-sm" title="Hesap Hareketleri">
                 <i class="bi bi-list-columns-reverse"></i>
+              </a>
+              <a href="{% url 'hy_bakiye_raporu' %}?q={{ c.cari_kod }}"
+                 class="btn btn-outline-success btn-sm ms-1" title="Bakiye">
+                <i class="bi bi-bar-chart-line"></i>
               </a>
             </td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="7" class="text-center text-muted py-4">
+            <td colspan="8" class="text-center text-muted py-4">
               <i class="bi bi-inbox fs-3 d-block mb-2"></i>
               {% if arama %}Aramanıza uygun cari bulunamadı.{% else %}Cari kaydı yok.{% endif %}
             </td>

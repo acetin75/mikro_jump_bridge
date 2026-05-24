@@ -166,8 +166,9 @@ def firma_kartlari(request):
         sorgu = f"""
             SELECT TOP 500
                 cari_kod, cari_unvan1, cari_unvan2,
-                cari_VergiKimlikNo, cari_vdaire_adi,
-                cari_CepTel, cari_EMail
+                cari_VergiKimlikNo,
+                cari_CepTel, cari_EMail,
+                cari_grup_kodu, cari_doviz_cinsi
             FROM CARI_HESAPLAR
             WHERE {where}
             ORDER BY cari_unvan1
