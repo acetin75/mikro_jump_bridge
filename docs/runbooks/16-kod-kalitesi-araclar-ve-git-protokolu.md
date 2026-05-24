@@ -45,7 +45,7 @@ VS Code ruff extension kaydetme sırasında otomatik düzeltirir.
 ## Vulture — Ölü Kod
 
 ```bat
-.venv\Scripts\python.exe -m vulture sync_motor mikro_gelen hesap_yonetimi mikro_sync --min-confidence 80
+.venv\Scripts\python.exe -m vulture sync_motor hesap_yonetimi lisans posta kullanici mikro_sync --min-confidence 80
 ```
 
 **Yanlış pozitif nasıl susturulur:**

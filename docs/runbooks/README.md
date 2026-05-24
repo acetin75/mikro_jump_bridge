@@ -30,7 +30,7 @@ Projede eksiklerden önce teslim edilmiş bazı sağlam parçalar da var:
 - `mikro_sync/middleware.py` login + firma seçim + lisans zorunluluğu çerçevesi sağlıyor.
 - `lisans/` app ile HMAC-SHA256 imzalı 15 günlük deneme + anahtar aktivasyon altyapısı tamam.
 - `sync_motor/client.py` içinde MD5 günlük hash auth ile güvenli Mikro ERP bağlantısı.
-- `mikro_gelen/` staging alanı — ham fatura verisi `ham_json`'da korunuyor, durum makinesi var.
+- `hesap_yonetimi/` app'i Mikro ERP'den **sadece okuma** modunda cari/hareket/bakiye sorgular — yerel veri persist edilmez.
 - Kökte `.env.example` mevcut — yerel kurulum için iyi bir referans.
 
 ## Kritik boşluklar — faz ve durum tablosu

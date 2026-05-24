@@ -61,7 +61,7 @@
 
 - API çağrılarına `X-Request-Id` veya correlation header beklenmiyor.
 - `logs/uygulama.log` içinde Mikro çağrılarını tek string ile takip etmek zor.
-- Webhook / push modu yok; iki yönlü değişiklik bildirimi pull modunda gerçekleşir.
+- Webhook / push modu yok; uzak (Mikro ERP) tarafındaki değişiklikler yalnızca pull (çekme) modunda algılanır.
 
 ### 6) Sürüm uyumsuzluğu için kontrol yok
 
@@ -97,7 +97,7 @@
 3. **Idempotency:** `Fatura` modeline `mikro_guid = CharField(unique=True, null=True, blank=True)` ekle; aktarımda `update_or_create(mikro_guid=...)`.
 4. **Retry stratejisi:** `mikro_sync/client.py` içinde `tenacity` veya elle yazılmış backoff (1s, 3s, 10s, vazgeç).
 5. **Correlation id:** `X-Request-Id` başlığını her iki tarafta middleware ile log'a yaz (runbook 08 ile birleşik).
-6. **Kısmi başarı için outbox/staging:** Mikro aktarımları önce `mikro_gelen/MikroFatura` staging'ine al, sonra atomic transaction ile staging verilerini işle.
+6. **Kısmi başarı için outbox/staging:** İleride yazma akışı eklenirse Mikro aktarımları önce yerel bir staging tablosuna (örn. `sync_motor.GelenFatura`) al, sonra atomic transaction ile staging verilerini işle. (Not: `mikro_gelen` uygulaması 2026-05-24'te kaldırılmıştır.)
 7. **API versiyon negotiation:** `/api/v1/ping/` yanıtında `{"server_version": "...", "api_versions": ["v1"]}` döndür.
 8. **Şifreleme güçlendir:** `FirmaAyar` şifre saklamayı `cryptography.fernet.Fernet` ile yeniden yaz; anahtar `.env` üzerinden gelir.
 9. **Health check:** `/api/v1/health/` — DB, disk, son başarılı aktarım zamanı.

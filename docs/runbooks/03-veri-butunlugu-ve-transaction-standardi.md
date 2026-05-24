@@ -1,7 +1,9 @@
 # Runbook 03 — Veri bütünlüğü ve transaction standardı
 
 **Faz:** P1
-**Durum:** ⛔ Açık — tespit edildi, uygulanmadı
+**Durum:** 🟢 Şu an pasif — Gelecekteki yazma akışı için referans
+
+> **⚠️ 2026-05-24 güncellemesi:** `mikro_gelen` uygulaması ve `import_baslat()` view'ı kaldırıldı. Proje şu an Mikro ERP'ye **yazma yapmıyor**; staging tablosu yoktur. Bu runbook, ileride yazma/staging akışı eklenirse uygulanacak standartları tanımlar. Aşağıdaki dosya/sınıf adları (`MikroFatura`, `mikro_gelen/views.py`, `import_baslat`) **artık mevcut değildir**; gelecekte oluşturulacak muadil yapılar için kılavuzdur.
 
 ## Amaç
 

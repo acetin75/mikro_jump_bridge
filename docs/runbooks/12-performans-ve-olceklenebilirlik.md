@@ -21,11 +21,13 @@ Mikro ERP API gecikmelerinin kullanıcıya yansımasını azaltmak; büyük impo
 
 Mikro ERP sunucusu yavaş/meşgul olduğunda her sayfa yüklemesi kullanıcıyı bekletir.
 
-### 2) Toplu import için chunk kontrolü yok
+### 2) Geniş aralık SQL sorguları korumasız
 
-**Kanıt:** `sync_motor/views.py` → `import_baslat()` — Mikro API'den çekilen tüm faturalar tek seferde işleniyor.
+**Kanıt:** `hesap_yonetimi/views.py` → `hesap_hareketleri()`, `bakiye_raporu()` — kullanıcı geniş bir tarih aralığı seçerse Mikro ERP'den binlerce satır tek seferde çekilir.
 
-Geniş tarih aralıklı import (ör. 6 aylık) beklenen sonuç: binlerce fatura, uzun işlem süresi, timeout.
+Geniş tarih aralıklı sorgu (ör. 1 yıllık) beklenen sonuç: binlerce hareket, uzun bekleme, timeout.
+
+> İleride yazma/import akışı eklenirse bu maddeye chunk işleme standardı eklenecektir.
 
 ### 3) `bakiye_raporu` / `firma_kartlari` pagination yok
 
@@ -66,23 +68,18 @@ def firma_kartlari(request):
 
 Django'nun varsayılan LocMemCache (settings'e ekstra kurulum gerekmez).
 
-### 2. Import chunk işleme
+### 2. Geniş tarih aralığı uyarısı
+
+`hesap_hareketleri` ve `bakiye_raporu` view'larında kullanıcı çok geniş tarih aralığı seçerse uyarı göster veya sorguyu reddet:
 
 ```python
-# sync_motor/views.py
-CHUNK_BOYUT = 100
-
-def import_baslat(request, pk):
-    ...
-    faturalar = client.gelen_faturalar(baslangic, bitis)
-    for i in range(0, len(faturalar), CHUNK_BOYUT):
-        chunk = faturalar[i:i + CHUNK_BOYUT]
-        with transaction.atomic():
-            MikroFatura.objects.bulk_create(
-                [_fatura_nesne_olustur(f, firma) for f in chunk],
-                ignore_conflicts=True
-            )
+MAKS_GUN = 366
+if (bitis - baslangic).days > MAKS_GUN:
+    messages.warning(request, f"En fazla {MAKS_GUN} günlük aralık sorgulanabilir.")
+    return redirect(...)
 ```
+
+> İleride yazma/import akışı eklenirse burada `CHUNK_BOYUT` ile `bulk_create(ignore_conflicts=True)` örneği yer alacaktır.
 
 ### 3. Sayfalama
 

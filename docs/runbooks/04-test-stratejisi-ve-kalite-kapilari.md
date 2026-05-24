@@ -16,7 +16,6 @@ Regresyonları önlemek için kritik iş mantığı ve entegrasyon noktalarını
 | Dosya | Satır | Durum |
 |---|---|---|
 | `sync_motor/tests.py` | 95 | İskelet / placeholder |
-| `mikro_gelen/tests.py` | 37 | İskelet |
 | `hesap_yonetimi/tests.py` | 2 | Tamamen boş |
 | `lisans/tests.py` | — | Dosya yok |
 

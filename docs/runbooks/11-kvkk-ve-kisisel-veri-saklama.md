@@ -1,11 +1,13 @@
 # Runbook 11 — KVKK ve kişisel veri saklama
 
 **Faz:** P1
-**Durum:** ⛔ Açık — kişisel veri saklanıyor, politika yok
+**Durum:** 🟢 Şu an pasif — Mikro ERP verisi persist edilmiyor
+
+> **⚠️ 2026-05-24 güncellemesi:** `mikro_gelen` ve `MikroFatura` staging tablosu kaldırıldı. Proje şu an Mikro ERP'den çektiği cari/hareket verilerini **yerel veritabanına yazmıyor** — `hesap_yonetimi` view'ları her istekte canlı sorgu yapar ve sonucu yalnızca template'e gönderir. Bu sayede kişisel/ticari veri saklama yükümlülüğü asgaridir. Aşağıdaki standartlar **ileride** cache, export veya staging eklenirse aktive olacaktır; bahsedilen `MikroFatura`, `ham_json`, `mikro_gelen` adları **şu an mevcut değildir**.
 
 ## Amaç
 
-`mikro_gelen` staging alanında biriken kişisel/ticari verilerin saklama süresini belirlemek, `ham_json` içindeki gizli veri alanlarını kontrol altına almak ve olası KVKK yükümlülüklerini minimize etmek.
+İleride Mikro ERP verilerinin yerelde persist edileceği bir akış eklenirse (staging, cache, export, rapor arşivi), kişisel/ticari verilerin saklama süresini belirlemek ve olası KVKK yükümlülüklerini minimize etmek.
 
 ---
 

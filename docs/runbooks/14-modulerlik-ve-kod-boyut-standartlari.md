@@ -20,7 +20,6 @@ Tek dosyaların aşırı büyümesini önlemek; yeni özellik eklemenin mevcut b
 | `templates/hesap_yonetimi/firma_sec.html` | **330** | 🔴 Sınır aşıldı (max 300) |
 | `sync_motor/client.py` | 217 | 🟡 Yaklaşıyor (soft limit 200) |
 | `sync_motor/models.py` | 111 | ✅ Uygun |
-| `mikro_gelen/models.py` | 107 | ✅ Uygun |
 | `lisans/utils.py` | 58 | ✅ Uygun |
 
 ### 2) `hesap_yonetimi/views.py` büyüme sebebi
@@ -83,7 +82,7 @@ Template'de:
 
 217 satır — şu an uygun. Her yeni metot eklenmeden önce boyut kontrol edilmeli.  
 `sql_oku()` + `gelen_faturalar()` + `saglik_kontrol()` → bunlar `client.py`'da kalabilir.  
-İleride: `MikroFatura` dönüşüm mantığı `sync_motor/mapper.py`'a taşınabilir.
+İleride: SQL sonuç → dict normalizasyon mantığı `sync_motor/mapper.py`'a taşınabilir.
 
 ---
 
