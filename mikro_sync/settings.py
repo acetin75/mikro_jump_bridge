@@ -22,6 +22,12 @@ if not DEBUG and SECRET_KEY.startswith("django-insecure-"):
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 
+# Cloudflare Tunnel hostname — .env'e TUNNEL_HOSTNAME=firmaabc.mikrojumpbridge.com ekle
+# Otomatik olarak ALLOWED_HOSTS ve CSRF_TRUSTED_ORIGINS'e dahil edilir
+TUNNEL_HOSTNAME = config("TUNNEL_HOSTNAME", default="")
+if TUNNEL_HOSTNAME:
+    ALLOWED_HOSTS.append(TUNNEL_HOSTNAME)
+
 # ---------------------------------------------------------------------------
 # UYGULAMALAR
 # ---------------------------------------------------------------------------
@@ -167,4 +173,6 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         x for x in config("CSRF_TRUSTED_ORIGINS", default="http://127.0.0.1:8001,http://localhost:8001").split(",") if x
     ]
+    if TUNNEL_HOSTNAME:
+        CSRF_TRUSTED_ORIGINS.append(f"https://{TUNNEL_HOSTNAME}")
     SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
