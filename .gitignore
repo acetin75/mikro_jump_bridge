@@ -26,6 +26,9 @@ yedek/
 # Şifre kasası — asla Git'e gönderilmez
 SIFRELER.md
 
+# Başka projelerden referans amaçlı kopyalanan arşivler (gerçek sırlar içerebilir)
+docs/arsiv/
+
 # IDE
 .vscode/
 .idea/
