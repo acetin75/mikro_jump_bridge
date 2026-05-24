@@ -70,7 +70,8 @@ def ekstre_gonder(
     firma_ayar,
     cari_kod: str,
     cari_unvan: str,
-    alici_email: str,
+    alici_email: list[str] | str,
+    bilgi_email: list[str] | None = None,
     donem_baslangic,
     donem_bitis,
     hareketler: list,
@@ -87,6 +88,13 @@ def ekstre_gonder(
             "Aktif mail ayarı bulunamadı. "
             "Lütfen /posta/ sayfasından SMTP bilgilerini girin."
         )
+
+    # alici_email listesi veya tekli string kabul eder
+    if isinstance(alici_email, str):
+        alici_email = [alici_email]
+    bilgi_email = bilgi_email or []
+    alici_str = ", ".join(alici_email)
+    bilgi_str = ", ".join(bilgi_email)
 
     if not konu:
         konu = (
@@ -111,7 +119,8 @@ def ekstre_gonder(
         firma_ayar=firma_ayar,
         cari_kod=cari_kod,
         cari_unvan=cari_unvan,
-        alici_email=alici_email,
+        alici_email=alici_str,
+        bilgi_email=bilgi_str,
         donem_baslangic=donem_baslangic,
         donem_bitis=donem_bitis,
         konu=konu,
@@ -123,13 +132,17 @@ def ekstre_gonder(
             subject=konu,
             body=icerik,
             from_email=ayar.gonderici,
-            to=[alici_email],
+            to=alici_email,
+            cc=bilgi_email if bilgi_email else None,
             connection=connection,
         )
         msg.content_subtype = "html"
         msg.send()
         log.durum = "gonderildi"
-        logger.info("Ekstre gönderildi: %s → %s", cari_kod, alici_email)
+        logger.info(
+            "Ekstre gönderildi: %s → TO:%s CC:%s",
+            cari_kod, alici_str, bilgi_str or "-",
+        )
     except Exception as e:
         log.durum = "hata"
         log.hata_mesaji = str(e)

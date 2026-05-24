@@ -132,7 +132,8 @@ def cari_ekstre_gonder(request):
 
     cari_kod = form.cleaned_data["cari_kod"]
     cari_unvan = form.cleaned_data.get("cari_unvan", "")
-    alici_email = form.cleaned_data["alici_email"]
+    alici_email = form.cleaned_data["alici_email"]   # list
+    bilgi_email = form.cleaned_data.get("bilgi_email", [])  # list
     donem_baslangic = form.cleaned_data["donem_baslangic"]
     donem_bitis = form.cleaned_data["donem_bitis"]
     konu = form.cleaned_data.get("konu", "")
@@ -200,13 +201,19 @@ def cari_ekstre_gonder(request):
             cari_kod=cari_kod,
             cari_unvan=cari_unvan,
             alici_email=alici_email,
+            bilgi_email=bilgi_email,
             donem_baslangic=donem_baslangic,
             donem_bitis=donem_bitis,
             hareketler=hareketler,
             acilis_bakiye=acilis_bakiye,
             konu=konu,
         )
-        messages.success(request, f"Ekstre gönderildi → {alici_email}")
+        to_str = ", ".join(alici_email)
+        cc_str = ", ".join(bilgi_email)
+        mesaj = f"Ekstre gönderildi → {to_str}"
+        if cc_str:
+            mesaj += f" (Bilgi: {cc_str})"
+        messages.success(request, mesaj)
     except Exception as e:
         messages.error(request, f"Gönderim hatası: {e}")
 

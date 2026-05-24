@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from mikro_sync.forms_mixin import BootstrapFormMixin
 
@@ -26,12 +28,34 @@ class MailAyarForm(BootstrapFormMixin, forms.ModelForm):
         ]
 
 
+def _email_listesi_dogrula(deger: str) -> list[str]:
+    """Virgülle ayrılmış e-posta listesini doğrulayıp döndürür."""
+    adresler = [e.strip() for e in deger.split(",") if e.strip()]
+    for adres in adresler:
+        try:
+            validate_email(adres)
+        except ValidationError:
+            raise ValidationError(f"Geçersiz e-posta adresi: {adres}")
+    return adresler
+
+
 class EkstreGonderForm(forms.Form):
     cari_kod = forms.CharField(widget=forms.HiddenInput)
     cari_unvan = forms.CharField(widget=forms.HiddenInput, required=False)
-    alici_email = forms.EmailField(
-        label="Alıcı E-posta",
-        widget=forms.EmailInput(attrs={"class": "form-control", "placeholder": "ornek@sirket.com"}),
+    alici_email = forms.CharField(
+        label="Alıcı (TO)",
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "ornek@firma.com, diger@firma.com"}
+        ),
+        help_text="Birden fazla adres için virgülle ayırın.",
+    )
+    bilgi_email = forms.CharField(
+        label="Bilgi (CC)",
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "ali@sirket.com, mehmet@sirket.com"}
+        ),
+        help_text="Şirket içi kişilere bilgi için virgülle ayırın. Boş bırakılabilir.",
     )
     donem_baslangic = forms.DateField(
         label="Dönem Başlangıcı",
@@ -48,3 +72,10 @@ class EkstreGonderForm(forms.Form):
             attrs={"class": "form-control", "placeholder": "Boş bırakılırsa otomatik oluşturulur"}
         ),
     )
+
+    def clean_alici_email(self):
+        return _email_listesi_dogrula(self.cleaned_data.get("alici_email", ""))
+
+    def clean_bilgi_email(self):
+        val = self.cleaned_data.get("bilgi_email", "")
+        return _email_listesi_dogrula(val) if val.strip() else []

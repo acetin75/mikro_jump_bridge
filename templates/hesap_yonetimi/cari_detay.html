@@ -103,11 +103,17 @@
         <input type="hidden" name="cari_unvan" value="{{ cari.cari_unvan1 }}">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label fw-semibold">Alıcı E-posta</label>
-            <input type="email" name="alici_email" class="form-control" required
+            <label class="form-label fw-semibold">Alıcı (TO)</label>
+            <input type="text" name="alici_email" class="form-control" required
                    value="{{ cari.cari_EMail|default:'' }}"
-                   placeholder="ornek@sirket.com">
-            <div class="form-text">Mikro ERP'deki e-posta otomatik dolduruldu; gerekirse değiştirin.</div>
+                   placeholder="ornek@firma.com, diger@firma.com">
+            <div class="form-text">Mikro ERP'deki e-posta otomatik dolduruldu; birden fazla için virgülle ayırın.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Bilgi (CC) <span class="text-muted fw-normal">— opsiyonel</span></label>
+            <input type="text" name="bilgi_email" class="form-control"
+                   placeholder="ali@sirket.com, mehmet@sirket.com">
+            <div class="form-text">Şirket içi bilgi amaçlı; birden fazla için virgülle ayırın.</div>
           </div>
           <div class="row g-2 mb-3">
             <div class="col">
