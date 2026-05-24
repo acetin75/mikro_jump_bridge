@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Lisans Bilgileri{% endblock %}
+{% block page_title %}Lisans Bilgileri{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-7">
+
+    {# ── Durum kartı ───────────────────────────────────────────────────── #}
+    <div class="card mb-4 border-{% if lisans.gecerli_mi %}success{% else %}danger{% endif %}">
+      <div class="card-header bg-{% if lisans.gecerli_mi %}success{% else %}danger{% endif %} text-white d-flex align-items-center gap-2">
+        <i class="bi {% if lisans.gecerli_mi %}bi-shield-check{% else %}bi-shield-x{% endif %} fs-5"></i>
+        <strong>Lisans Durumu</strong>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless mb-0">
+          <tr>
+            <th class="text-muted fw-normal ps-0" style="width:200px">Kurulum Tarihi</th>
+            <td>{{ lisans.install_tarihi }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted fw-normal ps-0">Lisans Tipi</th>
+            <td>
+              <span class="badge bg-{% if lisans.lisans_tipi == 'premium' %}warning text-dark{% elif lisans.lisans_tipi == 'standart' %}primary{% else %}secondary{% endif %}">
+                {{ lisans.get_lisans_tipi_display }}
+              </span>
+            </td>
+          </tr>
+          {% if lisans.musteri_kodu %}
+          <tr>
+            <th class="text-muted fw-normal ps-0">Müşteri Kodu</th>
+            <td>{{ lisans.musteri_kodu }}</td>
+          </tr>
+          {% endif %}
+          {% if lisans.lisans_bitis %}
+          <tr>
+            <th class="text-muted fw-normal ps-0">Lisans Bitiş</th>
+            <td>{{ lisans.lisans_bitis }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <th class="text-muted fw-normal ps-0">Durum</th>
+            <td>
+              <span class="fw-semibold text-{% if lisans.gecerli_mi %}success{% else %}danger{% endif %}">
+                {{ lisans.gecerlilik_durumu }}
+              </span>
+            </td>
+          </tr>
+          {% if lisans.gecerli_mi %}
+          <tr>
+            <th class="text-muted fw-normal ps-0">Kalan Süre</th>
+            <td>
+              {% if lisans.kalan_gun >= 9999 %}
+                <span class="text-success">Süresiz</span>
+              {% else %}
+                <div class="progress" style="height:8px; width:200px;">
+                  <div class="progress-bar bg-{% if lisans.kalan_gun > 7 %}success{% elif lisans.kalan_gun > 3 %}warning{% else %}danger{% endif %}"
+                       style="width:{% if lisans.lisans_tipi == 'deneme' %}{% widthratio lisans.kalan_gun 15 100 %}{% else %}100{% endif %}%"></div>
+                </div>
+                <small class="text-muted mt-1 d-block">{{ lisans.kalan_gun }} gün</small>
+              {% endif %}
+            </td>
+          </tr>
+          {% endif %}
+        </table>
+      </div>
+    </div>
+
+    {# ── Lisans aktivasyon formu ────────────────────────────────────────── #}
+    <div class="card">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="bi bi-key fs-5 text-primary"></i>
+        <strong>Lisans Anahtarı Gir</strong>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-3">
+          Satın alma sonrası tarafımızdan iletilen lisans anahtarını aşağıya yapıştırın.
+          Destek: <strong>muhasebe_buro@destek.com</strong>
+        </p>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="id_lisans_anahtari">Lisans Anahtarı</label>
+            <textarea
+              id="id_lisans_anahtari"
+              name="lisans_anahtari"
+              class="form-control font-monospace"
+              rows="4"
+              placeholder="Lisans anahtarını buraya yapıştırın…"
+              required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check2-circle me-1"></i> Lisansı Aktifleştir
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

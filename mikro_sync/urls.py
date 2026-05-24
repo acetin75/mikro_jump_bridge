@@ -26,4 +26,5 @@ urlpatterns = [
     path("", include("sync_motor.urls")),
     path("gelen/", include("mikro_gelen.urls")),
     path("hesap/", include("hesap_yonetimi.urls")),
+    path("lisans/", include("lisans.urls")),
 ]

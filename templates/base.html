@@ -171,6 +171,19 @@
 
 <!-- İÇERİK -->
 <div class="main-content">
+  {# ── Lisans uyarı bandı ─────────────────────────────────────────────── #}
+  {% if lisans and lisans.lisans_tipi == "deneme" and lisans.gecerli_mi %}
+    <div class="alert alert-{% if lisans.kalan_gun <= 3 %}danger{% elif lisans.kalan_gun <= 7 %}warning{% else %}info{% endif %} alert-dismissible fade show py-2 mb-3 d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-clock-history fs-5"></i>
+      <span>
+        <strong>Deneme Süresi:</strong> {{ lisans.kalan_gun }} gün kaldı.
+        Lisans satın almak için <a href="{% url 'lisans_durum' %}" class="alert-link">buraya tıklayın</a>.
+      </span>
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+  {% endif %}
+  {# ─────────────────────────────────────────────────────────────────────── #}
+
   {% if messages %}
     {% for msg in messages %}
       <div class="alert alert-{% if msg.tags == 'success' %}success{% elif msg.tags == 'error' %}danger{% elif msg.tags == 'warning' %}warning{% else %}info{% endif %} alert-dismissible fade show" role="alert">

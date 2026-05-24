@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "mikro_gelen",
     "sync_motor",
     "hesap_yonetimi",
+    "lisans",
 ]
 
 MIDDLEWARE = [
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "mikro_sync.middleware.LoginZorunluMiddleware",
+    "lisans.middleware.LisansKontrolMiddleware",
     "mikro_sync.middleware.FirmaSecimZorunluMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -66,6 +68,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "mikro_sync.context_processors.hy_aktif_firma",
+                "mikro_sync.context_processors.lisans_bilgi",
             ],
         },
     },

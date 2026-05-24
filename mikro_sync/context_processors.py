@@ -1,6 +1,15 @@
 from sync_motor.models import FirmaAyar
 
 
+def lisans_bilgi(request):
+    """Tüm şablonlara lisans nesnesini sağlar."""
+    if not request.user.is_authenticated:
+        return {}
+    from lisans.models import LisansBilgisi
+    lisans = LisansBilgisi.objects.first()
+    return {"lisans": lisans}
+
+
 def hy_aktif_firma(request):
     """
     Tüm şablonlara aktif Hesap Yönetimi firmasını ve firma listesini sağlar.
