@@ -34,7 +34,7 @@ GitHub: `acetin75/mikro_jump_bridge` — Django paket adı `mikro_sync` (içsel)
 ```
 Mikro ERP API  (port 8094)
       ↕  MikroApiClient  (MD5 günlük hash auth)
-mikro_gelen/   (staging — ham veriler)
+
       ↕
 hesap_yonetimi/   (okuma amacıyla sorgulama)
 ```
@@ -65,8 +65,10 @@ C:\mikro_jump_bridge\
 │   ├── registration/
 │   │   └── login.html
 │   ├── sync_motor/         ← Firma, import, onay şablonları
-│   ├── mikro_gelen/        ← Staging fatura listeleri
-│   └── hesap_yonetimi/     ← Cari sorgulama şablonları
+│   ├── hesap_yonetimi/     ← Cari sorgulama şablonları
+│   ├── kullanici/          ← Kullanıcı yönetimi şablonları
+│   ├── lisans/             ← Lisans şablonları
+│   └── posta/              ← Posta ayarları şablonları
 ├── mikro_sync/             ← Django proje paketi (paket adı)
 │   ├── settings.py         ← python-decouple, fail-fast SECRET_KEY, prod güvenlik bloğu
 │   ├── urls.py
@@ -79,14 +81,18 @@ C:\mikro_jump_bridge\
 │   ├── forms.py
 │   ├── views.py
 │   └── urls.py
-├── mikro_gelen/            ← STAGING ALANI — Mikro'dan gelen ham veriler
-│   ├── models.py           ← MikroFatura, MikroCariHesap, MikroStokKarti
-│   ├── views.py
+├── hesap_yonetimi/         ← CARİ SORGULAMA — okuma amaçlı (DB'ye yazmaz)
+│   ├── views.py            ← panel, firma_kartlari, hesap_hareketleri, bakiye_raporu
 │   └── urls.py
-└── hesap_yonetimi/         ← CARİ SORGULAMA — okuma amaçlı (DB'ye yazmaz)
-    ├── views.py            ← panel, firma_kartlari, hesap_hareketleri, bakiye_raporu
-    └── urls.py
-    └── urls.py
+├── kullanici/              ← KULLANICI YÖNETİMİ — liste, ekle, sil, yetki, şifre
+│   ├── views.py
+│   ├── forms.py
+│   └── urls.py
+├── lisans/                 ← LİSANS — durum ve doğrulama
+├── posta/                  ← POSTA — SMTP ayarları, ekstre gönderme
+└── installer/              ← KURULUM PAKETİ
+    ├── setup.iss           ← Inno Setup betiği
+    └── baslat_kurulu.bat   ← Müşteri launcher'ı
 ```
 
 ---
@@ -238,13 +244,6 @@ Log dosyası: `logs/mikro_sync.log` (INFO+, 10 MB × 3 yedek)
 - `cekilen_adet`, `aktarilan_adet`, `hata_adet`
 - Property: `basari_yuzdesi`
 
-### `mikro_gelen.MikroFatura`
-- `fat_guid` (unique), `fat_evrak_seri`, `fat_evrak_sira`, `fat_tarih`
-- `fat_cari_kod`, `fat_cari_unvan`, `fat_cari_vkn`
-- `durum` (ham/islendi/hata/atla)
-- `ham_json` — Mikro API'den gelen orijinal veri, **asla değiştirme**
-- Property: `ham_veri` — `ham_json`'u dict döndürür
-
 ---
 
 ## MikroApiClient Kullanımı
@@ -379,7 +378,7 @@ kontrol.bat
 |---|---|---|---|
 | `ruff check` | `.venv\Scripts\python.exe -m ruff check .` | Linter (E/F/W/I) | VS Code'da otomatik + commit öncesi |
 | `ruff format` | `.venv\Scripts\python.exe -m ruff format .` | Kod formatlama | VS Code'da otomatik |
-| `vulture` | `.venv\Scripts\python.exe -m vulture sync_motor mikro_gelen hesap_yonetimi mikro_sync --min-confidence 80` | Ölü kod tespiti | Haftada 1 |
+| `vulture` | `.venv\Scripts\python.exe -m vulture sync_motor hesap_yonetimi lisans posta kullanici mikro_sync --min-confidence 80` | Ölü kod tespiti | Haftada 1 |
 | `pip-audit` | `.venv\Scripts\python.exe -m pip_audit -r requirements.txt` | CVE güvenlik taraması | Commit öncesi |
 | `pip list --outdated` | `.venv\Scripts\python.exe -m pip list --outdated` | Eski kütüphaneler | Ayda 1 |
 
