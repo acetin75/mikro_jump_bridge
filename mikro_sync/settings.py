@@ -14,11 +14,39 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 
 SECRET_KEY = config("SECRET_KEY", default="django-insecure-mikrosync-degistir-uretimde!!")
 
-if not DEBUG and SECRET_KEY.startswith("django-insecure-"):
-    raise RuntimeError(
-        "Üretim ortamında SECRET_KEY değiştirilmeli! "
-        ".env dosyasına güçlü bir SECRET_KEY ekleyin."
+
+def _secret_key_zayif_mi(deger: str) -> str | None:
+    """Üretim için kabul edilemez SECRET_KEY kalıplarını tespit eder.
+
+    Dönen değer: kullanıcı için hata sebebi (None ise anahtar geçerli).
+    """
+    if not deger:
+        return "boş"
+    if deger.startswith("django-insecure-"):
+        return "Django varsayılan 'django-insecure-' önekiyle başlıyor"
+    if len(deger) < 50:
+        return f"çok kısa ({len(deger)} karakter, en az 50 olmalı)"
+    dusuk = deger.lower()
+    yasak_kaliplar = (
+        "buraya", "degistir", "değiştir", "change", "changeme",
+        "default", "example", "placeholder", "test", "ci-test",
+        "secret-key", "your-secret",
     )
+    for kalip in yasak_kaliplar:
+        if kalip in dusuk:
+            return f"yer tutucu kalıp içeriyor: '{kalip}'"
+    return None
+
+
+if not DEBUG:
+    _hata_sebebi = _secret_key_zayif_mi(SECRET_KEY)
+    if _hata_sebebi:
+        raise RuntimeError(
+            f"Üretim ortamında SECRET_KEY geçersiz: {_hata_sebebi}. "
+            ".env dosyasına güçlü, rastgele üretilmiş (>= 50 karakter) "
+            "bir SECRET_KEY ekleyin. Örn: "
+            "python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+        )
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 

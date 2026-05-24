@@ -17,19 +17,25 @@ def mail_ayar_al() -> MailAyar | None:
 
 
 class _EsnekSMTPBackend(_DjangoSMTP):
+    """SMTP backend; ``MailAyar.tls_dogrulamayi_atla=True`` ise sertifika
+    doğrulamasını devre dışı bırakır.
+
+    Varsayılan davranış güvenlidir (Python ``ssl.create_default_context``
+    sertifika ve hostname doğrulaması yapar). Yalnızca paylaşımlı/eski
+    hosting sunucuları için bilinçli kapatma seçeneği sunar.
     """
-    Paylaşımlı hosting sunucularında sık görülen SSL hostname uyuşmazlığını
-    (CERTIFICATE_VERIFY_FAILED) aşmak için sertifika doğrulamasını devre dışı
-    bırakan özel SMTP backend. Bağlantı şifreli kalır, sadece sertifika
-    kimlik doğrulaması atlanır.
-    """
+
+    def __init__(self, *args, dogrulamayi_atla: bool = False, **kwargs):
+        self._dogrulamayi_atla = dogrulamayi_atla
+        super().__init__(*args, **kwargs)
 
     def open(self):
         if self.connection:
             return False
         ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
+        if self._dogrulamayi_atla:
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
         connection_params = {"local_hostname": DNS_NAME.get_fqdn()}
         if self.timeout is not None:
             connection_params["timeout"] = self.timeout
@@ -61,6 +67,7 @@ def _smtp_baglantisi(ayar: MailAyar):
         password=ayar.sifre_al(),
         use_tls=ayar.tls_kullan,
         fail_silently=False,
+        dogrulamayi_atla=ayar.tls_dogrulamayi_atla,
     )
     return backend
 

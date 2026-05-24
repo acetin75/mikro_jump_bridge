@@ -22,6 +22,7 @@ class MailAyarForm(BootstrapFormMixin, forms.ModelForm):
             "smtp_port",
             "kullanici",
             "tls_kullan",
+            "tls_dogrulamayi_atla",
             "gonderen_ad",
             "gonderen_email",
             "aktif",

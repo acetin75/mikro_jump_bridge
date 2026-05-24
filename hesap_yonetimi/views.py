@@ -12,12 +12,28 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import NoReverseMatch, reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from sync_motor.client import MikroApiClient, MikroApiHatasi
 from sync_motor.forms import FirmaAyarForm
 from sync_motor.models import FirmaAyar
 
 logger = logging.getLogger("mikro_sync")
+
+
+def _guvenli_next(request, next_deger: str | None, varsayilan: str = "hy_panel") -> str:
+    """`next` parametresini doğrula. Geçersiz/dış host ise varsayılan URL'e döner."""
+    if next_deger and url_has_allowed_host_and_scheme(
+        url=next_deger,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return next_deger
+    try:
+        return reverse(varsayilan)
+    except NoReverseMatch:
+        return "/"
 
 
 def _aktif_firma(request):
@@ -66,7 +82,7 @@ def firma_sec(request):
             request.session["aktif_baglanti_modu"] = baglanti_modu
             mod_adi = dict([(m[0], m[1]) for m in firma.baglanti_modlari]).get(baglanti_modu, baglanti_modu)
             messages.success(request, f"{firma.ad} — {mod_adi} bağlantısı seçildi.")
-        next_url = request.POST.get("next") or "hy_panel"
+        next_url = _guvenli_next(request, request.POST.get("next"))
         return redirect(next_url)
 
     firmalar_ile_form = [(f, FirmaAyarForm(instance=f)) for f in firmalar]

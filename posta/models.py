@@ -20,6 +20,13 @@ class MailAyar(models.Model):
         "Şifre (Şifreli)", blank=True, db_column="sifre_sifreli"
     )
     tls_kullan = models.BooleanField("TLS Kullan", default=True)
+    tls_dogrulamayi_atla = models.BooleanField(
+        "TLS Sertifika Doğrulamasını Atla",
+        default=False,
+        help_text="Yalnızca paylaşımlı/eski hosting sunucularında "
+                  "CERTIFICATE_VERIFY_FAILED hatası alındığında işaretleyin. "
+                  "Bağlantı şifreli kalır ancak sunucu kimliği doğrulanmaz.",
+    )
     gonderen_ad = models.CharField("Gönderici Adı", max_length=200, blank=True)
     gonderen_email = models.EmailField("Gönderici E-posta", blank=True)
     aktif = models.BooleanField("Aktif", default=True)
