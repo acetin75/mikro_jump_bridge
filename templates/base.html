@@ -121,6 +121,29 @@
     <i class="bi bi-calendar-check"></i> Ödeme Planlama
   </a>
 
+  <!-- Aktif firma göstergesi + değiştir -->
+  <div style="margin: 10px 12px 4px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+    {% if hy_firmalar %}
+      <form method="post" action="{% url 'hy_firma_sec' %}" id="sidebar-firma-form">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.resolver_match.url_name|default:'hy_panel' }}">
+        <div class="d-flex align-items-center gap-1 mb-1">
+          <i class="bi bi-building" style="color:rgba(255,255,255,0.5);font-size:0.75rem;"></i>
+          <span style="color:rgba(255,255,255,0.4);font-size:0.68rem;text-transform:uppercase;letter-spacing:.06em;">Aktif Firma</span>
+        </div>
+        <select name="firma_id" onchange="document.getElementById('sidebar-firma-form').submit()"
+          style="width:100%;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:5px 8px;font-size:0.82rem;outline:none;cursor:pointer;">
+          {% if not hy_aktif_firma %}
+            <option value="" disabled selected style="color:#999;">— Firma seçin —</option>
+          {% endif %}
+          {% for f in hy_firmalar %}
+            <option value="{{ f.pk }}" {% if hy_aktif_firma.pk == f.pk %}selected{% endif %} style="color:#000;">{{ f.ad }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    {% endif %}
+  </div>
+
   <div class="nav-section">Sistem</div>
   <a href="/admin/" class="nav-link" target="_blank">
     <i class="bi bi-shield-lock"></i> Yönetim Paneli
