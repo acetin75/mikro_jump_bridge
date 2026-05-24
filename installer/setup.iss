@@ -37,7 +37,6 @@ WizardStyle=modern
 WizardSizePercent=120
 DisableProgramGroupPage=yes
 UninstallDisplayName={#MyAppName} v{#AppVersion}
-UninstallDisplayIcon={app}\static\favicon.ico
 
 [Languages]
 Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
@@ -57,9 +56,8 @@ Source: "..\posta\*";           DestDir: "{app}\posta";           Flags: recurse
 Source: "..\kullanici\*";       DestDir: "{app}\kullanici";       Flags: recursesubdirs ignoreversion
 Source: "..\mikro_sync\*";      DestDir: "{app}\mikro_sync";      Flags: recursesubdirs ignoreversion
 
-; Şablonlar ve statik dosyalar
+; Şablonlar (statik dosyalar kurulum sonrası collectstatic ile staticfiles/ altına üretilir)
 Source: "..\templates\*";  DestDir: "{app}\templates";  Flags: recursesubdirs ignoreversion
-Source: "..\static\*";     DestDir: "{app}\static";     Flags: recursesubdirs ignoreversion
 
 ; Kök dosyalar
 Source: "..\manage.py";       DestDir: "{app}"; Flags: ignoreversion

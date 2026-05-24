@@ -57,7 +57,6 @@ class ImportLogTestleri(TestCase):
         self.firma = FirmaAyar.objects.create(ad="Test Firma")
         self.log = ImportLog.objects.create(
             firma_ayar=self.firma,
-            yon="mikro_to_mb",
             durum="tamamlandi",
             cekilen_adet=10,
             aktarilan_adet=8,
