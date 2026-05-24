@@ -29,11 +29,15 @@ if not exist ".env" (
 )
 
 :: Migration
-echo  [1/3] Veritabanı güncelleniyor...
+echo  [1/4] Veritabanı güncelleniyor...
 "%PYTHON%" manage.py migrate --run-syncdb >nul 2>&1
 
+:: Statik dosyalar
+echo  [2/4] Statik dosyalar hazırlanıyor...
+"%PYTHON%" manage.py collectstatic --noinput -v 0 >nul 2>&1
+
 :: Admin hesabı
-echo  [2/3] Admin hesabı kontrol ediliyor...
+echo  [3/4] Admin hesabı kontrol ediliyor...
 "%PYTHON%" olustur_admin.py >nul 2>&1
 
 echo.
@@ -42,4 +46,4 @@ echo  Durdurmak için: Ctrl+C
 echo.
 
 start "" http://127.0.0.1:8001
-"%PYTHON%" manage.py runserver 8001
+"%PYTHON%" manage.py runserver 8001 --noreload
