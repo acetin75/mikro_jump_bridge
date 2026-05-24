@@ -299,19 +299,29 @@ ADMIN_SIFRE=Admin123!.@
 - `DEBUG=True` geliştirme içindir, üretimde `False`
 - `ADMIN_SIFRE` tanımlıysa `baslat.bat` admin hesabını **sessizce** oluşturur — interaktif sormaz
 
-### Şifre Kasası — SIFRELER.md
+### Şifre Yönetimi — `.env` tek otorite
 
-Tüm kimlik bilgileri `SIFRELER.md` dosyasında saklanır:
+Projede **tek bir kimlik kaynağı** vardır:
 
 ```
-SIFRELER.md       ← Admin şifresi, Mikro bağlantıları, MB API token
-.env              ← SECRET_KEY, DEBUG, ADMIN_KULLANICI, ADMIN_SIFRE
+.env  ← TEK OTORİTE — uygulamayı çalıştıran tüm değerler
+        (SECRET_KEY, DEBUG, ALLOWED_HOSTS, ADMIN_KULLANICI, ADMIN_SIFRE,
+         isteğe bağlı LISANS_IMZA_ANAHTARI)
 ```
 
-Her iki dosya da `.gitignore`'dadır — Git'e **asla** gönderilmez.
-Yedek alırken `db.sqlite3` + `.env` + `SIFRELER.md` üçlüsünü birlikte kopyala.
+**Kurallar:**
 
-**Şifre güncelleme:** `.env` → `ADMIN_SIFRE` değiştir + `SIFRELER.md` güncelle → `baslat.bat` çalıştır.
+- `.env` `.gitignore`'dadır — Git'e **asla** gönderilmez.
+- `olustur_admin.py` ve `baslat.bat` yalnızca `.env`'i okur.
+- Mikro ERP firma şifreleri **DB'de** `django.core.signing.Signer` ile imzalanmış olarak saklanır — ayrı bir düz metin kasa **tutulmaz**.
+- Yedek alırken `db.sqlite3` + `.env` ikilisini birlikte kopyala (örn. `yedek/` klasörüne).
+
+**Şifre güncelleme akışı:**
+
+1. `.env` → `ADMIN_SIFRE` değiştir
+2. `baslat.bat` çalıştir → admin şifresi sessizce güncellenir
+
+> Müşteri kurulumlarında hangi makineye hangi değer girildiğini hatırlamak gerekiyorsa, müşteri tarafındaki `.env` dosyasını yerel güvenli yedek konumuna kopyala — ikinci bir düz metin kasa **oluşturma**.
 
 ---
 

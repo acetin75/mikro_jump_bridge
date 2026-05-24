@@ -27,7 +27,7 @@ Bu projenin sürüm notları [Keep a Changelog](https://keepachangelog.com/tr/1.
 - `SECRET_KEY` fail-fast koruması (`django-insecure-` + `DEBUG=False` ile uygulama başlamaz)
 - Mikro şifreleri `django.core.signing.Signer` ile imzalanmış olarak saklanır
 - Mikro API'ye günlük MD5 hash auth (şifre açık metin gönderilmez)
-- `.env` ve `SIFRELER.md` `.gitignore`'da
+- `.env` `.gitignore`'da
 - `yedek/` dizini `.gitignore`'da (yedek dosyaları Git'e gönderilmez)
 
 ### Teknoloji

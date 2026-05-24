@@ -139,7 +139,7 @@ ADMIN_SIFRE=GucluBirSifre123!
 
 > `SECRET_KEY` değeri `django-insecure-` ile başlıyorsa ve `DEBUG=False` ise uygulama başlamaz.
 
-`.env` tek otorite şifre kaynağıdır. Müşteri kurulum bilgileri ayrıca `SIFRELER.md` dosyasında tutulabilir (Git'e gönderilmez).
+`.env` tek otorite şifre kaynağıdır ve `.gitignore`'dadır. Mikro ERP firma şifreleri DB'de `django.core.signing.Signer` ile imzalanmış şekilde saklanır — ayrı bir düz metin kasa tutulmaz.
 
 ---
 
