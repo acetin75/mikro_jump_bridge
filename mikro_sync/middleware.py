@@ -4,7 +4,6 @@ Her sayfaya giriş ve firma seçimi zorunluluğu getirir.
 from django.conf import settings
 from django.shortcuts import redirect
 
-
 MUAF_URL_ONEKLERI = [
     "/admin/",
     "/giris/",

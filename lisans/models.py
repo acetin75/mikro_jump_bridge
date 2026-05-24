@@ -20,6 +20,7 @@ class LisansBilgisi(models.Model):
     guncellendi     = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering            = ["-guncellendi"]
         verbose_name        = "Lisans Bilgisi"
         verbose_name_plural = "Lisans Bilgileri"
 

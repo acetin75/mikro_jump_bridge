@@ -33,6 +33,7 @@ hesap_yonetimi/  (cari sorgulama — okuma amaçlı)
 | **Import Geçmişi** | Her aktarım için tam log; başarı yüzdesi, hata detayı |
 | **Cari Hesap Sorgulama** | Mikro ERP'deki cariler, hareketler ve bakiyeler okunur |
 | **Şifreli Bağlantı** | Mikro şifreleri `django.core.signing` ile şifreli saklanır |
+| **Lisans Sistemi** | 15 gün ücretsiz deneme; HMAC imzalı lisans anahtarıyla aktivasyon |
 
 ---
 

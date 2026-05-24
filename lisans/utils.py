@@ -16,7 +16,7 @@ from datetime import date
 
 def _imza_anahtari() -> bytes:
     """İmzalama anahtarını döndürür — .env'den okunur."""
-    from decouple import config, UndefinedValueError
+    from decouple import UndefinedValueError, config
     try:
         return config("LISANS_IMZA_ANAHTARI").encode()
     except UndefinedValueError:
