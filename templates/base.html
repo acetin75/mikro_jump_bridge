@@ -146,6 +146,11 @@
   </div>
 
   <div class="nav-section">Sistem</div>
+  {% if request.user.is_superuser %}
+  <a href="{% url 'kullanici_liste' %}" class="nav-link {% if 'kullanici' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-people"></i> Kullanıcılar
+  </a>
+  {% endif %}
   <a href="{% url 'posta_ayarlar' %}" class="nav-link {% if 'posta' in request.resolver_match.url_name %}active{% endif %}">
     <i class="bi bi-envelope-at"></i> Posta Ayarları
   </a>

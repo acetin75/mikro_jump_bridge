@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Kullanıcılar{% endblock %}
+{% block page_title %}Kullanıcı Yönetimi{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <p class="text-muted mb-0">Sisteme giriş yapabilecek kullanıcılar listelenmektedir.</p>
+  <a href="{% url 'kullanici_ekle' %}" class="btn btn-primary btn-sm">
+    <i class="bi bi-person-plus"></i> Yeni Kullanıcı
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Kullanıcı Adı</th>
+          <th>Ad Soyad</th>
+          <th>E-posta</th>
+          <th>Yetki</th>
+          <th>Son Giriş</th>
+          <th class="text-end">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for k in kullanicilar %}
+        <tr>
+          <td>
+            <i class="bi bi-person-circle text-muted me-1"></i>
+            <strong>{{ k.username }}</strong>
+            {% if k == request.user %}
+              <span class="badge bg-secondary ms-1">ben</span>
+            {% endif %}
+          </td>
+          <td>{{ k.get_full_name|default:"—" }}</td>
+          <td>{{ k.email|default:"—" }}</td>
+          <td>
+            {% if k.is_superuser %}
+              <span class="badge bg-danger"><i class="bi bi-shield-fill"></i> Yönetici</span>
+            {% else %}
+              <span class="badge bg-secondary"><i class="bi bi-person"></i> Standart</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if k.last_login %}
+              {{ k.last_login|date:"d.m.Y H:i" }}
+            {% else %}
+              <span class="text-muted">—</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            <div class="d-flex justify-content-end gap-1">
+              <!-- Şifre Değiştir -->
+              <a href="{% url 'kullanici_sifre' k.pk %}"
+                 class="btn btn-outline-secondary btn-sm"
+                 title="Şifre Değiştir">
+                <i class="bi bi-key"></i>
+              </a>
+
+              <!-- Yetki Değiştir (kendine dokunulamaz) -->
+              {% if k != request.user %}
+                <form method="post" action="{% url 'kullanici_yetki' k.pk %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit"
+                    class="btn btn-sm {% if k.is_superuser %}btn-outline-warning{% else %}btn-outline-success{% endif %}"
+                    title="{% if k.is_superuser %}Yönetici yetkisini kaldır{% else %}Yönetici yap{% endif %}"
+                    onclick="return confirm('{{ k.username }} kullanıcısının yetkisini değiştirmek istediğinize emin misiniz?')">
+                    <i class="bi {% if k.is_superuser %}bi-person-dash{% else %}bi-person-check{% endif %}"></i>
+                  </button>
+                </form>
+
+                <!-- Sil -->
+                <a href="{% url 'kullanici_sil' k.pk %}"
+                   class="btn btn-outline-danger btn-sm"
+                   title="Sil">
+                  <i class="bi bi-trash"></i>
+                </a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">Kayıtlı kullanıcı yok.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

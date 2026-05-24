@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Yeni Kullanıcı{% endblock %}
+{% block page_title %}Yeni Kullanıcı Ekle{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.kullanici_adi.label }}</label>
+            {{ form.kullanici_adi }}
+            {% if form.kullanici_adi.help_text %}
+              <div class="form-text">{{ form.kullanici_adi.help_text }}</div>
+            {% endif %}
+            {% for err in form.kullanici_adi.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.ad_soyad.label }}</label>
+            {{ form.ad_soyad }}
+            {% for err in form.ad_soyad.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.email.label }}</label>
+            {{ form.email }}
+            {% for err in form.email.errors %}
+              <div class="invalid-feedback d-block">{{ err }}</div>
+            {% endfor %}
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">{{ form.sifre.label }}</label>
+              {{ form.sifre }}
+              {% for err in form.sifre.errors %}
+                <div class="invalid-feedback d-block">{{ err }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">{{ form.sifre_tekrar.label }}</label>
+              {{ form.sifre_tekrar }}
+              {% for err in form.sifre_tekrar.errors %}
+                <div class="invalid-feedback d-block">{{ err }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="form-check">
+              {{ form.yonetici|add_class:"form-check-input" }}
+              <label class="form-check-label fw-semibold" for="{{ form.yonetici.id_for_label }}">
+                {{ form.yonetici.label }}
+              </label>
+            </div>
+            {% if form.yonetici.help_text %}
+              <div class="form-text">{{ form.yonetici.help_text }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-person-plus"></i> Kullanıcı Oluştur
+            </button>
+            <a href="{% url 'kullanici_liste' %}" class="btn btn-outline-secondary">İptal</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

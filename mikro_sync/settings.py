@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "hesap_yonetimi",
     "lisans",
     "posta",
+    "kullanici",
 ]
 
 MIDDLEWARE = [
