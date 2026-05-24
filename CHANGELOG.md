@@ -4,6 +4,31 @@ Bu projenin sürüm notları [Keep a Changelog](https://keepachangelog.com/tr/1.
 
 ## [Yayınlanmadı]
 
+### Eklendi
+- `sync_motor/sql_utils.py` — Decimal-güvenli SQL yardımcıları (sql_str, sql_like, sql_int, sql_date, whitelist)
+- `MikroApiClient._extract_list_response()` — API list yanıt normalleştirme
+- `static/css/app.css`, `static/css/firma_sec.css`, `static/js/app.js`, `static/js/firma_sec.js` — Inline CSS/JS harici dosyalara taşındı
+- 41 yeni test: `sync_motor/test_client.py` (MikroApiClient + sql_utils mock), `lisans/tests.py` (HMAC imza + singleton), `posta/tests.py` (singleton + form), `hesap_yonetimi/tests.py` (_guvenli_next + open-redirect)
+- `.github/workflows/ci.yml` — requirements-dev + ruff format check + pip-audit
+- `kontrol.bat` — 6 aşamalı fail-fast (ruff lint/format, vulture, pip-audit, check, test)
+
+### Değiştirildi
+- `baslat.bat` — admin oluşturma başarısızlığında fail-fast (UYARI → HATA + exit 1)
+- `installer/setup.iss` + `release.yml` — `.env.example` tek kaynak (gereksiz kopyalama kaldırıldı)
+- `templates/base.html` — Mesajlar artık tek yerde (topbar badge tekrarı kaldırıldı)
+- `mikro_sync/settings.py` — `STATICFILES_DIRS` eklendi
+- README — PDF/Excel/CSV özelliği "planlanan" olarak işaretlendi
+- 48 dosya `ruff format` ile normalize edildi
+
+### Güvenlik
+- `SECRET_KEY` fail-fast genişletildi: placeholder kalıpları (`buraya`, `change`, `example`) + minimum uzunluk + entropi kontrolü
+- `olustur_admin.py` — Zayıf/placeholder admin şifreleri reddedilir
+- `hesap_yonetimi.firma_sec` — Açık yönlendirme koruması (`_guvenli_next`)
+- `MailAyar` — SMTP TLS doğrulama opsiyonel (`tls_dogrulamayi_atla` alanı)
+
+### Kaldırıldı
+- `defusedxml==0.7.1` — Kullanılmıyordu, `requirements.txt`'den çıkarıldı
+
 ## [1.0.0] - 2026-05-24
 
 İlk kararlı sürüm. Mikro ERP'ye **sadece okuma** modunda bağlanan çok firmalı cari yönetim köprüsü.

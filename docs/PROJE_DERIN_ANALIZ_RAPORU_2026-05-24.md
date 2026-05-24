@@ -66,7 +66,7 @@ Dosya: `sync_motor/tests.py`
 
 ---
 
-## 4. Faz 0 — Hemen Düzeltilmesi Gereken Kırıklar
+## 4. Faz 0 — Hemen Düzeltilmesi Gereken Kırıklar ✅ Tamam (commit `6ae35ee`)
 
 Bu fazın hedefi: **CI/test/release hattının kırık kalmaması.**
 
@@ -98,7 +98,7 @@ Bu fazın hedefi: **CI/test/release hattının kırık kalmaması.**
 
 ---
 
-## 5. Faz 1 — Güvenlik ve Sır Yönetimi
+## 5. Faz 1 — Güvenlik ve Sır Yönetimi ✅ Tamam (commit `b1a13cf`)
 
 Bu fazın hedefi: **üretime yanlış/placeholder sırlarla çıkmayı engellemek ve yönlendirme açıklarını kapatmak.**
 
@@ -158,7 +158,7 @@ Bu fazın hedefi: **üretime yanlış/placeholder sırlarla çıkmayı engelleme
 
 ---
 
-## 6. Faz 2 — Veri Erişimi, Mikro API ve İş Mantığı Sağlamlaştırma
+## 6. Faz 2 — Veri Erişimi, Mikro API ve İş Mantığı Sağlamlaştırma ✅ Tamam (commit `b7302ba`)
 
 Bu fazın hedefi: **Mikro sorgularını güvenilir, test edilebilir ve bakımı kolay hale getirmek.**
 
@@ -222,7 +222,7 @@ Bu fazın hedefi: **Mikro sorgularını güvenilir, test edilebilir ve bakımı 
 
 ---
 
-## 7. Faz 3 — Test Stratejisi ve Kalite Kapıları
+## 7. Faz 3 — Test Stratejisi ve Kalite Kapıları ✅ Tamam (commit `b3d5572`)
 
 Bu fazın hedefi: **regresyonları yakalayan güvenilir test tabanı oluşturmak.**
 
@@ -260,7 +260,7 @@ Bu fazın hedefi: **regresyonları yakalayan güvenilir test tabanı oluşturmak
 
 ---
 
-## 8. Faz 4 — Deployment, Installer ve Operasyon
+## 8. Faz 4 — Deployment, Installer ve Operasyon ✅ Tamam (commit `b3d5572`)
 
 Bu fazın hedefi: **müşteri kurulumunu tekrarlanabilir ve güvenli hale getirmek.**
 
@@ -298,7 +298,7 @@ Bu fazın hedefi: **müşteri kurulumunu tekrarlanabilir ve güvenli hale getirm
 
 ---
 
-## 9. Faz 5 — Dokümantasyon, Ürün Kapsamı ve UX
+## 9. Faz 5 — Dokümantasyon, Ürün Kapsamı ve UX ✅ Tamam (commit `b3d5572`)
 
 Bu fazın hedefi: **dokümanın gerçek ürünle birebir uyumlu olması ve UI bakım maliyetinin azalması.**
 
