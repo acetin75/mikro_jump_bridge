@@ -1,0 +1,20 @@
+# Geliştirme ve kod kalite araçları
+# Kurulum: pip install -r requirements-dev.txt
+
+# Linter / Formatter (zaten pyproject.toml'da yapılandırılmış)
+ruff==0.11.10
+
+# Ölü kod tespiti
+vulture==2.14
+
+# Güvenlik açığı taraması (bağımlılıklarda CVE kontrolü)
+pip-audit==2.9.0
+
+# Bağımlılık güncelleme kontrolü
+pip-check-updates==1.0.5
+
+# Kopyala-yapıştır (duplicate) kod tespiti
+jscpd-python-wrapper==0.1.2
+
+# Django geliştirme / profil
+django-debug-toolbar==5.2.0

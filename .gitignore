@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Sanal ortam
+.venv/
+venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+db_yedek_*.sqlite3
+staticfiles/
+media/
+
+# Ortam değişkenleri — asla Git'e gönderilmez
+.env
+
+# Şifre kasası — asla Git'e gönderilmez
+SIFRELER.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dağıtım
+*.egg-info/
+dist/
+build/

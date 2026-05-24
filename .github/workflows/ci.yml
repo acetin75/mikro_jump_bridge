@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  kalite:
+    name: Lint + Test
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Bağımlılıkları kur
+        run: pip install -r requirements.txt
+
+      - name: .env oluştur (CI için)
+        run: |
+          echo SECRET_KEY=ci-test-key-degistir > .env
+          echo DEBUG=True >> .env
+          echo ALLOWED_HOSTS=127.0.0.1,localhost >> .env
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Django sistem kontrolü
+        run: python manage.py check
+
+      - name: Testleri çalıştır
+        run: python manage.py test --verbosity=2

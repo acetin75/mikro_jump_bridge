@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Import Geçmişi{% endblock %}
+{% block page_title %}Import Geçmişi{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>#</th><th>Firma</th><th>Yön</th><th>Tarih Aralığı</th><th>Çekilen</th><th>Aktarılan</th><th>Hatalı</th><th>Durum</th><th>Başlatan</th><th>Tarih</th></tr>
+      </thead>
+      <tbody>
+        {% for log in importlar %}
+          <tr>
+            <td>{{ log.pk }}</td>
+            <td>{{ log.firma_ayar.ad }}</td>
+            <td><small>{{ log.get_yon_display }}</small></td>
+            <td>
+              {% if log.baslangic_tarih %}
+                <small>{{ log.baslangic_tarih }} – {{ log.bitis_tarih }}</small>
+              {% else %}—{% endif %}
+            </td>
+            <td>{{ log.cekilen_adet }}</td>
+            <td class="text-success fw-semibold">{{ log.aktarilan_adet }}</td>
+            <td class="{% if log.hata_adet %}text-danger{% endif %}">{{ log.hata_adet }}</td>
+            <td>
+              <span class="badge badge-durum-{{ log.durum }} rounded-pill">{{ log.get_durum_display }}</span>
+            </td>
+            <td><small class="text-muted">{{ log.baslayan.username|default:"—" }}</small></td>
+            <td><small class="text-muted">{{ log.olusturuldu|date:"d.m.Y H:i" }}</small></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="10" class="text-center text-muted py-4">Henüz import yapılmadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

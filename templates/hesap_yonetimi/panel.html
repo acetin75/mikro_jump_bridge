@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Hesap Yönetimi{% endblock %}
+{% block page_title %}Hesap Yönetimi — {{ aktif_firma.ad }}{% endblock %}
+
+{% block content %}
+
+<!-- Firma Seçici -->
+<div class="card mb-4 border-0 shadow-sm">
+  <div class="card-body py-2">
+    <form method="post" action="{% url 'hy_firma_sec' %}" class="d-flex align-items-center gap-3">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="hy_panel">
+      <span class="text-muted small fw-semibold"><i class="bi bi-building me-1"></i>Aktif Firma:</span>
+      <select name="firma_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+        {% for f in firmalar %}
+          <option value="{{ f.pk }}" {% if aktif_firma.pk == f.pk %}selected{% endif %}>{{ f.ad }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+
+<!-- Bağlantı Durumu -->
+{% if ozet.baglanti %}
+  {% if ozet.baglanti.basarili %}
+    <div class="alert alert-success py-2">
+      <i class="bi bi-wifi me-2"></i>Mikro API bağlantısı <strong>başarılı</strong>
+    </div>
+  {% else %}
+    <div class="alert alert-danger py-2">
+      <i class="bi bi-wifi-off me-2"></i>Bağlantı hatası: {{ ozet.baglanti.mesaj }}
+    </div>
+  {% endif %}
+{% endif %}
+
+<!-- Özet Kartlar -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card" style="background: linear-gradient(135deg, #3b82f6, #6366f1)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Toplam Cari</div>
+          <div class="fs-2 fw-bold">{{ ozet.cari.cari_adet|default:"—" }}</div>
+        </div>
+        <i class="bi bi-people fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card" style="background: linear-gradient(135deg, #10b981, #059669)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Toplam Alacak</div>
+          <div class="fs-2 fw-bold">{{ ozet.cari.toplam_alacak|floatformat:0|default:"—" }} ₺</div>
+        </div>
+        <i class="bi bi-arrow-up-circle fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card" style="background: linear-gradient(135deg, #ef4444, #dc2626)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Toplam Borç</div>
+          <div class="fs-2 fw-bold">{{ ozet.cari.toplam_borc|floatformat:0|default:"—" }} ₺</div>
+        </div>
+        <i class="bi bi-arrow-down-circle fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hızlı Erişim -->
+<div class="row g-3">
+  <div class="col-md-6 col-lg-3">
+    <a href="{% url 'hy_firma_kartlari' %}" class="card text-decoration-none h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="bi bi-card-list fs-1 text-primary mb-2"></i>
+        <div class="fw-semibold">Firma Kartları</div>
+        <div class="small text-muted">Cari hesap listesi</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <a href="{% url 'hy_hesap_hareketleri' %}" class="card text-decoration-none h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="bi bi-list-columns-reverse fs-1 text-success mb-2"></i>
+        <div class="fw-semibold">Hesap Hareketleri</div>
+        <div class="small text-muted">Cari hareket detayı</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <a href="{% url 'hy_bakiye_raporu' %}" class="card text-decoration-none h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="bi bi-bar-chart-line fs-1 text-warning mb-2"></i>
+        <div class="fw-semibold">Bakiye Raporu</div>
+        <div class="small text-muted">Açık bakiyeler</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <a href="{% url 'hy_odeme_planlama' %}" class="card text-decoration-none h-100 border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <i class="bi bi-calendar-check fs-1 text-danger mb-2"></i>
+        <div class="fw-semibold">Ödeme Planlama</div>
+        <div class="small text-muted">Vadesi yaklaşan çekler</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

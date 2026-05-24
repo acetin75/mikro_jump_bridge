@@ -1,0 +1,52 @@
+[project]
+name = "mikro-sync"
+version = "1.0.0"
+description = "Mikro ERP ↔ Muhasebe Bürosu iki yönlü senkronizasyon köprüsü"
+requires-python = ">=3.10"
+
+# ---------------------------------------------------------------------------
+# Ruff — linter ve formatter
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [
+    ".venv",
+    "migrations",
+    "__pycache__",
+    "staticfiles",
+    "media",
+]
+
+[tool.ruff.lint]
+# E = pycodestyle errors, F = pyflakes, W = warnings, I = isort
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501",   # satır uzunluğu — line-length ile yönetilir
+    "F401",   # kullanılmayan import — göç dosyalarında gerekli
+]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "mikro_sync",
+    "sync_motor",
+    "mikro_gelen",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+# ---------------------------------------------------------------------------
+# Vulture — ölü kod tespiti
+# ---------------------------------------------------------------------------
+[tool.vulture]
+min_confidence = 80
+paths = ["sync_motor", "mikro_gelen", "hesap_yonetimi", "mikro_sync"]
+ignore_names = [
+    "urlpatterns", "admin", "app_name", "verbose_name*",
+    "Meta", "clean*", "save", "delete", "get_*", "post",
+    "form_valid", "form_invalid",
+]
+ignore_decorators = ["@login_required", "@property", "@receiver"]

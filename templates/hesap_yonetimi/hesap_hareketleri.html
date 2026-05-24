@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Hesap Hareketleri{% endblock %}
+{% block page_title %}Hesap Hareketleri — {{ aktif_firma.ad }}{% endblock %}
+
+{% block content %}
+
+<!-- Firma Seçici -->
+<div class="card mb-3 border-0 shadow-sm">
+  <div class="card-body py-2">
+    <form method="post" action="{% url 'hy_firma_sec' %}" class="d-flex align-items-center gap-3">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="hy_hesap_hareketleri">
+      <span class="text-muted small fw-semibold"><i class="bi bi-building me-1"></i>Aktif Firma:</span>
+      <select name="firma_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+        {% for f in firmalar %}
+          <option value="{{ f.pk }}" {% if aktif_firma.pk == f.pk %}selected{% endif %}>{{ f.ad }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+
+<!-- Filtre -->
+<div class="card mb-3 border-0 shadow-sm">
+  <div class="card-body py-3">
+    <form class="row g-2 align-items-end" method="get">
+      <div class="col-md-4">
+        <label class="form-label small mb-1">Cari Kodu</label>
+        <input type="text" name="cari_kod" value="{{ cari_kod }}"
+               class="form-control form-control-sm" placeholder="C001 veya XYZLTD">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small mb-1">Başlangıç</label>
+        <input type="date" name="baslangic" value="{{ baslangic }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small mb-1">Bitiş</label>
+        <input type="date" name="bitis" value="{{ bitis }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-search me-1"></i>Getir
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Cari Başlık -->
+{% if secili_cari %}
+  <div class="card border-0 shadow-sm mb-3" style="border-left: 4px solid #3b82f6 !important;">
+    <div class="card-body py-2 d-flex justify-content-between align-items-center">
+      <div>
+        <span class="fw-bold text-primary">{{ secili_cari.cari_kod }}</span>
+        <span class="ms-2">{{ secili_cari.cari_unvan1 }}</span>
+      </div>
+      <div class="fw-bold {% if secili_cari.cari_bakiye > 0 %}text-success{% elif secili_cari.cari_bakiye < 0 %}text-danger{% endif %}">
+        Bakiye: {{ secili_cari.cari_bakiye|floatformat:2 }} ₺
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Tablo -->
+<div class="card border-0 shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center py-2">
+    <span class="fw-semibold"><i class="bi bi-list-columns-reverse me-2"></i>Hareketler</span>
+    <span class="badge bg-secondary">{{ hareketler|length }} satır</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-sm align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Tarih</th>
+          <th>Belge No</th>
+          <th>Açıklama</th>
+          <th class="text-end">Tutar</th>
+          <th>D/A</th>
+          <th>Döviz</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for h in hareketler %}
+          <tr class="{% if h.che_normal_iade == 1 %}table-warning{% endif %}">
+            <td class="text-nowrap">{{ h.che_tarih|slice:":10" }}</td>
+            <td><small class="text-muted">{{ h.che_evrak_seri }}{{ h.che_evrak_sira }}</small></td>
+            <td>{{ h.che_aciklama|default:"—"|truncatechars:50 }}</td>
+            <td class="text-end fw-semibold
+              {% if h.che_normal_iade == 0 %}text-success{% else %}text-danger{% endif %}">
+              {{ h.che_meblag|floatformat:2 }}
+            </td>
+            <td>
+              {% if h.che_normal_iade == 0 %}
+                <span class="badge bg-success rounded-pill">Borç</span>
+              {% else %}
+                <span class="badge bg-danger rounded-pill">Alacak</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if h.che_doviz_cinsi == 0 %}TL
+              {% elif h.che_doviz_cinsi == 1 %}USD
+              {% elif h.che_doviz_cinsi == 2 %}EUR
+              {% else %}{{ h.che_doviz_cinsi }}{% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" class="text-center text-muted py-4">
+              <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+              {% if cari_kod %}Seçili tarih aralığında hareket bulunamadı.
+              {% else %}Cari kodu girerek arama yapın.{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

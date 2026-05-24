@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Ödeme Planlama{% endblock %}
+{% block page_title %}Ödeme Planlama — {{ aktif_firma.ad }}{% endblock %}
+
+{% block content %}
+
+<!-- Firma Seçici -->
+<div class="card mb-3 border-0 shadow-sm">
+  <div class="card-body py-2">
+    <form method="post" action="{% url 'hy_firma_sec' %}" class="d-flex align-items-center gap-3">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="hy_odeme_planlama">
+      <span class="text-muted small fw-semibold"><i class="bi bi-building me-1"></i>Aktif Firma:</span>
+      <select name="firma_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+        {% for f in firmalar %}
+          <option value="{{ f.pk }}" {% if aktif_firma.pk == f.pk %}selected{% endif %}>{{ f.ad }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+
+<!-- Filtre -->
+<div class="card mb-3 border-0 shadow-sm">
+  <div class="card-body py-3">
+    <form class="row g-2 align-items-end" method="get">
+      <div class="col-md-4">
+        <label class="form-label small mb-1">Kaç günlük vadeler gösterilsin?</label>
+        <div class="input-group input-group-sm">
+          <input type="number" name="gun" value="{{ gun }}" min="1" max="365" class="form-control">
+          <span class="input-group-text">gün</span>
+        </div>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-calendar-check me-1"></i>Getir
+        </button>
+        <a href="{% url 'hy_odeme_planlama' %}" class="btn btn-secondary btn-sm ms-1">Sıfırla (30 gün)</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Tablo -->
+<div class="card border-0 shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center py-2">
+    <span class="fw-semibold">
+      <i class="bi bi-calendar-event me-2"></i>
+      Bugünden itibaren <strong>{{ gun }}</strong> gün içinde vadeli çek / senetler
+    </span>
+    <span class="badge bg-secondary">{{ cekler|length }} kayıt</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Vade Tarihi</th>
+          <th>Kalan</th>
+          <th>Evrak No</th>
+          <th>Cari</th>
+          <th class="text-end">Tutar</th>
+          <th>Döviz</th>
+          <th>Tip</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in cekler %}
+          <tr class="{% if c.kalan_gun <= 0 %}table-danger{% elif c.kalan_gun <= 7 %}table-warning{% endif %}">
+            <td class="text-nowrap fw-semibold">{{ c.csh_vade_tar|slice:":10" }}</td>
+            <td>
+              {% if c.kalan_gun <= 0 %}
+                <span class="badge bg-danger rounded-pill">Vadesi geçti</span>
+              {% elif c.kalan_gun <= 7 %}
+                <span class="badge bg-warning text-dark rounded-pill">{{ c.kalan_gun }} gün</span>
+              {% else %}
+                <span class="badge bg-success rounded-pill">{{ c.kalan_gun }} gün</span>
+              {% endif %}
+            </td>
+            <td><code class="small">{{ c.csh_evrak_no|default:"—" }}</code></td>
+            <td>
+              <div class="fw-semibold small">{{ c.cari_unvan1|default:c.csh_cari_kodu }}</div>
+              <div class="text-muted" style="font-size:.75rem">{{ c.csh_cari_kodu }}</div>
+            </td>
+            <td class="text-end fw-bold">{{ c.csh_tutar|floatformat:2 }}</td>
+            <td>
+              {% if c.csh_doviz_cinsi == 0 %}TL
+              {% elif c.csh_doviz_cinsi == 1 %}USD
+              {% elif c.csh_doviz_cinsi == 2 %}EUR
+              {% else %}{{ c.csh_doviz_cinsi }}{% endif %}
+            </td>
+            <td>
+              {% if c.csh_tip == 0 %}
+                <span class="badge bg-info rounded-pill">Alınan Çek</span>
+              {% elif c.csh_tip == 1 %}
+                <span class="badge bg-secondary rounded-pill">Verilen Çek</span>
+              {% elif c.csh_tip == 2 %}
+                <span class="badge bg-primary rounded-pill">Alınan Senet</span>
+              {% elif c.csh_tip == 3 %}
+                <span class="badge bg-dark rounded-pill">Verilen Senet</span>
+              {% else %}
+                <span class="badge bg-secondary rounded-pill">{{ c.csh_tip }}</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+              {{ gun }} gün içinde vadeli çek / senet bulunamadı.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

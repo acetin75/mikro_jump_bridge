@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ baslik }}{% endblock %}
+{% block page_title %}{{ baslik }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+
+          <h6 class="text-muted mb-3 border-bottom pb-2">Genel</h6>
+          <div class="mb-3">{{ form.ad.label_tag }}{{ form.ad }}</div>
+          <div class="mb-3">{{ form.baglanti_tipi.label_tag }}{{ form.baglanti_tipi }}</div>
+          <div class="mb-3 form-check">{{ form.aktif }}{{ form.aktif.label_tag }}</div>
+
+          <h6 class="text-muted mb-3 border-bottom pb-2 mt-4">Mikro API Bağlantısı</h6>
+          <div class="row">
+            <div class="col-md-8 mb-3">{{ form.mikro_sunucu.label_tag }}{{ form.mikro_sunucu }}
+              <div class="form-text">{{ form.mikro_sunucu.help_text }}</div>
+            </div>
+            <div class="col-md-4 mb-3">{{ form.mikro_port.label_tag }}{{ form.mikro_port }}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">{{ form.mikro_sunucu_vpn.label_tag }}{{ form.mikro_sunucu_vpn }}
+              <div class="form-text">{{ form.mikro_sunucu_vpn.help_text }}</div>
+            </div>
+            <div class="col-md-6 mb-3">{{ form.mikro_sunucu_uzak.label_tag }}{{ form.mikro_sunucu_uzak }}
+              <div class="form-text">{{ form.mikro_sunucu_uzak.help_text }}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">{{ form.mikro_kullanici.label_tag }}{{ form.mikro_kullanici }}</div>
+            <div class="col-md-6 mb-3">{{ form.mikro_sifre_gir.label_tag }}{{ form.mikro_sifre_gir }}
+              <div class="form-text">{{ form.mikro_sifre_gir.help_text }}</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4 mb-3">{{ form.firma_kodu.label_tag }}{{ form.firma_kodu }}
+              <div class="form-text">{{ form.firma_kodu.help_text }}</div>
+            </div>
+            <div class="col-md-4 mb-3">{{ form.calisma_yili.label_tag }}{{ form.calisma_yili }}
+              <div class="form-text">{{ form.calisma_yili.help_text }}</div>
+            </div>
+            <div class="col-md-4 mb-3">{{ form.mikro_api_key.label_tag }}{{ form.mikro_api_key }}</div>
+          </div>
+
+          <h6 class="text-muted mb-3 border-bottom pb-2 mt-4">SQL Server (Opsiyonel)</h6>
+          <div class="row">
+            <div class="col-md-6 mb-3">{{ form.sql_sunucu.label_tag }}{{ form.sql_sunucu }}</div>
+            <div class="col-md-6 mb-3">{{ form.sql_veritabani.label_tag }}{{ form.sql_veritabani }}</div>
+          </div>
+          <div class="mb-3">{{ form.sql_kullanici.label_tag }}{{ form.sql_kullanici }}</div>
+
+          <h6 class="text-muted mb-3 border-bottom pb-2 mt-4">Notlar</h6>
+          <div class="mb-3">{{ form.notlar }}</div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Kaydet</button>
+            <a href="{% url 'firma_liste' %}" class="btn btn-secondary">İptal</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

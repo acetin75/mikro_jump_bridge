@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Panel{% endblock %}
+{% block page_title %}Mikro Sync — Panel{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="stat-card" style="background:linear-gradient(135deg,#1e3a5f,#2563eb)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Aktif Firma</div>
+          <div class="fs-2 fw-bold">{{ firmalar.count }}</div>
+        </div>
+        <i class="bi bi-building-gear fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="stat-card" style="background:linear-gradient(135deg,#059669,#10b981)">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="opacity-75 small">Toplam Import</div>
+          <div class="fs-2 fw-bold">{{ son_importlar.count }}</div>
+        </div>
+        <i class="bi bi-cloud-download fs-2 opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firmalar -->
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-building-gear me-2"></i>Firma Bağlantıları</span>
+    <a href="{% url 'firma_liste' %}" class="btn btn-sm btn-outline-primary">Tümünü Gör</a>
+  </div>
+  <div class="card-body p-0">
+    {% if firmalar %}
+      <div class="list-group list-group-flush">
+        {% for firma in firmalar %}
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <span class="fw-semibold">{{ firma.ad }}</span>
+              <span class="badge bg-secondary ms-2">{{ firma.get_baglanti_tipi_display }}</span>
+              {% if firma.mikro_sunucu %}
+                <small class="text-muted ms-2">{{ firma.mikro_sunucu }}:{{ firma.mikro_port }}</small>
+              {% endif %}
+            </div>
+            <div class="d-flex gap-2">
+              <a href="{% url 'firma_test' firma.pk %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-plug"></i> Test
+              </a>
+              <a href="{% url 'import_baslat' firma.pk %}" class="btn btn-sm btn-primary">
+                <i class="bi bi-cloud-download"></i> Import
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="p-4 text-center text-muted">
+        <i class="bi bi-building-x fs-3 d-block mb-2"></i>
+        Henüz firma eklenmedi.
+        <a href="{% url 'firma_ekle' %}" class="d-block mt-2">+ Firma Ekle</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Son Import'lar -->
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-clock-history me-2"></i>Son Import İşlemleri</span>
+    <a href="{% url 'import_liste' %}" class="btn btn-sm btn-outline-primary">Tümünü Gör</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>#</th><th>Firma</th><th>Tarih Aralığı</th><th>Çekilen</th><th>Aktarılan</th><th>Durum</th><th>Tarih</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in son_importlar %}
+          <tr>
+            <td>{{ log.pk }}</td>
+            <td>{{ log.firma_ayar.ad }}</td>
+            <td>
+              {% if log.baslangic_tarih %}{{ log.baslangic_tarih }} – {{ log.bitis_tarih }}{% else %}—{% endif %}
+            </td>
+            <td>{{ log.cekilen_adet }}</td>
+            <td>{{ log.aktarilan_adet }}</td>
+            <td>
+              <span class="badge badge-durum-{{ log.durum }} rounded-pill">{{ log.get_durum_display }}</span>
+            </td>
+            <td><small class="text-muted">{{ log.olusturuldu|date:"d.m.Y H:i" }}</small></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="text-center text-muted py-4">Henüz import yapılmadı.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

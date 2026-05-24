@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Cari Detay — {{ cari_kod }}{% endblock %}
+{% block page_title %}Cari Detay — {{ aktif_firma.ad }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{% url 'hy_firma_kartlari' %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left me-1"></i>Geri
+  </a>
+</div>
+
+{% if cari %}
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-person-badge me-2"></i>Cari Bilgileri
+      </div>
+      <div class="card-body">
+        <table class="table table-sm mb-0">
+          <tr><th width="40%">Kod</th><td><code>{{ cari.cari_kod }}</code></td></tr>
+          <tr><th>Ünvan</th><td>{{ cari.cari_unvan1 }}</td></tr>
+          {% if cari.cari_unvan2 %}<tr><th>Ünvan 2</th><td>{{ cari.cari_unvan2 }}</td></tr>{% endif %}
+          <tr><th>VKN / TC</th><td>{{ cari.cari_vkn_vd|default:"—" }}</td></tr>
+          <tr><th>Vergi Dairesi</th><td>{{ cari.cari_VergiDairesi|default:"—" }}</td></tr>
+          <tr><th>Telefon</th><td>{{ cari.cari_telefon1|default:"—" }}</td></tr>
+          <tr><th>E-Posta</th><td>{{ cari.cari_EMail1|default:"—" }}</td></tr>
+          {% if cari.cari_adres1 %}<tr><th>Adres</th><td>{{ cari.cari_adres1 }}</td></tr>{% endif %}
+          <tr>
+            <th>Bakiye</th>
+            <td class="fw-bold {% if cari.cari_bakiye > 0 %}text-success{% elif cari.cari_bakiye < 0 %}text-danger{% endif %}">
+              {{ cari.cari_bakiye|floatformat:2 }} ₺
+            </td>
+          </tr>
+          <tr>
+            <th>Tip</th>
+            <td>
+              {% if cari.cari_isk_tip == 0 %}
+                <span class="badge bg-primary">Müşteri</span>
+              {% elif cari.cari_isk_tip == 1 %}
+                <span class="badge bg-warning text-dark">Tedarikçi</span>
+              {% else %}
+                <span class="badge bg-secondary">Diğer</span>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-cash-stack me-2"></i>Dövizli Bakiyeler
+      </div>
+      <div class="card-body">
+        {% if bakiye_doviz %}
+          <table class="table table-sm mb-0">
+            <thead><tr><th>Döviz</th><th class="text-end">Bakiye</th></tr></thead>
+            <tbody>
+              {% for b in bakiye_doviz %}
+                <tr>
+                  <td>{{ b.doviz }}</td>
+                  <td class="text-end fw-semibold">{{ b.bakiye|floatformat:2 }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="text-muted small mb-0">Dövizli hareket bulunamadı.</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card border-0 shadow-sm mt-3">
+      <div class="card-header fw-semibold">Hızlı İşlemler</div>
+      <div class="card-body d-flex flex-wrap gap-2">
+        <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ cari.cari_kod }}"
+           class="btn btn-outline-success btn-sm">
+          <i class="bi bi-list-columns-reverse me-1"></i>Hareketler
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+  <div class="alert alert-warning">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <code>{{ cari_kod }}</code> kodlu cari bulunamadı.
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Firma Kartları{% endblock %}
+{% block page_title %}Firma Kartları — {{ aktif_firma.ad }}{% endblock %}
+
+{% block content %}
+
+<!-- Firma Seçici -->
+<div class="card mb-3 border-0 shadow-sm">
+  <div class="card-body py-2">
+    <form method="post" action="{% url 'hy_firma_sec' %}" class="d-flex align-items-center gap-3">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="hy_firma_kartlari">
+      <span class="text-muted small fw-semibold"><i class="bi bi-building me-1"></i>Aktif Firma:</span>
+      <select name="firma_id" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+        {% for f in firmalar %}
+          <option value="{{ f.pk }}" {% if aktif_firma.pk == f.pk %}selected{% endif %}>{{ f.ad }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+
+<!-- Filtre -->
+<div class="card mb-3 border-0 shadow-sm">
+  <div class="card-body py-3">
+    <form class="row g-2 align-items-end" method="get">
+      <div class="col-md-5">
+        <label class="form-label small mb-1">Arama (ünvan / kod / VKN)</label>
+        <input type="text" name="q" value="{{ arama }}" class="form-control form-control-sm"
+               placeholder="Cari ara...">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small mb-1">Tip</label>
+        <select name="tip" class="form-select form-select-sm">
+          <option value="" {% if not tip_filtre %}selected{% endif %}>Tümü</option>
+          <option value="musteri" {% if tip_filtre == "musteri" %}selected{% endif %}>Müşteri</option>
+          <option value="tedarikci" {% if tip_filtre == "tedarikci" %}selected{% endif %}>Tedarikçi</option>
+        </select>
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="bi bi-search me-1"></i>Ara
+        </button>
+        <a href="{% url 'hy_firma_kartlari' %}" class="btn btn-secondary btn-sm ms-1">Temizle</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Tablo -->
+<div class="card border-0 shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center py-2">
+    <span class="fw-semibold"><i class="bi bi-card-list me-2"></i>Cari Hesaplar</span>
+    <span class="badge bg-secondary">{{ cariler|length }} kayıt</span>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Kod</th>
+          <th>Ünvan</th>
+          <th>VKN / TC</th>
+          <th>Telefon</th>
+          <th class="text-end">Bakiye (₺)</th>
+          <th>Tip</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in cariler %}
+          <tr>
+            <td><code class="text-primary">{{ c.cari_kod }}</code></td>
+            <td>
+              <div class="fw-semibold">{{ c.cari_unvan1 }}</div>
+              {% if c.cari_unvan2 %}<div class="small text-muted">{{ c.cari_unvan2 }}</div>{% endif %}
+            </td>
+            <td>{{ c.cari_vkn_vd|default:"—" }}</td>
+            <td>{{ c.cari_telefon1|default:"—" }}</td>
+            <td class="text-end fw-semibold
+              {% if c.cari_bakiye and c.cari_bakiye|floatformat:2 != '0.00' %}
+                {% if c.cari_bakiye > 0 %}text-success{% else %}text-danger{% endif %}
+              {% endif %}">
+              {{ c.cari_bakiye|floatformat:2|default:"0,00" }}
+            </td>
+            <td>
+              {% if c.cari_isk_tip == 0 %}
+                <span class="badge bg-primary rounded-pill">Müşteri</span>
+              {% elif c.cari_isk_tip == 1 %}
+                <span class="badge bg-warning text-dark rounded-pill">Tedarikçi</span>
+              {% else %}
+                <span class="badge bg-secondary rounded-pill">Diğer</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'hy_cari_detay' c.cari_kod %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a href="{% url 'hy_hesap_hareketleri' %}?cari_kod={{ c.cari_kod }}"
+                 class="btn btn-outline-success btn-sm ms-1">
+                <i class="bi bi-list-columns-reverse"></i>
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+              {% if arama %}Aramanıza uygun cari bulunamadı.{% else %}Cari kaydı yok.{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
