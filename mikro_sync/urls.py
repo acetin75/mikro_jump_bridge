@@ -24,7 +24,6 @@ urlpatterns = [
     path("giris/", auth_views.LoginView.as_view(template_name="registration/login.html"), name="login"),
     path("cikis/", auth_views.LogoutView.as_view(), name="logout"),
     path("", include("sync_motor.urls")),
-    path("gelen/", include("mikro_gelen.urls")),
     path("hesap/", include("hesap_yonetimi.urls")),
     path("lisans/", include("lisans.urls")),
     path("posta/", include("posta.urls")),

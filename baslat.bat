@@ -50,35 +50,8 @@ if errorlevel 1 (
     echo UYARI: Admin hesabı oluşturulamadı, devam ediliyor...
 )
 
-:: -------------------------------------------------------
-:: Cloudflare Tunnel (isteğe bağlı — .env'de TUNNEL_TOKEN varsa başlatır)
-:: -------------------------------------------------------
-set "CF_TUNNEL_TOKEN="
-set "CF_TUNNEL_HOST="
-if exist ".env" (
-    for /f "usebackq tokens=1* delims==" %%a in (".env") do (
-        if "%%a"=="TUNNEL_TOKEN"    set "CF_TUNNEL_TOKEN=%%b"
-        if "%%a"=="TUNNEL_HOSTNAME" set "CF_TUNNEL_HOST=%%b"
-    )
-)
-if defined CF_TUNNEL_TOKEN (
-    where cloudflared >nul 2>&1
-    if not errorlevel 1 (
-        echo  Cloudflare Tunnel başlatılıyor: !CF_TUNNEL_HOST!
-        start /b cloudflared tunnel --no-autoupdate run --token !CF_TUNNEL_TOKEN!
-    ) else if exist "cloudflared.exe" (
-        echo  Cloudflare Tunnel başlatılıyor: !CF_TUNNEL_HOST!
-        start /b "cloudflared" cloudflared.exe tunnel --no-autoupdate run --token !CF_TUNNEL_TOKEN!
-    ) else (
-        echo  [UYARI] TUNNEL_TOKEN .env'de tanımlı ama cloudflared bulunamadı.
-        echo          cloudflared.exe'yi proje klasörüne koyun ya da PATH'e ekleyin.
-        echo          İndirme: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/
-    )
-)
-
 echo.
 echo  Sunucu başlatılıyor: http://127.0.0.1:8001
-if defined CF_TUNNEL_HOST echo  Dış erişim:  https://!CF_TUNNEL_HOST!
 echo  Durdurmak için: Ctrl+C
 echo.
 

@@ -1,0 +1,110 @@
+name: Release — Kurulum Paketi Üret
+
+# v1.2.3 gibi bir tag push edildiğinde tetiklenir:
+#   git tag v1.2.3 && git push origin v1.2.3
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-installer:
+    name: Windows Installer (Inno Setup)
+    runs-on: windows-latest
+
+    steps:
+      # ------------------------------------------------------------------
+      # 1) Kodu al
+      # ------------------------------------------------------------------
+      - name: Kodu çek
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # 2) Sürüm numarasını etiket adından çıkar  (v1.2.3 → 1.2.3)
+      # ------------------------------------------------------------------
+      - name: Sürüm numarasını belirle
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.ref_name }}"          # v1.2.3
+          $ver = $tag.TrimStart("v")               # 1.2.3
+          echo "APP_VERSION=$ver" >> $env:GITHUB_OUTPUT
+
+      # ------------------------------------------------------------------
+      # 3) Python 3.12 Embeddable indir + pip + bağımlılıklar
+      # ------------------------------------------------------------------
+      - name: Python embeddable hazırla
+        shell: pwsh
+        run: |
+          $PY_VER  = "3.12.10"
+          $PY_URL  = "https://www.python.org/ftp/python/$PY_VER/python-$PY_VER-embed-amd64.zip"
+          $PY_DEST = "dist_build\python_dist"
+
+          Write-Host "Python $PY_VER embeddable indiriliyor..."
+          Invoke-WebRequest -Uri $PY_URL -OutFile "py_embed.zip" -UseBasicParsing
+          New-Item -ItemType Directory -Path $PY_DEST -Force | Out-Null
+          Expand-Archive "py_embed.zip" -DestinationPath $PY_DEST
+
+          # _pth dosyasında 'import site' satırını aktif et
+          $pth = Get-ChildItem "$PY_DEST\*.pth" | Select-Object -First 1
+          (Get-Content $pth.FullName) -replace '#import site', 'import site' |
+            Set-Content $pth.FullName
+
+          # pip kur
+          Write-Host "pip kuruluyor..."
+          Invoke-WebRequest -Uri "https://bootstrap.pypa.io/get-pip.py" -OutFile "get-pip.py" -UseBasicParsing
+          & "$PY_DEST\python.exe" get-pip.py --quiet
+
+          # Proje bağımlılıklarını kur
+          Write-Host "Bağımlılıklar kuruluyor..."
+          & "$PY_DEST\python.exe" -m pip install -r requirements.txt `
+              --quiet --no-warn-script-location
+
+          Write-Host "Python embeddable hazır: $PY_DEST"
+
+      # ------------------------------------------------------------------
+      # 4) Inno Setup kur
+      # ------------------------------------------------------------------
+      - name: Inno Setup kur
+        shell: pwsh
+        run: choco install innosetup --yes --no-progress --quiet
+
+      # ------------------------------------------------------------------
+      # 5) .env.example → env.example (ISS dosyası bu adla referans eder)
+      # ------------------------------------------------------------------
+      - name: env.example kopyala
+        shell: pwsh
+        run: Copy-Item ".env.example" "env.example"
+
+      # ------------------------------------------------------------------
+      # 6) Installer derle
+      # ------------------------------------------------------------------
+      - name: Installer derle
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.version.outputs.APP_VERSION }}"
+          New-Item -ItemType Directory -Path "dist" -Force | Out-Null
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+              /DAppVersion=$ver `
+              installer\setup.iss
+          Write-Host "Installer derlendi: dist\MikroJumpBridge_Kurulum_v$ver.exe"
+
+      # ------------------------------------------------------------------
+      # 7) GitHub Release oluştur ve .exe'yi yükle
+      # ------------------------------------------------------------------
+      - name: GitHub Release yayınla
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Mikro Jump Bridge v${{ steps.version.outputs.APP_VERSION }}"
+          body: |
+            ## Kurulum
+
+            `MikroJumpBridge_Kurulum_v${{ steps.version.outputs.APP_VERSION }}.exe` dosyasını indirip çalıştırın.
+
+            - Python kurmanıza **gerek yok** — Python gömülü gelir.
+            - İlk açılışta veritabanı otomatik oluşturulur.
+            - Varsayılan kullanıcı: `admin` / Şifre: `Admin1234!`  
+              *( Kurulumdan sonra `/kullanicilar/` sayfasından değiştirin.)*
+          generate_release_notes: false
+          files: dist/*.exe
+          fail_on_unmatched_files: true

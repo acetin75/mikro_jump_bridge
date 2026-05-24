@@ -19,7 +19,7 @@ echo.
 echo ========================================
 echo  2/5  VULTURE — Oldu Kod Tespiti
 echo ========================================
-%PYTHON% -m vulture sync_motor mikro_gelen hesap_yonetimi mikro_sync --min-confidence 80
+%PYTHON% -m vulture sync_motor hesap_yonetimi mikro_sync --min-confidence 80
 
 echo.
 echo ========================================
