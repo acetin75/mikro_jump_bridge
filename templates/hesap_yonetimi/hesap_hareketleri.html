@@ -22,6 +22,9 @@
   .kumulatif-borc { color: #dc3545; font-weight: 600; }
   .kumulatif-alacak { color: #198754; font-weight: 600; }
   .kumulatif-bakiye { font-weight: 700; }
+  .sm-chevron.rotate-90 { transform: rotate(90deg); }
+  #sm-accordion .card-header button:focus { box-shadow: none; outline: none; }
+  #sm-accordion .card { border-radius: .5rem !important; overflow: hidden; }
 </style>
 {% endblock %}
 
@@ -136,10 +139,17 @@
 {% endif %}
 
 <!-- Hareketler Tablosu -->
-<div class="card border-0 shadow-sm">
+<div class="card border-0 shadow-sm" id="hareketler-table-card">
   <div class="card-header d-flex justify-content-between align-items-center py-2">
     <span class="fw-semibold"><i class="bi bi-list-columns-reverse me-2"></i>Hareketler</span>
-    <span class="badge bg-secondary">{{ hareketler|length }} satır</span>
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge bg-secondary">{{ hareketler|length }} satır</span>
+      {% if hareketler %}
+      <button type="button" class="btn btn-outline-primary btn-sm" id="grupla-btn" onclick="toggleGrupla()">
+        <i class="bi bi-layers me-1"></i>Sor. Merkezine Göre Grupla
+      </button>
+      {% endif %}
+    </div>
   </div>
   <div class="table-responsive">
     <table class="table table-hover table-sm align-middle mb-0" style="font-size:.82rem;">
@@ -215,6 +225,11 @@
   </div>
 </div>
 
+<!-- SM Gruplama Accordion (başlangıçta gizli) -->
+<div id="gruplama-view" style="display:none" class="mt-2"></div>
+
+{{ hareketler_json_data|json_script:"hareketler-data" }}
+
 {% endblock %}
 
 {% block extra_js %}
@@ -246,5 +261,150 @@ $(function () {
     $(this).closest('form').submit();
   });
 });
+
+// ---- SM GRUPLAMA ----
+const HAREKETLER = JSON.parse(document.getElementById('hareketler-data')?.textContent || '[]');
+let gruplamaAktif = false;
+
+function toggleGrupla() {
+  gruplamaAktif = !gruplamaAktif;
+  const btn = document.getElementById('grupla-btn');
+  const tableCard = document.getElementById('hareketler-table-card');
+  const gruplaView = document.getElementById('gruplama-view');
+
+  if (gruplamaAktif) {
+    buildGruplama();
+    tableCard.style.display = 'none';
+    gruplaView.style.display = '';
+    btn.classList.replace('btn-outline-primary', 'btn-primary');
+    btn.innerHTML = '<i class="bi bi-list me-1"></i>Düz Liste';
+  } else {
+    tableCard.style.display = '';
+    gruplaView.style.display = 'none';
+    btn.classList.replace('btn-primary', 'btn-outline-primary');
+    btn.innerHTML = '<i class="bi bi-layers me-1"></i>Sor. Merkezine Göre Grupla';
+  }
+}
+
+function fmt(n) {
+  return parseFloat(n || 0).toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function buildGruplama() {
+  // 1. Grupları oluştur
+  const groups = {};
+  const order = [];
+
+  HAREKETLER.forEach(h => {
+    const key = h.sm || '__yok__';
+    if (!groups[key]) {
+      const label = h.sm
+        ? (h.sm_adi ? `${h.sm} <small class="text-muted fw-normal">(${h.sm_adi})</small>` : h.sm)
+        : '<em class="text-muted fw-normal">Sorumluluk Merkezi Belirtilmemiş</em>';
+      groups[key] = {label, rows: [], dovizler: {}};
+      order.push(key);
+    }
+    const g = groups[key];
+    g.rows.push(h);
+    const d = h.doviz_adi;
+    if (!g.dovizler[d]) g.dovizler[d] = {borc: 0, alacak: 0};
+    g.dovizler[d].borc  += h.borc;
+    g.dovizler[d].alacak += h.alacak;
+  });
+
+  // 2. Accordion HTML
+  let html = '<div class="accordion accordion-flush" id="sm-accordion">';
+
+  order.forEach((key, idx) => {
+    const g = groups[key];
+    const colId = `sm-col-${idx}`;
+
+    // Döviz özet barı
+    const dovizBar = Object.entries(g.dovizler).map(([d, t]) => {
+      const bak = t.borc - t.alacak;
+      const rnk = bak > 0.005 ? 'text-danger' : bak < -0.005 ? 'text-success' : 'text-secondary';
+      return `<span class="d-inline-flex align-items-center gap-1">
+                <span class="badge bg-light text-secondary border">${d}</span>
+                <span class="text-muted small">Borç</span>
+                <span class="fw-semibold small">${fmt(t.borc)}</span>
+                <span class="text-muted small">Alacak</span>
+                <span class="fw-semibold small">${fmt(t.alacak)}</span>
+                <span class="text-muted small">Bakiye</span>
+                <span class="fw-bold small ${rnk}">${fmt(bak)}</span>
+              </span>`;
+    }).join('<span class="vr mx-2"></span>');
+
+    // Satır HTML (SM kolonu olmadan)
+    const rowsHtml = g.rows.map(h => {
+      const baBadge = h.ba === 0
+        ? `<span class="badge rounded-pill text-bg-danger" style="font-size:.7rem;">B</span>`
+        : `<span class="badge rounded-pill text-bg-success" style="font-size:.7rem;">A</span>`;
+      const borcHtml  = h.borc   ? `<span class="kumulatif-borc">${fmt(h.borc)}</span>`   : '<span class="text-muted">—</span>';
+      const alacakHtml = h.alacak ? `<span class="kumulatif-alacak">${fmt(h.alacak)}</span>` : '<span class="text-muted">—</span>';
+      const bakRenk   = h.bakiye > 0.005 ? 'text-danger' : h.bakiye < -0.005 ? 'text-success' : 'text-secondary';
+      const kurHtml   = (h.kur && h.kur !== 1.0) ? fmt(h.kur) : '—';
+      const aciklama  = (h.aciklama || '—').substring(0, 70);
+      return `<tr>
+        <td class="text-nowrap text-muted">${h.tarih || '—'}</td>
+        <td>${baBadge}</td>
+        <td class="text-nowrap"><small class="text-muted">${h.evrak_no || '—'}</small></td>
+        <td>${aciklama}</td>
+        <td class="text-end text-nowrap">${borcHtml}</td>
+        <td class="text-end text-nowrap">${alacakHtml}</td>
+        <td class="text-end text-nowrap fw-bold ${bakRenk}">${fmt(h.bakiye)}</td>
+        <td><span class="badge bg-light text-secondary border">${h.doviz_adi}</span></td>
+        <td class="text-end text-nowrap text-muted">${kurHtml}</td>
+        <td class="text-nowrap text-muted">${h.vade || '—'}</td>
+        <td><small class="text-muted">${h.kaynak || '—'}</small></td>
+      </tr>`;
+    }).join('');
+
+    html += `
+    <div class="card border-0 shadow-sm mb-2">
+      <div class="card-header py-0 px-0 bg-white border-bottom-0">
+        <button class="btn w-100 text-start py-2 px-3 d-flex align-items-center flex-wrap gap-2 border-0 bg-transparent"
+                type="button" data-bs-toggle="collapse" data-bs-target="#${colId}" aria-expanded="false">
+          <i class="bi bi-chevron-right sm-chevron me-1 text-muted" style="transition:.2s;"></i>
+          <span class="fw-semibold text-primary me-1">${g.label}</span>
+          <span class="badge bg-secondary me-2">${g.rows.length} hareket</span>
+          <div class="d-flex flex-wrap gap-3">${dovizBar}</div>
+        </button>
+      </div>
+      <div id="${colId}" class="collapse">
+        <div class="table-responsive">
+          <table class="table table-hover table-sm align-middle mb-0" style="font-size:.82rem;">
+            <thead class="table-light">
+              <tr>
+                <th class="text-nowrap">Tarih</th><th>B/A</th>
+                <th class="text-nowrap">Evrak No</th><th>Açıklama</th>
+                <th class="text-end text-nowrap">Borç</th>
+                <th class="text-end text-nowrap">Alacak</th>
+                <th class="text-end text-nowrap">Bakiye</th>
+                <th>Döviz</th>
+                <th class="text-end text-nowrap">Kur</th>
+                <th class="text-nowrap">Vade</th>
+                <th>Kaynak</th>
+              </tr>
+            </thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += '</div>';
+  document.getElementById('gruplama-view').innerHTML = html;
+
+  // Chevron animasyonu
+  document.querySelectorAll('#sm-accordion .collapse').forEach(el => {
+    el.addEventListener('show.bs.collapse', () => {
+      el.previousElementSibling?.querySelector('.sm-chevron')?.classList.add('rotate-90');
+    });
+    el.addEventListener('hide.bs.collapse', () => {
+      el.previousElementSibling?.querySelector('.sm-chevron')?.classList.remove('rotate-90');
+    });
+  });
+}
 </script>
 {% endblock %}

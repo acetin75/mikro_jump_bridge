@@ -4,6 +4,7 @@ Hesap Yönetimi — Mikro ERP cari hesap sorgulama ekranları.
 Tüm sorgular seçili firmaya ait MikroApiClient üzerinden yapılır.
 Aktif firma session'da tutulur: request.session["aktif_firma_id"]
 """
+import json
 import logging
 from datetime import date, timedelta
 
@@ -287,7 +288,9 @@ def hesap_hareketleri(request):
 
     DOVIZ_MAP = {0: "TL", 1: "USD", 2: "EUR", 8: "JPY", 12: "AED", 20: "GBP"}
     hareketler = []
+    hareketler_json_data = []
     bakiye_ozet = []
+    acilis_liste = []
     firma = None
 
     if cari_kod:
@@ -403,6 +406,26 @@ def hesap_hareketleri(request):
                 if b != 0
             ]
 
+            # JSON verisi — SM gruplama için (template'te json_script ile gömülür)
+            hareketler_json_data = [
+                {
+                    "tarih":     h.get("tarih") or "",
+                    "ba":        int(h.get("ba") or 0),
+                    "evrak_no":  str(h.get("evrak_no") or ""),
+                    "aciklama":  str(h.get("aciklama") or ""),
+                    "sm":        str(h.get("sm") or ""),
+                    "sm_adi":    str(h.get("sm_adi") or ""),
+                    "kur":       float(h.get("kur") or 0),
+                    "borc":      float(h.get("borc") or 0),
+                    "alacak":    float(h.get("alacak") or 0),
+                    "doviz_adi": str(h.get("doviz_adi") or "TL"),
+                    "vade":      str(h.get("vade") or ""),
+                    "kaynak":    str(h.get("kaynak") or ""),
+                    "bakiye":    float(h.get("bakiye") or 0),
+                }
+                for h in hareketler
+            ]
+
             logger.info("Hesap hareketleri [%s] %s: %d satır", aktif_firma.ad, cari_kod, len(hareketler))
         except MikroApiHatasi as e:
             logger.error("Hesap hareketleri hatası [%s] %s: %s", aktif_firma.ad, cari_kod, e)
@@ -416,8 +439,9 @@ def hesap_hareketleri(request):
         "son_tarih": son_tarih,
         "firma": firma,
         "bakiye_ozet": bakiye_ozet,
-        "acilis_liste": acilis_liste if cari_kod else [],
+        "acilis_liste": acilis_liste,
         "hareketler": hareketler,
+        "hareketler_json_data": hareketler_json_data,
         "DOVIZ_MAP": DOVIZ_MAP,
     })
 
