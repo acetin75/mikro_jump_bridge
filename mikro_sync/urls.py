@@ -27,4 +27,5 @@ urlpatterns = [
     path("gelen/", include("mikro_gelen.urls")),
     path("hesap/", include("hesap_yonetimi.urls")),
     path("lisans/", include("lisans.urls")),
+    path("posta/", include("posta.urls")),
 ]

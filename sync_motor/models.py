@@ -1,6 +1,7 @@
 import logging
-from django.db import models
+
 from django.core import signing
+from django.db import models
 
 logger = logging.getLogger("mikro_sync")
 

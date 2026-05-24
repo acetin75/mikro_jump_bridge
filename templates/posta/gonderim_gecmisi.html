@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Gönderim Geçmişi{% endblock %}
+{% block page_title %}Ekstre Gönderim Geçmişi{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <a href="{% url 'posta_ayarlar' %}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left me-1"></i>Ayarlar
+  </a>
+  <form method="get" class="d-flex gap-2 align-items-center">
+    <select name="firma" class="form-select form-select-sm" style="width:200px;" onchange="this.form.submit()">
+      <option value="">Tüm Firmalar</option>
+      {% for f in firmalar %}
+        <option value="{{ f.pk }}" {% if firma_filtre == f.pk|stringformat:"s" %}selected{% endif %}>{{ f.ad }}</option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span class="fw-semibold"><i class="bi bi-envelope-open me-2"></i>Son 200 Gönderim</span>
+    <span class="badge bg-secondary">{{ loglar|length }} kayıt</span>
+  </div>
+  <div class="card-body p-0">
+    {% if loglar %}
+    <div class="table-responsive">
+      <table class="table table-sm table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Tarih</th>
+            <th>Firma</th>
+            <th>Cari</th>
+            <th>Alıcı</th>
+            <th>Dönem</th>
+            <th>Durum</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in loglar %}
+          <tr>
+            <td class="text-nowrap small">{{ log.olusturuldu|date:"d.m.Y H:i" }}</td>
+            <td class="small">{{ log.firma_ayar.ad }}</td>
+            <td>
+              <code class="small">{{ log.cari_kod }}</code>
+              {% if log.cari_unvan %}<span class="text-muted small ms-1">{{ log.cari_unvan }}</span>{% endif %}
+            </td>
+            <td class="small">{{ log.alici_email }}</td>
+            <td class="text-nowrap small">
+              {{ log.donem_baslangic|date:"d.m.Y" }} – {{ log.donem_bitis|date:"d.m.Y" }}
+            </td>
+            <td>
+              {% if log.durum == "gonderildi" %}
+                <span class="badge bg-success">Gönderildi</span>
+              {% else %}
+                <span class="badge bg-danger" title="{{ log.hata_mesaji }}">Hata</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="p-4 text-center text-muted">
+      <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+      Henüz gönderim kaydı bulunmuyor.
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

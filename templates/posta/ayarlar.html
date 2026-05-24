@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Posta Ayarları{% endblock %}
+{% block page_title %}Posta Ayarları{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- SOL: SMTP FORM -->
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-gear me-2"></i>SMTP Gönderici Ayarları
+      </div>
+      <div class="card-body">
+
+        <div class="alert alert-info py-2 small mb-3">
+          <i class="bi bi-info-circle me-1"></i>
+          Bu ayarlar <strong>büroya ait gönderici</strong> bilgilerini tanımlar.
+          Gmail için "Uygulama Şifresi" oluşturmanız gerekir (hesap ayarları → 2 adımlı doğrulama → uygulama şifreleri).
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">SMTP Sunucusu</label>
+            {{ form.smtp_sunucu }}
+            <div class="form-text">Örn: <code>smtp.gmail.com</code> · <code>smtp.office365.com</code> · <code>mail.domain.com</code></div>
+            {% if form.smtp_sunucu.errors %}<div class="text-danger small">{{ form.smtp_sunucu.errors.0 }}</div>{% endif %}
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Port</label>
+              {{ form.smtp_port }}
+              <div class="form-text">587 (TLS) veya 465 (SSL)</div>
+              {% if form.smtp_port.errors %}<div class="text-danger small">{{ form.smtp_port.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-8 d-flex align-items-end pb-1">
+              <div class="form-check">
+                {{ form.tls_kullan }}
+                <label class="form-check-label" for="{{ form.tls_kullan.id_for_label }}">
+                  TLS Kullan (önerilir)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Kullanıcı Adı (E-posta)</label>
+            {{ form.kullanici }}
+            {% if form.kullanici.errors %}<div class="text-danger small">{{ form.kullanici.errors.0 }}</div>{% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ form.sifre.label }}</label>
+            {{ form.sifre }}
+            <div class="form-text">{{ form.sifre.help_text }}</div>
+            {% if form.sifre.errors %}<div class="text-danger small">{{ form.sifre.errors.0 }}</div>{% endif %}
+          </div>
+
+          <hr class="my-3">
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Gönderici Adı</label>
+            {{ form.gonderen_ad }}
+            <div class="form-text">Alıcının göreceği isim. Örn: <em>ABC Muhasebe Bürosu</em></div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Gönderici E-posta (farklıysa)</label>
+            {{ form.gonderen_email }}
+            <div class="form-text">Boş bırakılırsa kullanıcı adı kullanılır.</div>
+          </div>
+
+          <div class="mb-4">
+            <div class="form-check">
+              {{ form.aktif }}
+              <label class="form-check-label" for="{{ form.aktif.id_for_label }}">
+                Bu mail ayarını aktif olarak kullan
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-floppy me-1"></i>Kaydet
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAĞ: DURUM + TEST -->
+  <div class="col-lg-5">
+
+    <!-- Mevcut ayar özeti -->
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-info-circle me-2"></i>Mevcut Durum
+      </div>
+      <div class="card-body">
+        {% if ayar %}
+          <table class="table table-sm mb-0">
+            <tr><th width="45%">Sunucu</th><td><code>{{ ayar.smtp_sunucu }}:{{ ayar.smtp_port }}</code></td></tr>
+            <tr><th>Kullanıcı</th><td>{{ ayar.kullanici }}</td></tr>
+            <tr><th>Gönderici</th><td>{{ ayar.gonderici }}</td></tr>
+            <tr><th>TLS</th><td>{% if ayar.tls_kullan %}<span class="badge bg-success">Açık</span>{% else %}<span class="badge bg-secondary">Kapalı</span>{% endif %}</td></tr>
+            <tr><th>Durum</th><td>{% if ayar.aktif %}<span class="badge bg-success">Aktif</span>{% else %}<span class="badge bg-danger">Pasif</span>{% endif %}</td></tr>
+          </table>
+        {% else %}
+          <div class="text-muted small">
+            <i class="bi bi-exclamation-circle me-1"></i>
+            Henüz mail ayarı tanımlanmamış.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Test maili -->
+    {% if ayar and ayar.aktif %}
+    <div class="card border-0 shadow-sm mb-3">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-send-check me-2"></i>Bağlantı Testi
+      </div>
+      <div class="card-body">
+        <p class="small text-muted mb-3">
+          Ayarların doğruluğunu test etmek için bir adrese deneme maili gönderin.
+        </p>
+        <form method="post" action="{% url 'posta_test' %}">
+          {% csrf_token %}
+          <div class="input-group">
+            <input type="email" name="test_email" class="form-control"
+                   placeholder="test@ornek.com" required>
+            <button type="submit" class="btn btn-outline-primary">
+              <i class="bi bi-envelope-arrow-up me-1"></i>Gönder
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Otomatik gönderim bilgisi -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-clock-history me-2"></i>Otomatik Gönderim
+      </div>
+      <div class="card-body small text-muted">
+        <p>Aylık otomatik ekstre göndermek için Windows Task Scheduler ile aşağıdaki komutu çalıştırın:</p>
+        <code class="d-block bg-light border rounded p-2 mb-2" style="font-size:0.78rem;word-break:break-all;">
+          C:\mikro_jump_bridge\.venv\Scripts\python.exe manage.py ekstre_gonder --ay 2026-05
+        </code>
+        <p class="mb-1">Her ay için <code>--ay YYYY-MM</code> değerini güncelleyin veya belirtmezseniz otomatik olarak <strong>geçen ay</strong> kullanılır.</p>
+        <a href="{% url 'posta_gecmis' %}" class="btn btn-sm btn-outline-secondary mt-2">
+          <i class="bi bi-list-ul me-1"></i>Gönderim Geçmişi
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

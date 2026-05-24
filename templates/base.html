@@ -146,6 +146,15 @@
   </div>
 
   <div class="nav-section">Sistem</div>
+  <a href="{% url 'posta_ayarlar' %}" class="nav-link {% if 'posta' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-envelope-at"></i> Posta Ayarları
+  </a>
+  <a href="{% url 'posta_gecmis' %}" class="nav-link {% if request.resolver_match.url_name == 'posta_gecmis' %}active{% endif %}">
+    <i class="bi bi-clock-history"></i> Gönderim Geçmişi
+  </a>
+  <a href="{% url 'lisans_durum' %}" class="nav-link {% if 'lisans' in request.resolver_match.url_name %}active{% endif %}">
+    <i class="bi bi-key"></i> Lisans
+  </a>
   <a href="/admin/" class="nav-link" target="_blank">
     <i class="bi bi-shield-lock"></i> Yönetim Paneli
   </a>

@@ -1,10 +1,12 @@
 import logging
-from django.db import transaction
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+
 from django.contrib import messages
-from .models import FirmaAyar, ImportLog
+from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+
 from .forms import FirmaAyarForm
+from .models import FirmaAyar, ImportLog
 
 logger = logging.getLogger("mikro_sync")
 
@@ -89,10 +91,12 @@ def import_baslat(request, firma_pk):
     """Import sürecini başlatır: tarihleri al, fatura çek, staging'e kaydet."""
     firma = get_object_or_404(FirmaAyar, pk=firma_pk)
     if request.method == "POST":
-        from datetime import date
-        from .client import MikroApiClient, MikroApiHatasi
-        from mikro_gelen.models import MikroFatura
         import json
+        from datetime import date
+
+        from mikro_gelen.models import MikroFatura
+
+        from .client import MikroApiClient, MikroApiHatasi
 
         bas_str = request.POST.get("baslangic_tarih", "")
         bit_str = request.POST.get("bitis_tarih", "")

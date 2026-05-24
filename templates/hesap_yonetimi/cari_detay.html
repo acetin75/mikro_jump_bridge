@@ -78,10 +78,66 @@
            class="btn btn-outline-success btn-sm">
           <i class="bi bi-list-columns-reverse me-1"></i>Hareketler
         </a>
+        <button type="button" class="btn btn-outline-primary btn-sm"
+                data-bs-toggle="modal" data-bs-target="#ekstreModal">
+          <i class="bi bi-envelope-arrow-up me-1"></i>Ekstre Gönder
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- EKSTRE GÖNDER MODAL -->
+<div class="modal fade" id="ekstreModal" tabindex="-1" aria-labelledby="ekstreModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ekstreModalLabel">
+          <i class="bi bi-envelope-arrow-up me-2"></i>Ekstre Gönder — {{ cari.cari_unvan1 }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'posta_ekstre_gonder' %}">
+        {% csrf_token %}
+        <input type="hidden" name="cari_kod"   value="{{ cari.cari_kod }}">
+        <input type="hidden" name="cari_unvan" value="{{ cari.cari_unvan1 }}">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Alıcı E-posta</label>
+            <input type="email" name="alici_email" class="form-control" required
+                   value="{{ cari.cari_EMail|default:'' }}"
+                   placeholder="ornek@sirket.com">
+            <div class="form-text">Mikro ERP'deki e-posta otomatik dolduruldu; gerekirse değiştirin.</div>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col">
+              <label class="form-label fw-semibold">Başlangıç</label>
+              <input type="date" name="donem_baslangic" class="form-control" required
+                     value="{{ today|date:'Y' }}-01-01">
+            </div>
+            <div class="col">
+              <label class="form-label fw-semibold">Bitiş</label>
+              <input type="date" name="donem_bitis" class="form-control" required
+                     value="{{ today|date:'Y-m-d' }}">
+            </div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label fw-semibold">Konu <span class="text-muted fw-normal">(opsiyonel)</span></label>
+            <input type="text" name="konu" class="form-control"
+                   placeholder="Boş bırakılırsa otomatik oluşturulur">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">İptal</button>
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="bi bi-send me-1"></i>Gönder
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% else %}
   <div class="alert alert-warning">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import MikroFatura, MikroCariHesap, MikroStokKarti
+
+from .models import MikroCariHesap, MikroFatura, MikroStokKarti
 
 
 @admin.register(MikroFatura)

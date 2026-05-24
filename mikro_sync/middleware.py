@@ -19,6 +19,7 @@ FIRMA_SEC_MUAF_ONEKLERI = MUAF_URL_ONEKLERI + [
     "/hesap/firma-baglanti-test/",  # AJAX endpoint — firma seçimi henüz yapılmamış olabilir
     "/static/",
     "/lisans/",  # Lisans sayfaları firma seçimi gerektirmez
+    "/posta/",   # Posta ayarları firma seçimi gerektirmez
 ]
 
 

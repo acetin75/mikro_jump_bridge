@@ -1,4 +1,4 @@
-"""
+r"""
 Admin kullanıcısı oluşturma scripti.
 Çalıştır: .venv\Scripts\python.exe olustur_admin.py
 
@@ -6,12 +6,13 @@ Admin kullanıcısı oluşturma scripti.
 Tanımlı değilse interaktif olarak sorar.
 """
 import os
+
 import django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mikro_sync.settings")
 django.setup()
 
-from decouple import config, UndefinedValueError  # noqa: E402
+from decouple import UndefinedValueError, config  # noqa: E402
 from django.contrib.auth import get_user_model  # noqa: E402
 
 User = get_user_model()

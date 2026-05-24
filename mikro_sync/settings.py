@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "sync_motor",
     "hesap_yonetimi",
     "lisans",
+    "posta",
 ]
 
 MIDDLEWARE = [

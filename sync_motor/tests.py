@@ -13,7 +13,6 @@ from django.urls import reverse
 
 from .models import FirmaAyar, ImportLog
 
-
 # ---------------------------------------------------------------------------
 # Model testleri
 # ---------------------------------------------------------------------------

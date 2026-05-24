@@ -267,6 +267,7 @@ def cari_detay(request, cari_kod: str):
         "cari": cari,
         "cari_kod": cari_kod,
         "bakiye_doviz": bakiye_doviz,
+        "today": date.today(),
     })
 
 
